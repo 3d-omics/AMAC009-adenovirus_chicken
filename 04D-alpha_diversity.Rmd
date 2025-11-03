@@ -1,0 +1,330 @@
+# Alpha Diversity Analysis
+
+## Load Data and Plotting Utilities
+
+```{r load_data_04D, warning=FALSE, message=FALSE}
+# Load processed plotting data and color schemes
+load("data/macro/plot_data.Rdata")
+load("data/data_colors.Rdata")
+```
+
+## Alpha Diversity by Breed
+
+Alpha diversity measures within-sample microbial community diversity. This section compares richness and Shannon diversity metrics between breeds and treatments over time.
+
+### Layers - Alpha Diversity
+
+```{r alpha_diversity_layer_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics for alpha diversity metrics by treatment, age, and metric
+var <- "value"
+summary_stats_layer <- tidy_plot_alpha_diversity_genomes_macro %>%
+  filter(animal_breed == "layer") %>%
+  filter(filter_level == 'filtered_30') %>%
+  filter(filter_status == "Retained by filtering") %>%  # Remove empty samples
+  group_by(treatment_expl, age, metric) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = formatC(median, format = "f", digits = 1))
+
+# Display summary statistics table
+knitr::kable(summary_stats_layer, digits = 3, caption = "Summary statistics (median and IQR) for alpha diversity metrics in layers")
+```
+
+```{r alpha_diversity_layer_plot, warning=FALSE, message=FALSE, fig.height=8, fig.width=10}
+# Create boxplot showing alpha diversity metrics over time for layers
+plot_alpha_div_layer <- tidy_plot_alpha_diversity_genomes_macro %>%
+  filter(animal_breed == "layer") %>%
+  filter(filter_level == 'filtered_30') %>%
+  filter(filter_status == "Retained by filtering") %>%  # Remove empty samples
+  ggplot(aes(x = age, y = value, fill = treatment)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.9) +
+  scale_fill_manual(
+    name = "Treatment",
+    breaks = names(treatment_colours_bright),
+    values = treatment_colours_bright
+  ) +
+  geom_jitter(width = 0.1, alpha = 0.6) +
+  facet_nested(metric ~ treatment_expl, scales = "free", space = "fixed") +
+  labs(x = "Days Post Infection", y = "Alpha diversity value") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+  # Add median values as text labels
+  geom_text(
+    data = summary_stats_layer,
+    aes(x = age, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -3.0,
+    size = 3, alpha = 1, color = "black"
+  ) +
+  expand_limits(y = 0) +
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle("Layers: Alpha diversity - 30% coverage filter")
+
+# Display the plot (commented out - used in combined plot)
+# plot_alpha_div_layer
+```
+
+### Broilers - Alpha Diversity
+
+```{r alpha_diversity_broiler_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics for alpha diversity metrics by treatment, age, and metric
+var <- "value"
+summary_stats_broiler <- tidy_plot_alpha_diversity_genomes_macro %>%
+  filter(animal_breed == "broiler") %>%
+  filter(filter_level == 'filtered_30') %>%
+  filter(filter_status == "Retained by filtering") %>%  # Remove empty samples
+  group_by(treatment_expl, age, metric) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = formatC(median, format = "f", digits = 1))
+
+# Display summary statistics table
+knitr::kable(summary_stats_broiler, digits = 3, caption = "Summary statistics (median and IQR) for alpha diversity metrics in broilers")
+```
+
+```{r alpha_diversity_broiler_plot, warning=FALSE, message=FALSE, fig.height=8, fig.width=10}
+# Create boxplot showing alpha diversity metrics over time for broilers
+plot_alpha_div_broiler <- tidy_plot_alpha_diversity_genomes_macro %>%
+  filter(animal_breed == "broiler") %>%
+  filter(filter_level == 'filtered_30') %>%
+  filter(filter_status == "Retained by filtering") %>%  # Remove empty samples
+  ggplot(aes(x = age, y = value, fill = treatment)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.9) +
+  scale_fill_manual(
+    name = "Treatment",
+    breaks = names(treatment_colours_bright),
+    values = treatment_colours_bright
+  ) +
+  geom_jitter(width = 0.1, alpha = 0.6) +
+  facet_nested(metric ~ treatment_expl, scales = "free", space = "fixed") +
+  labs(x = "Days Post Infection", y = "Alpha diversity value") +
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+  # Add median values as text labels
+  geom_text(
+    data = summary_stats_broiler,
+    aes(x = age, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -3.0,
+    size = 3, alpha = 1, color = "black"
+  ) +
+  expand_limits(y = 0) +
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle("Broilers: Alpha diversity - 30% coverage filter")
+
+# Display the plot (commented out - used in combined plot)
+# plot_alpha_div_broiler
+```
+
+### Combined Visualization
+
+```{r alpha_diversity_combined, warning=FALSE, message=FALSE, fig.height=10, fig.width=12}
+# Adjust theme for side-by-side display (remove duplicate y-axis labels)
+plot_alpha_div_layer <- plot_alpha_div_layer +
+  theme(
+    strip.background.y = element_blank(),
+    strip.text.y.right = element_blank()
+  )
+
+# Combine both plots side-by-side
+(plot_alpha_div_layer | plot_alpha_div_broiler) + 
+  plot_annotation(tag_levels = 'a') &
+  theme(legend.position = "bottom", legend.box = "vertical")
+```
+
+## Detailed Alpha Diversity - Layers with Animal Labels
+
+```{r alpha_diversity_layer_detailed, warning=FALSE, message=FALSE, fig.height=8, fig.width=10}
+# Create detailed plot showing individual animals labeled for layers
+# This plot uses the neutral (Shannon) diversity metric
+tidy_plot_alpha_diversity_genomes_macro %>%
+  filter(animal_breed == "layer") %>%
+  filter(filter_level == 'filtered_30') %>%
+  filter(filter_status == "Retained by filtering") %>%  # Remove empty samples
+  filter(metric == "neutral") %>%
+  ggplot(aes(x = age, y = value, fill = treatment)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.6) +
+  scale_fill_manual(
+    name = "Treatment",
+    breaks = names(treatment_colours_bright),
+    values = treatment_colours_bright
+  ) +
+  geom_jitter(width = 0.3, alpha = 0.6) +
+  facet_nested(treatment_expl ~ ., scales = "free", space = "fixed") +
+  # Add animal labels to individual points
+  geom_text(
+    aes(label = animal), 
+    position = position_jitter(width = 0.2, height = 0), 
+    size = 3.5, alpha = 0.7, check_overlap = FALSE
+  ) +
+  expand_limits(y = 0) +
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Alpha diversity - neutral - 30% coverage filtering level - LAYERS")
+
+# Display the plot
+```
+
+
+## Relationship Between Genome Length and Alpha Diversity
+
+This section explores the relationship between median genome length per sample and alpha diversity (richness).
+
+### Prepare Data: Calculate Median Genome Length
+
+```{r alpha_genome_length_prep, warning=FALSE, message=FALSE, comment=""}
+# Calculate median genome length per sample
+# First, remove zero-count entries to get accurate length calculations
+tidy_plot_genome_counts_filt_30_macro_closed_zerosrem <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(count > 0)
+
+# Calculate median genome length for each sample
+median_lengths <- tidy_plot_genome_counts_filt_30_macro_closed_zerosrem %>%
+  group_by(microsample) %>%
+  summarise(median_genome_length = median(length, na.rm = TRUE), .groups = "drop")
+
+# Join median lengths with alpha diversity data
+alpha_div_macro_filtered_30_gen_length <- alpha_div_macro_filtered_30 %>%
+  left_join(median_lengths, by = join_by(microsample == microsample)) %>%
+  left_join(sample_metadata_macro, by = join_by(microsample == sample))
+```
+
+### Visualize Relationship: Linear Model
+
+```{r alpha_genome_length_scatter, warning=FALSE, message=FALSE, fig.height=4, fig.width=7}
+# Create scatter plot showing relationship between median genome length and richness
+# Points colored by treatment, shaped by days post-infection
+alpha_div_macro_filtered_30_gen_length %>%
+  filter(treatment != "TF0") %>%  # Exclude negative controls
+  ggplot(aes(x = median_genome_length, y = richness, color = treatment, shape = factor(age))) +
+  geom_point(size = 3, alpha = 0.8) +
+  # Add linear regression line with confidence interval
+  geom_smooth(method = "lm", se = TRUE, aes(group = 1), color = "black", linewidth = 1) +
+  scale_color_manual(values = treatment_colours_bright, name = "Treatment") +
+  scale_shape_manual(
+    name = "DPI",
+    values = c("0" = 16, "3" = 17, "5" = 15, "7" = 18, "14" = 4)
+  ) +
+  labs(x = "Median genome length (bp) per sample", y = "Richness") +
+  ylim(c(0, 150)) +
+  theme_minimal() +
+  custom_ggplot_theme
+
+# Display the plot
+```
+
+### Statistical Modeling: Negative Binomial Regression
+
+```{r alpha_genome_length_prep_model, warning=FALSE, message=FALSE, comment=""}
+# Recalculate median lengths (if needed) and prepare data for modeling
+tidy_plot_genome_counts_filt_30_macro_closed_zerosrem <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(count > 0)
+
+median_lengths <- tidy_plot_genome_counts_filt_30_macro_closed_zerosrem %>%
+  group_by(microsample) %>%
+  summarise(median_genome_length = median(length, na.rm = TRUE), .groups = "drop")
+
+# Join with alpha diversity and filter out controls
+alpha_div_macro_filtered_30_gen_length <- alpha_div_macro_filtered_30 %>%
+  left_join(median_lengths, by = join_by(microsample == microsample)) %>%
+  left_join(sample_metadata_macro, by = join_by(microsample == sample)) %>%
+  filter(treatment != "TF0")
+```
+
+```{r alpha_genome_length_model_plot, warning=FALSE, message=FALSE, fig.height=4, fig.width=7}
+
+# Fit negative binomial regression model (appropriate for count data)
+model_nb <- glm.nb(richness ~ median_genome_length, 
+                   data = alpha_div_macro_filtered_30_gen_length)
+
+# Fit null model (intercept only) for comparison
+model_null <- glm.nb(richness ~ 1,
+                     data = alpha_div_macro_filtered_30_gen_length)
+
+# Calculate McFadden pseudo-R² (model fit metric)
+pseudo_r2 <- 1 - (logLik(model_nb) / logLik(model_null))
+cat("McFadden pseudo-R² =", round(pseudo_r2, 3), "\n")
+
+# Calculate Spearman correlation (non-parametric)
+cor_test <- cor.test(
+  ~ richness + median_genome_length,
+  data = alpha_div_macro_filtered_30_gen_length,
+  method = "spearman"
+)
+
+rho  <- cor_test$estimate
+pval <- cor_test$p.value
+cat("Spearman correlation (ρ) =", round(rho, 3), ", p =", signif(pval, 3), "\n")
+
+# Create prediction data frame for model visualization
+newdata <- data.frame(
+  median_genome_length = seq(
+    min(alpha_div_macro_filtered_30_gen_length$median_genome_length, na.rm = TRUE),
+    max(alpha_div_macro_filtered_30_gen_length$median_genome_length, na.rm = TRUE),
+    length.out = 200
+  )
+)
+
+# Get predictions and standard errors on link scale
+pred <- predict(model_nb, newdata, type = "link", se.fit = TRUE)
+
+# Back-transform predictions to response scale and calculate 95% confidence intervals
+newdata$fit <- exp(pred$fit)
+newdata$lwr <- exp(pred$fit - 1.96 * pred$se.fit)   # Lower 95% CI
+newdata$upr <- exp(pred$fit + 1.96 * pred$se.fit)   # Upper 95% CI
+
+# Position for statistics annotations
+x_pos <- max(alpha_div_macro_filtered_30_gen_length$median_genome_length, na.rm = TRUE) * 0.98
+y_pos <- max(alpha_div_macro_filtered_30_gen_length$richness, na.rm = TRUE) * 0.95
+
+# Create plot with fitted negative binomial curve
+ggplot(alpha_div_macro_filtered_30_gen_length, 
+       aes(x = median_genome_length, y = richness)) +
+  # Confidence interval ribbon
+  geom_ribbon(data = newdata, 
+              aes(x = median_genome_length, ymin = lwr, ymax = upr),
+              fill = "grey70", alpha = 0.4, inherit.aes = FALSE) +
+  # Fitted curve
+  geom_line(data = newdata, 
+            aes(x = median_genome_length, y = fit),
+            color = "black", linewidth = 1.2, inherit.aes = FALSE) +
+  # Data points
+  geom_point(aes(color = treatment, shape = factor(age)), 
+             size = 3, alpha = 0.8) +
+  # Spearman correlation annotation
+  annotate("text",
+           x = x_pos, y = y_pos,
+           label = paste0("Spearman ρ = ", round(rho, 2),
+                          "\np = ", signif(pval, 2)),
+           hjust = 1, vjust = 1, size = 3) +
+  # Pseudo-R² annotation
+  annotate("text",
+           x = x_pos, y = y_pos * 0.85,
+           label = paste0("Pseudo-R² = ", round(pseudo_r2, 3)),
+           hjust = 1, vjust = 1, size = 3) +
+  scale_color_manual(values = treatment_colours_bright, name = "Treatment") +
+  scale_shape_manual(name = "DPI",
+                    values = c("0" = 16, "3" = 17, "5" = 15, "7" = 18, "14" = 4)) +
+  labs(x = "Median genome length (bp) per sample", y = "Richness") +
+  theme_minimal() +
+  custom_ggplot_theme
+
+# Display the plot
+```
+
+

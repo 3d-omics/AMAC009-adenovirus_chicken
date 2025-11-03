@@ -1,0 +1,665 @@
+# MAG Catalogue Overview
+
+## Overview
+
+This chapter provides an overview of the Metagenome-Assembled Genome (MAG) catalogue used in this analysis. It displays quality metrics, taxonomic composition, and other properties of the 251 species-representative genomes.
+
+## Load Data
+
+```{r load_data_03, warning=FALSE, message=FALSE}
+# Load MAG catalogue data and color schemes
+load("data/MAG_catalogue/data.Rdata")
+load("data/data_colors.Rdata")
+```
+
+
+## Genome Quality Summary
+
+This section displays summary statistics for genome quality metrics (completeness and contamination) across all MAGs in the catalogue.
+
+```{r genome_quality_summary_03, message=FALSE, warning=FALSE, comment=""}
+# Calculate and display summary statistics for genome quality metrics
+genome_quality_summary <- data.frame(
+  Metric = c("Completeness", "Contamination"),
+  Median = c(median(genome_metadata$completeness, na.rm = TRUE), 
+             median(genome_metadata$contamination, na.rm = TRUE)),
+  Q1 = c(quantile(genome_metadata$completeness, 0.25, na.rm = TRUE),
+         quantile(genome_metadata$contamination, 0.25, na.rm = TRUE)),
+  Q3 = c(quantile(genome_metadata$completeness, 0.75, na.rm = TRUE),
+         quantile(genome_metadata$contamination, 0.75, na.rm = TRUE))
+) %>%
+  mutate(IQR = Q3 - Q1)
+
+knitr::kable(genome_quality_summary, digits = 2, caption = "Summary statistics (median and IQR) for genome quality metrics")
+```
+
+
+## Genome Circularity and Taxonomic Distribution
+
+```{r genome_circularity_03, message=FALSE, warning=FALSE, comment=""}
+# Calculate circularity statistics for all genomes
+genome_circularity_stats <- genome_metadata %>%
+  summarise(
+    circular_count = sum(circularity == "1"),
+    total_count = n(),
+    circular_percent = 100 * circular_count / total_count
+  )
+
+# Display circularity statistics
+knitr::kable(genome_circularity_stats, digits = 2, caption = "Genome circularity statistics")
+
+# Calculate taxonomic distribution statistics by order
+order_distribution_stats <- order_metadata %>%
+  summarise(
+    genera_count = sum(number_of_genera),
+    lachnospirales_count = sum(number_of_genera[order == "Lachnospirales"]),
+    lachnospirales_perc = 100 * lachnospirales_count / genera_count,
+    oscillospirales_count = sum(number_of_genera[order == "Oscillospirales"]),
+    oscillospirales_perc = 100 * oscillospirales_count / genera_count
+  )
+
+# Display taxonomic distribution
+knitr::kable(order_distribution_stats, digits = 2, caption = "Taxonomic distribution: Number of genera in major orders")
+``` 
+  
+## Genome Quality Visualization
+
+This section creates visualizations showing the relationship between completeness and contamination, colored by taxonomic order.
+
+```{r genome_quality_plot_order_level_03, message=FALSE, warning=FALSE, fig.height=6, fig.width=8, fig.fullwidth=TRUE}
+# Generate quality biplot showing completeness vs contamination
+# Points are colored by taxonomic order and sized by genome length
+genome_biplot <- genome_metadata %>%
+  select(c(genome,domain,order,completeness,contamination,length)) %>%
+  arrange(match(genome, rev(genome_tree$tip.label))) %>% #sort MAGs according to phylogenetic tree
+  ggplot(aes(x=completeness,y=contamination,size=length,color=order)) +
+              geom_point(alpha=0.7) +
+                    xlim(c(70,100)) +
+                    ylim(c(25,0)) +
+                    scale_color_manual(values=order_colors) +
+                    labs(y= "Contamination", x = "Completeness") +
+                    theme_classic() +
+                    theme(legend.position = "none")
+
+#Generate contamination boxplot
+genome_contamination <- genome_metadata %>%
+            ggplot(aes(y=contamination)) +
+                    ylim(c(25,0)) +
+                    geom_boxplot(colour = "#999999", fill="#cccccc") +
+                    theme_void() +
+                    theme(legend.position = "none",
+                        axis.title.x = element_blank(),
+                        axis.title.y = element_blank(),
+                        axis.text.y=element_blank(),
+                        axis.ticks.y=element_blank(),
+                        axis.text.x=element_blank(),
+                        axis.ticks.x=element_blank(),
+                        plot.margin = unit(c(0, 0, 0.40, 0),"inches")) #add bottom-margin (top, right, bottom, left)
+
+#Generate completeness boxplot
+genome_completeness <- genome_metadata %>%
+        ggplot(aes(x=completeness)) +
+                xlim(c(70,100)) +
+                geom_boxplot(colour = "#999999", fill="#cccccc") +
+                theme_void() +
+                theme(legend.position = "none",
+                    axis.title.x = element_blank(),
+                    axis.title.y = element_blank(),
+                    axis.text.y=element_blank(),
+                    axis.ticks.y=element_blank(),
+                    axis.text.x=element_blank(),
+                    axis.ticks.x=element_blank(),
+                    plot.margin = unit(c(0, 0, 0, 0.50),"inches")) #add left-margin (top, right, bottom, left)
+
+# Align margins
+genome_biplot <- genome_biplot + theme(plot.margin = margin(5, 5, 5, 5))
+genome_completeness <- genome_completeness + theme(plot.margin = margin(0, 5, 0, 5))
+genome_contamination <- genome_contamination + theme(plot.margin = margin(5, 0, 5, 0))
+
+# Compose layout
+top_row <- genome_completeness + plot_spacer() + plot_layout(widths = c(15, 1))
+bottom_row <- genome_biplot + genome_contamination + plot_layout(widths = c(15, 1))
+
+# Stack rows
+MAG_plot <- (top_row / bottom_row + plot_layout(heights = c(2, 15))) + plot_layout(guides = "collect") &
+  theme(legend.position = "bottom", legend.box = "vertical") 
+
+MAG_plot
+
+
+```
+
+
+## MAG catalogue phyla and order colours
+```{r phyla_order_colors_plot_03, message=FALSE, warning=FALSE, fig.height=3, fig.width=6, fig.fullwidth=TRUE}
+MAG_tax_df <- order_metadata %>%
+  select(order, phylum) %>%
+  distinct()  # ensure no duplicates
+
+# get the phylum order that facet_grid2 will use (alphabetical by default)
+phylum_order <- MAG_tax_df %>%
+  distinct(phylum) %>%
+  arrange(phylum) %>%
+  pull(phylum)
+
+# phylum strip colors in correct order
+strip_colors <- phylum_colors[phylum_order]
+
+# plot: use y = 1 directly
+ggplot(MAG_tax_df, aes(x = order, y = 1, fill = order)) +
+  geom_col(width = 0.9, show.legend = FALSE) +
+  geom_text(aes(label = order),
+            angle = 90, color = "white", size = 3,
+            hjust = 1.1, vjust = 0.5) +
+  scale_fill_manual(values = order_colors) +
+  facet_grid2(
+    . ~ phylum,
+    scales = "free_x",
+    space = "free",
+    strip = strip_themed(
+      background_x = elem_list_rect(fill = strip_colors),
+      text_x = elem_list_text(angle = 90, color = "white", face = "bold")
+    )
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank(),
+    panel.spacing = unit(0.3, "lines")
+  )
+```
+
+## MAG catalogue phyla and order colours, and genera number
+```{r phyla_order_genera_plot_03, message=FALSE, warning=FALSE, fig.height=4, fig.width=8, fig.fullwidth=TRUE}
+MAG_tax_df <- order_metadata %>%
+  select(phylum, order, number_of_genera) %>%
+  distinct() %>%
+  mutate(
+    order_color = order_colors[order],
+    phylum_color = phylum_colors[phylum]
+  )
+
+# 2. Get facet strip colors in correct order
+phylum_order <- MAG_tax_df %>%
+  distinct(phylum) %>%
+  arrange(phylum) %>%
+  pull(phylum)
+
+strip_colors <- unname(phylum_colors[phylum_order])
+
+# 3. Plot
+ggplot(MAG_tax_df, aes(x = order, y = number_of_genera, fill = order)) +
+  # Bars
+  geom_col(width = 0.9, show.legend = FALSE) +
+  
+  # Color scale
+  scale_fill_manual(values = order_colors) +
+  
+  # Facet by phylum (strip on bottom)
+  facet_grid2(
+    . ~ phylum,
+    scales = "free_x",
+    space = "free_x",
+    switch = "x", 
+    strip = strip_themed(
+      background_x = elem_list_rect(fill = strip_colors),
+      text_x = elem_list_text(angle = 90, color = "white", face = "bold")
+    )
+  ) +
+
+  # Flip x-axis title and text to top
+  scale_x_discrete(position = "top") +
+
+  # Theme
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 0),
+    axis.title = element_blank(),
+    panel.spacing = unit(1, "lines"),
+    strip.background = element_blank(),
+    strip.placement = "outside"
+  )
+```
+
+
+## Genome phylogeny plot
+```{r genome_phylogeny_plot_03, message=FALSE, warning=FALSE, fig.height=10, fig.width=8, fig.fullwidth=TRUE}
+# Generate the phylum color heatmap
+phylum_heatmap <- genome_metadata %>%
+    arrange(match(genome, genome_tree$tip.label)) %>%
+    select(genome,phylum) %>%
+    mutate(phylum = factor(phylum, levels = unique(phylum))) %>%
+    column_to_rownames(var = "genome")
+
+# Generate the order color heatmap
+order_heatmap <- genome_metadata %>%
+    arrange(match(genome, genome_tree$tip.label)) %>%
+    select(genome, order) %>%
+    mutate(order = factor(order, levels = unique(order))) %>%
+    column_to_rownames(var = "genome")
+
+# Generate the basal tree
+circular_tree <- force.ultrametric(genome_tree, method="extend") %>% # extend to ultrametric for the sake of visualisation
+    ggtree(., layout="fan", open.angle=10, size=0.1)
+
+# Add the phylum ring
+circular_tree <- gheatmap(circular_tree, 
+                          phylum_heatmap, 
+                          offset = 1.3, width = 0.2, colnames = FALSE) +
+    scale_fill_manual(values = phylum_colors, name = "Phylum") +
+    geom_tiplab2(size = 1, hjust = -0.1) +
+    theme(plot.margin = margin(0, 0, 0, 0), 
+          panel.margin = margin(0, 0, 0, 0))
+
+# Flush color scale for the next ring
+circular_tree <- circular_tree + new_scale_fill()
+
+# Add order ring
+circular_tree <- gheatmap(circular_tree, 
+                          order_heatmap, 
+                          offset = 0.55, width = 0.3, colnames = FALSE) +
+    scale_fill_manual(values = order_colors, name = "Order") +
+    theme(legend.position = "right")
+
+# # Flush color scale to enable a new color scheme in the next ring
+# circular_tree <- circular_tree + new_scale_fill()
+# 
+# circular_tree <- circular_tree +
+#     new_scale_fill() +
+#     scale_fill_manual(values = c("1" = "#fcbb6d", "0" = "#465c7a"), 
+#                       name = 'Circularized genomes') +
+#     geom_fruit(
+#         data = genome_metadata,
+#         geom = geom_bar,
+#         # Use as.factor to map circularity
+#         mapping = aes(x = 1, y = genome, fill = circularity),  
+#         offset = 1.0,
+#         orientation = "y",
+#         stat = "identity")
+
+
+# Add text
+circular_tree <-  circular_tree +
+  annotate('text', x=3.0, y=0, label='           Order', size=3.5) +
+  annotate('text', x=3.4, y=0, label='              Phylum', size=3.5) #+
+  # annotate('text', x=4.2, y=0, label='                      Circularised', size=3.5)
+
+#Plot circular tree
+p <-circular_tree %>% open_tree(45) %>% rotate_tree(90) +
+  theme(legend.position = "bottom", legend.box = "vertical")
+# print(p)
+# ggsave(filename = "results/figures/MAG_macro_tree.pdf", plot = p,
+#       units = "cm", width = 29, height = 40)
+
+```
+## Genome phylogeny plot without legend
+```{r genome_phylogeny_no_legend_03, message=FALSE, warning=FALSE, fig.height=7, fig.width=7, fig.fullwidth=TRUE}
+p +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "none")
+```
+
+
+
+```{r function_ordination_gifts_aggregate_03, message=FALSE, fig.height=14, fig.width=10}
+
+#Aggregate bundle-level GIFTs into the compound level
+GIFTs_elements <- to.elements(genome_gifts,GIFT_db)
+
+#Aggregate element-level GIFTs into the function level
+GIFTs_functions <- to.functions(GIFTs_elements,GIFT_db)
+
+#Aggregate function-level GIFTs into overall Biosynthesis, Degradation and Structural GIFTs
+GIFTs_domains <- to.domains(GIFTs_functions,GIFT_db)
+
+```
+
+
+## Functional overview
+
+```{r function_group_colors_03, message=FALSE, warning=FALSE, fig.height=10, fig.width=10, fig.fullwidth=TRUE}
+
+function_group_colors <- c(
+  B01 = "#f7941d",  # topmost color (orange)
+  B02 = "#f26c1f",  # apricot-orange
+  B03 = "#e63e26",  # red-orange
+  B04 = "#e6004c",  # deep pink
+  B06 = "#a1246b",  # magenta
+  B07 = "#ed559f",  # pink
+  B08 = "#f99388",  # peach
+  B09 = "#1a3c85",  # dark blue
+  B10 = "#2b8ac4",  # blue
+
+  D01 = "#5ec4ed",  # sky blue
+  D02 = "#89d2ef",  # pale blue
+  D03 = "#d9efe9",  # pale mint
+  D04 = "#9ed7b4",  # light green
+  D05 = "#4fb18f",  # mint green
+  D06 = "#3b946d",  # dark teal
+  D07 = "#2a7854",  # deeper teal
+  D08 = "#295b47",  # forest green
+  D09 = "#234c3f",  # deep green
+
+  S01 = "#1b3e34",  # nearly black-green
+  S02 = "#aaaaaa",  # light grey
+  S03 = "#666666"   # dark grey
+)
+```
+
+```{r function_heatmap_tree_03, message=FALSE, warning=FALSE, fig.height=10, fig.width=10, fig.fullwidth=TRUE}
+order_heatmap <- genome_metadata %>%
+    arrange(match(genome, genome_tree$tip.label)) %>%
+    select(genome,order) %>%
+    column_to_rownames(var = "genome")
+
+# Aggregate basal GIFT into elements
+function_table <- genome_gifts %>%
+    to.elements(., GIFT_db)
+
+# 1. Base tree
+function_tree <- force.ultrametric(genome_tree, method="extend") %>%
+                ggtree(size = 0.3) 
+
+# 2. First heatmap: add order (row) color strip
+function_tree <- gheatmap(
+    function_tree, 
+    order_heatmap, 
+    offset = 0, width = 0.1, colnames = FALSE
+  ) +
+  scale_fill_manual(values = order_colors) +
+  labs(fill = "Order")
+
+# 5. Reset fill scale again for main function matrix
+function_tree <- function_tree + new_scale_fill()
+
+# 6. Add the full function table heatmap (numeric)
+function_tree <- gheatmap(
+    function_tree, 
+    function_table, 
+    offset = 0.5, 
+    width = 3.5, 
+    colnames = FALSE
+  ) +
+  vexpand(0) + #   vexpand(0.08) +
+  coord_cartesian(clip = "off") +
+  scale_fill_gradient(low = "#f4f4f4", high = "#666666", na.value = "white") +
+  labs(fill = "GIFT")
+
+# 7. Final plot
+function_tree <- function_tree +
+  theme_void() +
+  theme(legend.position = "none") 
+# function_tree
+```
+
+
+
+```{r function_heatmap_annotation_03, message=FALSE, warning=FALSE, fig.height=2, fig.width=10, fig.fullwidth=TRUE}
+# Join to get Code_function (e.g. B01, D01) for each Code_element (e.g. B0101, B0204)
+column_annotation <- tibble(Code_element = colnames(function_table)) %>%
+  left_join(
+    GIFT_db %>% 
+      select(Code_element, Code_function) %>% 
+      distinct(Code_element, .keep_all = TRUE),
+    by = "Code_element"
+  )
+
+# Create a 1-row matrix with Code_function values
+column_annotation_matrix <- matrix(
+  column_annotation$Code_function,
+  nrow = 1,
+  dimnames = list("Function_group", column_annotation$Code_element)
+)
+# Ensure Code_element order matches your heatmap
+column_annotation_df <- column_annotation %>%
+  distinct(Code_element, Code_function)
+
+column_annotation_df$Code_element <- factor(
+  column_annotation_df$Code_element,
+  levels = column_annotation$Code_element
+)
+# Plot annotation strip
+annotation_strip <- ggplot(column_annotation_df, aes(x = Code_element, y = 1, fill = Code_function)) +
+  geom_tile(color = "white", linewidth = 0.1) +
+  scale_fill_manual(values = function_group_colors, na.translate = FALSE) +
+  theme_void() +
+  theme(
+    axis.text.x = element_blank(),
+    plot.margin = margin(0, 0, 0, 0)
+  ) +
+  guides(fill = "none") +
+  theme_void()
+
+
+# annotation_strip
+
+```
+
+```{r function_heatmap_combined_03, message=FALSE, warning=FALSE, fig.height=5, fig.width=8, fig.fullwidth=TRUE}
+combined_plot <- ((plot_spacer() | wrap_elements(annotation_strip) | plot_spacer()) + plot_layout(widths = c(10.1, 25, 1.1))) /
+                 wrap_elements(function_tree) +
+                 plot_layout(heights = c(0.2, 10))  # adjust strip height as needed
+
+combined_plot
+
+```
+
+## Functional distances
+
+```{r function_distances, message=FALSE, fig.height=8, fig.width=10, fig.fullwidth=TRUE}
+functional_distances <- genome_gifts %>%
+    to.elements(., GIFT_db) %>%
+    as.data.frame() %>%
+    stats::dist(., method = "manhattan") / ncol(genome_gifts[genome_metadata$genome, ])
+
+mean(functional_distances)
+sd(functional_distances)
+max(functional_distances)
+```
+
+
+## Functional ordination 
+
+PCoA functional ordination with PCA loadings.
+
+```{r function_ordination_pcoa, message=FALSE, fig.height=8, fig.width=10, fig.fullwidth=TRUE}
+gift_pcoa <- genome_gifts %>%
+    to.elements(., GIFT_db) %>%
+    as.data.frame() %>%
+    vegdist(method="euclidean") %>%
+    pcoa()
+
+gift_pcoa_rel_eigen <- gift_pcoa$values$Relative_eig[1:10]
+
+
+# Get genome positions
+gift_pcoa_vectors <- gift_pcoa$vectors %>% #extract vectors
+  as.data.frame() %>% 
+  select(Axis.1,Axis.2) # keep the first 2 axes
+
+gift_pcoa_eigenvalues <- gift_pcoa$values$Eigenvalues[c(1,2)]
+
+gift_pcoa_gifts <- cov(genome_gifts, scale(gift_pcoa_vectors)) %*% diag((gift_pcoa_eigenvalues/(nrow(genome_gifts)-1))^(-0.5)) %>%
+  as.data.frame() %>% 
+  rename(Axis.1=1,Axis.2=2) %>% 
+  rownames_to_column(var="label") %>% 
+  #get function summary vectors
+  mutate(func=substr(label,1,3)) %>% 
+  group_by(func) %>% 
+  summarise(Axis.1=mean(Axis.1),
+            Axis.2=mean(Axis.2)) %>% 
+  rename(label=func) %>% 
+  filter(!label %in% c("S01","S02","S03"))
+
+```
+
+
+```{r function_ordination_pcoa_plot, message=FALSE, fig.height=8, fig.width=10, fig.fullwidth=TRUE}
+
+scale <- 15 # scale for vector loadings
+pcoa_plot <- gift_pcoa_vectors %>% 
+  rownames_to_column(var="genome") %>% 
+  left_join(genome_metadata, by="genome") %>%
+  ggplot() +
+      #genome positions
+      scale_color_manual(values=order_colors)+
+      geom_point(aes(x=Axis.1,y=Axis.2, color=order, size=length), 
+                 alpha=0.9, shape=16) +
+    guides(color = "none") +
+      #scale_color_manual(values=phylum_colors) +
+      scale_size_continuous(range = c(0.1,5)) +
+      #loading positions
+      geom_segment(data=gift_pcoa_gifts, 
+                   aes(x=0, y=0, xend=Axis.1 * scale, yend=Axis.2 * scale),
+                    arrow = arrow(length = unit(0.3, "cm"), 
+                    type = "open", 
+                    angle = 25),
+                    linewidth = 0.5, 
+                    color = "black") +
+     #Primary and secondary scale adjustments
+     # scale_x_continuous(name = paste0("PCoA1 (",round(gift_pcoa_rel_eigen[1]*100, digits = 2), " %)"),
+     #                  sec.axis = sec_axis(~ . / scale)
+     #        ) +
+     # scale_y_continuous(name = paste0("PCoA2 (",round(gift_pcoa_rel_eigen[2]*100, digits = 2), " %)"),
+     #                  sec.axis = sec_axis(~ . / scale)
+     #        ) +
+    geom_label_repel(data = gift_pcoa_gifts,
+                     aes(label = label, x = Axis.1 * scale, y = Axis.2 * scale),
+                     segment.color = 'transparent') +
+    theme_minimal() 
+
+
+# pcoa_plot
+
+```
+
+```{r function_ordination_pcoa_length_curve, message=FALSE, fig.height=2, fig.width=10, fig.fullwidth=TRUE}
+gift_axis_1 <- gift_pcoa_vectors %>% 
+  rownames_to_column(var="genome") %>% 
+  left_join(genome_metadata, by="genome") %>%
+  ggplot(aes(x=Axis.1, y=length)) +
+      geom_smooth(color = "black") +
+      theme_minimal() + 
+      theme(legend.position = "none") +
+  labs(y = "Genome length", x =  "PCoA Axis 1") 
+
+# gift_axis_1
+```
+
+
+```{r function_ordination_pcoa_D01_plot_03, message=FALSE, fig.height=7, fig.width=2, fig.fullwidth=TRUE}
+gift_df_PCoA <- genome_gifts %>%
+    to.elements(., GIFT_db) %>% 
+    to.functions(., GIFT_db) %>% 
+    as.data.frame() %>% 
+    rownames_to_column(var="genome") %>% 
+    left_join(genome_metadata, by="genome") %>%
+    left_join(gift_pcoa_vectors %>% rownames_to_column(var="genome"), by="genome")
+
+gift_long <- gift_df_PCoA %>%
+  select(genome, Axis.2,
+         B01, B02, B03, B04, B06, B07, B08, B09, B10,
+         D01, D02, D03, D04, D05, D06, D07, D08, D09,
+         S01, S02, S03) %>%
+  pivot_longer(
+    cols = c(B01, B02, B03, B04, B06, B07, B08, B09, B10,
+             D01, D02, D03, D04, D05, D06, D07, D08, D09,
+             S01, S02, S03),
+    names_to = "component",
+    values_to = "value"
+  )
+# Plot: x = Axis.2, y = value, colored by component (D01 vs D02)
+gift_plot_PC2 <- gift_long %>%
+  filter(component %in% c("D01", "D09")) %>%
+  ggplot(aes(y = value, x =  Axis.2, color = component)) +
+  geom_smooth() +
+  scale_color_manual(values = c(D01 = "#5ec4ed", D09 = "#234c3f")) +
+  theme_minimal() +
+  labs(y = "GIFT", x =  "PCoA Axis 2", color = "Component") +
+  theme(legend.position = "right")+ 
+  coord_flip()
+# gift_plot_PC2
+```
+
+```{r function_ordination_pcoa_combined_03, message=FALSE, fig.height=8, fig.width=13, fig.fullwidth=TRUE}
+((gift_axis_1| plot_spacer()) + plot_layout(widths = c(4.5, 1))) / 
+  ((pcoa_plot | gift_plot_PC2) + plot_layout(widths = c(7, 1))) +
+  plot_layout(heights = c(1, 6), guides = "collect") +
+  theme(legend.position = "bottom") 
+
+```
+
+
+```{r GIFT_functions_03, message=FALSE, fig.height=7, fig.width=2, fig.fullwidth=TRUE}
+GIFT_db_functions <- GIFT_db %>%
+  select(Code_function, Function, Domain) %>%
+  distinct(Code_function, .keep_all = TRUE)
+GIFT_db_functions
+```
+
+
+```{r GIFT_elements_03, message=FALSE, fig.height=7, fig.width=2, fig.fullwidth=TRUE}
+GIFT_db_elements <- GIFT_db %>%
+  select(Code_element, Element, Function, Domain) %>%
+  distinct(Code_element, .keep_all = TRUE)
+GIFT_db_elements
+
+GIFT_db_elements %>% filter(Element == "Butyrate")
+
+
+# I am searching the species in genome metadata, and the compound from GIFT_db_elements in the GIFTs_elements
+# Faecalibacterium intestinigallinarum
+GIFTs_elements["D301020:bin_000009", "B0402"] 
+
+# Mediterraneibacter faecipullorum
+GIFTs_elements["D301031:bin_000019", "B0402"] 
+
+# Blautia pullicola
+GIFTs_elements["D300974:bin_000001", "B0402"] 
+
+# Mediterraneibacter excrementigallinarum
+GIFTs_elements["D301051:bin_000001", "B0402"] 
+
+# Coproplasma stercorigallinarum
+GIFTs_elements["D300981:bin_000003", "B0402"] 
+
+
+```
+
+```{r GIFT_legend_03, message=FALSE, fig.height=8, fig.width=3, fig.fullwidth=TRUE}
+
+
+GIFT_legend_df <- GIFT_db_functions %>%
+  mutate(color = function_group_colors[Code_function]) %>%
+  arrange(Code_function)  # keep the order consistent
+
+function_colors <- ggplot(GIFT_legend_df, aes(y = reorder(Code_function, desc(Code_function)), x = 1, fill = Code_function)) +
+  geom_tile(color = "white", linewidth = 0.4, width = 1.1, height = 0.9) +
+  scale_fill_manual(values = function_group_colors, guide = "none") +
+  geom_text(aes(label = paste0(Code_function, ": ", Function)), 
+            hjust = 0, nudge_x = - 0.5, color = "white", size = 3.5, fontface = "bold") +
+  theme_void() +
+  theme(
+    aspect.ratio = NULL,
+    plot.margin = margin(0, 0, 0, 0)
+  ) 
+function_colors
+```
+
+
+```{r function_ordination_pcoa_components_03, message=FALSE, fig.height=5, fig.width=12, fig.fullwidth=TRUE}
+gift_long %>%
+  ggplot(aes(x = Axis.2, y = value)) +
+  geom_smooth(se = FALSE, color = "black", linewidth = 0.6) +
+  facet_wrap(~ component, ncol = 5, scales = "free_y") +
+  theme_minimal() +
+  labs(x = "PCoA Axis 2", y = "Component value") +
+  theme(
+    strip.text = element_text(size = 8, face = "bold"),
+    panel.spacing = unit(0.5, "lines"),
+    axis.title = element_text(size = 10)
+  )
+
+```

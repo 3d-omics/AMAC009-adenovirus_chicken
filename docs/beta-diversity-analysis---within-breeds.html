@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>11 Beta Diversity Analysis - Within Breeds | 3D’omics | Adenovirus: Conventional metagenomics</title>
+  <meta name="description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="11 Beta Diversity Analysis - Within Breeds | 3D’omics | Adenovirus: Conventional metagenomics" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="github-repo" content="3d-omics/XXX" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="11 Beta Diversity Analysis - Within Breeds | 3D’omics | Adenovirus: Conventional metagenomics" />
+  
+  <meta name="twitter:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  
+
+<meta name="author" content="Amalia Bogri" />
+<meta name="author" content="Antton Alberdi" />
+<meta name="author" content="Jorge Langa" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="beta-diversity-analysis---between-breeds.html"/>
+<link rel="next" href="diversity-partitioning-analysis.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prepare-the-r-environment"><i class="fa fa-check"></i><b>1.1</b> Prepare the R environment</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#environment"><i class="fa fa-check"></i><b>1.1.1</b> Environment</a></li>
+<li class="chapter" data-level="1.1.2" data-path="index.html"><a href="index.html#libraries"><i class="fa fa-check"></i><b>1.1.2</b> Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-essential-functions"><i class="fa fa-check"></i><b>1.2</b> Load Essential Functions</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notes"><i class="fa fa-check"></i><b>1.3</b> Notes</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#installation-of-modules"><i class="fa fa-check"></i><b>1.3.1</b> Installation of modules</a></li>
+<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#airtable-access"><i class="fa fa-check"></i><b>1.3.2</b> Airtable access:</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html"><i class="fa fa-check"></i><b>2</b> Data Import - MAG Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-catalogue"><i class="fa fa-check"></i><b>2.2</b> Genome (MAGs) Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#dereplicated-genomes"><i class="fa fa-check"></i><b>2.2.1</b> Dereplicated Genomes</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-taxonomy"><i class="fa fa-check"></i><b>2.2.2</b> Genome (MAGs) Taxonomy</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-quality"><i class="fa fa-check"></i><b>2.2.3</b> Genome (MAGs) Quality</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-phylogenetic-tree"><i class="fa fa-check"></i><b>2.2.4</b> Genome (MAGs) Phylogenetic Tree</a></li>
+<li class="chapter" data-level="2.2.5" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#merged-genome-mags-taxonomy-quality"><i class="fa fa-check"></i><b>2.2.5</b> Merged Genome (MAGs) taxonomy &amp; quality</a></li>
+<li class="chapter" data-level="2.2.6" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-functional-annotations"><i class="fa fa-check"></i><b>2.2.6</b> Genome (MAGs) functional annotations</a></li>
+<li class="chapter" data-level="2.2.7" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#distil-functional-annotations"><i class="fa fa-check"></i><b>2.2.7</b> Distil functional annotations</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#bacterial-phyla-order-color-scheme-data"><i class="fa fa-check"></i><b>2.3</b> Bacterial phyla &amp; order color scheme data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-working-objects"><i class="fa fa-check"></i><b>2.4</b> Save Working Objects</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-core-mag-catalogue-data-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.1</b> Save Core MAG Catalogue Data (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-color-schemes-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.2</b> Save Color Schemes (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-complete-preparation-data-for-colleagues-analyses"><i class="fa fa-check"></i><b>2.4.3</b> Save Complete Preparation Data (for colleagues’ analyses)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html"><i class="fa fa-check"></i><b>3</b> Data Import - Metadata and Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#overview-1"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#define-plotting-settings"><i class="fa fa-check"></i><b>3.2</b> Define Plotting Settings</a></li>
+<li class="chapter" data-level="3.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sample-metadata"><i class="fa fa-check"></i><b>3.3</b> Sample metadata</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples"><i class="fa fa-check"></i><b>3.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples"><i class="fa fa-check"></i><b>3.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-reads-counts"><i class="fa fa-check"></i><b>3.4</b> Bacterial reads (counts)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-1"><i class="fa fa-check"></i><b>3.4.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.4.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-1"><i class="fa fa-check"></i><b>3.4.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#genome-covered-bases"><i class="fa fa-check"></i><b>3.5</b> Genome covered bases</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-2"><i class="fa fa-check"></i><b>3.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.5.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-2"><i class="fa fa-check"></i><b>3.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sequencing-statistics"><i class="fa fa-check"></i><b>3.6</b> Sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-3"><i class="fa fa-check"></i><b>3.6.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.6.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-3"><i class="fa fa-check"></i><b>3.6.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#non-bacterial-mapped-reads-human-chicken-swine"><i class="fa fa-check"></i><b>3.7</b> Non-bacterial mapped reads: human, chicken, swine</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro"><i class="fa fa-check"></i><b>3.7.1</b> Micro</a></li>
+<li class="chapter" data-level="3.7.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-4"><i class="fa fa-check"></i><b>3.7.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-mapped-reads."><i class="fa fa-check"></i><b>3.8</b> Bacterial mapped reads.</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-4"><i class="fa fa-check"></i><b>3.8.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.8.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-5"><i class="fa fa-check"></i><b>3.8.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#alternative-way-to-estimate-bacterial-read-counts-from-count-table"><i class="fa fa-check"></i><b>3.9</b> Alternative way to estimate bacterial read counts (from count table):</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-5"><i class="fa fa-check"></i><b>3.9.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.9.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-6"><i class="fa fa-check"></i><b>3.9.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sanity-checks"><i class="fa fa-check"></i><b>3.10</b> Sanity checks</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-6"><i class="fa fa-check"></i><b>3.10.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.10.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-7"><i class="fa fa-check"></i><b>3.10.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#combine-relevant-sequencing-statistics"><i class="fa fa-check"></i><b>3.11</b> Combine relevant sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.11.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-7"><i class="fa fa-check"></i><b>3.11.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.11.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-8"><i class="fa fa-check"></i><b>3.11.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.12" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#filter-and-normalise-data"><i class="fa fa-check"></i><b>3.12</b> Filter and normalise data</a>
+<ul>
+<li class="chapter" data-level="3.12.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-coverage-table"><i class="fa fa-check"></i><b>3.12.1</b> Generate coverage table</a></li>
+<li class="chapter" data-level="3.12.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#coverage-filtering"><i class="fa fa-check"></i><b>3.12.2</b> Coverage filtering</a></li>
+<li class="chapter" data-level="3.12.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-genome-count-table"><i class="fa fa-check"></i><b>3.12.3</b> Generate genome count table</a></li>
+<li class="chapter" data-level="3.12.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-length-corrected-read-count-tables"><i class="fa fa-check"></i><b>3.12.4</b> Generate length-corrected read count tables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.13" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#wrap-working-objects"><i class="fa fa-check"></i><b>3.13</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html"><i class="fa fa-check"></i><b>4</b> Data Preparation for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#overview-2"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#load-the-data"><i class="fa fa-check"></i><b>4.2</b> Load the Data</a></li>
+<li class="chapter" data-level="4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#sequencing-statistics-data-frames"><i class="fa fa-check"></i><b>4.3</b> Sequencing Statistics Data Frames</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-11"><i class="fa fa-check"></i><b>4.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.3.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-13"><i class="fa fa-check"></i><b>4.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-tables-for-plotting"><i class="fa fa-check"></i><b>4.4</b> Tidy Tables for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after-trimming-comparison"><i class="fa fa-check"></i><b>4.4.1</b> Before-After Trimming Comparison</a></li>
+<li class="chapter" data-level="4.4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after"><i class="fa fa-check"></i><b>4.4.2</b> Before-after</a></li>
+<li class="chapter" data-level="4.4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#samtools-mapping-to-different-references"><i class="fa fa-check"></i><b>4.4.3</b> Samtools mapping to different references</a></li>
+<li class="chapter" data-level="4.4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#percentages-of-different-references"><i class="fa fa-check"></i><b>4.4.4</b> Percentages of different references</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-genome-counts"><i class="fa fa-check"></i><b>4.5</b> Tidy genome counts</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-15"><i class="fa fa-check"></i><b>4.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.5.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-17"><i class="fa fa-check"></i><b>4.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#read-count-tables-length-corrected-dataframes"><i class="fa fa-check"></i><b>4.6</b> Read count tables (length corrected) dataframes</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data"><i class="fa fa-check"></i><b>4.6.1</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#alpha-diversity-dataframes"><i class="fa fa-check"></i><b>4.7</b> Alpha diversity dataframes</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data"><i class="fa fa-check"></i><b>4.7.1</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-1"><i class="fa fa-check"></i><b>4.7.2</b> Macro-data</a></li>
+<li class="chapter" data-level="4.7.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data-1"><i class="fa fa-check"></i><b>4.7.3</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-2"><i class="fa fa-check"></i><b>4.7.4</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#wrap-working-objects-1"><i class="fa fa-check"></i><b>4.8</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html"><i class="fa fa-check"></i><b>5</b> MAG Catalogue Overview</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#overview-3"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#load-data"><i class="fa fa-check"></i><b>5.2</b> Load Data</a></li>
+<li class="chapter" data-level="5.3" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-summary"><i class="fa fa-check"></i><b>5.3</b> Genome Quality Summary</a></li>
+<li class="chapter" data-level="5.4" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-circularity-and-taxonomic-distribution"><i class="fa fa-check"></i><b>5.4</b> Genome Circularity and Taxonomic Distribution</a></li>
+<li class="chapter" data-level="5.5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-visualization"><i class="fa fa-check"></i><b>5.5</b> Genome Quality Visualization</a></li>
+<li class="chapter" data-level="5.6" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours"><i class="fa fa-check"></i><b>5.6</b> MAG catalogue phyla and order colours</a></li>
+<li class="chapter" data-level="5.7" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours-and-genera-number"><i class="fa fa-check"></i><b>5.7</b> MAG catalogue phyla and order colours, and genera number</a></li>
+<li class="chapter" data-level="5.8" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot"><i class="fa fa-check"></i><b>5.8</b> Genome phylogeny plot</a></li>
+<li class="chapter" data-level="5.9" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot-without-legend"><i class="fa fa-check"></i><b>5.9</b> Genome phylogeny plot without legend</a></li>
+<li class="chapter" data-level="5.10" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-overview"><i class="fa fa-check"></i><b>5.10</b> Functional overview</a></li>
+<li class="chapter" data-level="5.11" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-distances"><i class="fa fa-check"></i><b>5.11</b> Functional distances</a></li>
+<li class="chapter" data-level="5.12" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-ordination"><i class="fa fa-check"></i><b>5.12</b> Functional ordination</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html"><i class="fa fa-check"></i><b>6</b> Adenovirus Presence Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#load-data-and-plotting-utilities"><i class="fa fa-check"></i><b>6.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="6.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-percentage-over-time"><i class="fa fa-check"></i><b>6.2</b> Adenovirus Percentage Over Time</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.1</b> Broilers - Adenovirus Percentage</a></li>
+<li class="chapter" data-level="6.2.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.2</b> Layers - Adenovirus Percentage</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-read-counts-by-sample"><i class="fa fa-check"></i><b>6.3</b> Adenovirus Read Counts by Sample</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.1</b> Layers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.2</b> Broilers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#combined-visualization"><i class="fa fa-check"></i><b>6.3.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html"><i class="fa fa-check"></i><b>7</b> Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#load-data-and-plotting-utilities-1"><i class="fa fa-check"></i><b>7.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="7.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#number-of-bases-and-reads"><i class="fa fa-check"></i><b>7.2</b> Number of Bases and Reads</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-bases-before-trimming"><i class="fa fa-check"></i><b>7.2.1</b> Total Bases Before Trimming</a></li>
+<li class="chapter" data-level="7.2.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-reads-after-trimming"><i class="fa fa-check"></i><b>7.2.2</b> Total Reads After Trimming</a></li>
+<li class="chapter" data-level="7.2.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-1"><i class="fa fa-check"></i><b>7.2.3</b> Combined Visualization</a></li>
+<li class="chapter" data-level="7.2.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#low-data-samples"><i class="fa fa-check"></i><b>7.2.4</b> Low Data Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#percentage-of-reads-mapped-trimmed-and-unmapped"><i class="fa fa-check"></i><b>7.3</b> Percentage of Reads: Mapped, Trimmed, and Unmapped</a></li>
+<li class="chapter" data-level="7.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#composition-of-reads-vs.-references"><i class="fa fa-check"></i><b>7.4</b> Composition of Reads vs. References</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#relative-composition-proportions"><i class="fa fa-check"></i><b>7.4.1</b> Relative Composition (Proportions)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#absolute-composition-counts"><i class="fa fa-check"></i><b>7.4.2</b> Absolute Composition (Counts)</a></li>
+<li class="chapter" data-level="7.4.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-2"><i class="fa fa-check"></i><b>7.4.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html"><i class="fa fa-check"></i><b>8</b> Antimicrobial Effect Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#load-data-and-plotting-utilities-2"><i class="fa fa-check"></i><b>8.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="8.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#bacteria-to-host-read-ratio"><i class="fa fa-check"></i><b>8.2</b> Bacteria-to-Host Read Ratio</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#layers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.1</b> Layers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#broilers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.2</b> Broilers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.3" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#combined-visualization-3"><i class="fa fa-check"></i><b>8.2.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity Analysis</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#load-data-and-plotting-utilities-3"><i class="fa fa-check"></i><b>9.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="9.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#alpha-diversity-by-breed"><i class="fa fa-check"></i><b>9.2</b> Alpha Diversity by Breed</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#layers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.1</b> Layers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#broilers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.2</b> Broilers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#combined-visualization-4"><i class="fa fa-check"></i><b>9.2.3</b> Combined Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#detailed-alpha-diversity---layers-with-animal-labels"><i class="fa fa-check"></i><b>9.3</b> Detailed Alpha Diversity - Layers with Animal Labels</a></li>
+<li class="chapter" data-level="9.4" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#relationship-between-genome-length-and-alpha-diversity"><i class="fa fa-check"></i><b>9.4</b> Relationship Between Genome Length and Alpha Diversity</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#prepare-data-calculate-median-genome-length"><i class="fa fa-check"></i><b>9.4.1</b> Prepare Data: Calculate Median Genome Length</a></li>
+<li class="chapter" data-level="9.4.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#visualize-relationship-linear-model"><i class="fa fa-check"></i><b>9.4.2</b> Visualize Relationship: Linear Model</a></li>
+<li class="chapter" data-level="9.4.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#statistical-modeling-negative-binomial-regression"><i class="fa fa-check"></i><b>9.4.3</b> Statistical Modeling: Negative Binomial Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html"><i class="fa fa-check"></i><b>10</b> Beta Diversity Analysis - Between Breeds</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#load-data-and-plotting-utilities-4"><i class="fa fa-check"></i><b>10.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="10.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#composition-barplots"><i class="fa fa-check"></i><b>10.2</b> Composition Barplots</a></li>
+<li class="chapter" data-level="10.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#layer-vs-broiler-composition"><i class="fa fa-check"></i><b>10.3</b> Layer vs Broiler Composition</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#pca"><i class="fa fa-check"></i><b>10.3.1</b> PCA</a></li>
+<li class="chapter" data-level="10.3.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#genomes-overlap-between-breeds"><i class="fa fa-check"></i><b>10.3.2</b> Genomes Overlap Between Breeds</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.4</b> ALDEx2 Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-aldex2"><i class="fa fa-check"></i><b>10.4.1</b> Prepare Data for ALDEx2</a></li>
+<li class="chapter" data-level="10.4.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#run-aldex2-analysis"><i class="fa fa-check"></i><b>10.4.2</b> Run ALDEx2 Analysis</a></li>
+<li class="chapter" data-level="10.4.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-diagnostic-plots"><i class="fa fa-check"></i><b>10.4.3</b> ALDEx2 Diagnostic Plots</a></li>
+<li class="chapter" data-level="10.4.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-significant-taxa-visualization"><i class="fa fa-check"></i><b>10.4.4</b> ALDEx2 Significant Taxa Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#ancom-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.5</b> ANCOM Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-ancom"><i class="fa fa-check"></i><b>10.5.1</b> Prepare Data for ANCOM</a></li>
+<li class="chapter" data-level="10.5.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-diagram-control-treatment-tf3-only"><i class="fa fa-check"></i><b>10.5.2</b> Venn Diagram: Control Treatment (TF3) Only</a></li>
+<li class="chapter" data-level="10.5.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-of-all-groups-separately"><i class="fa fa-check"></i><b>10.5.3</b> Venn of all groups separately</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html"><i class="fa fa-check"></i><b>11</b> Beta Diversity Analysis - Within Breeds</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#load-data-and-plotting-utilities-5"><i class="fa fa-check"></i><b>11.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="11.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#beta-diversity-within-breeds"><i class="fa fa-check"></i><b>11.2</b> Beta Diversity Within Breeds</a></li>
+<li class="chapter" data-level="11.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---composition-barplots"><i class="fa fa-check"></i><b>11.3</b> Broilers - Composition Barplots</a></li>
+<li class="chapter" data-level="11.4" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---pca-analysis"><i class="fa fa-check"></i><b>11.4</b> Broilers - PCA Analysis</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova"><i class="fa fa-check"></i><b>11.4.1</b> PERMANOVA</a></li>
+<li class="chapter" data-level="11.4.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#layers"><i class="fa fa-check"></i><b>11.4.2</b> Layers</a></li>
+<li class="chapter" data-level="11.4.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova-1"><i class="fa fa-check"></i><b>11.4.3</b> PERMANOVA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html"><i class="fa fa-check"></i><b>12</b> Diversity Partitioning Analysis</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#overview-4"><i class="fa fa-check"></i><b>12.1</b> Overview</a></li>
+<li class="chapter" data-level="12.2" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#load-data-and-plotting-utilities-6"><i class="fa fa-check"></i><b>12.2</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="12.3" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#hierarchical-diversity-partitioning-functions"><i class="fa fa-check"></i><b>12.3</b> Hierarchical Diversity Partitioning Functions</a></li>
+<li class="chapter" data-level="12.4" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#prepare-data-for-diversity-partitioning"><i class="fa fa-check"></i><b>12.4</b> Prepare Data for Diversity Partitioning</a></li>
+<li class="chapter" data-level="12.5" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#diversity-partitioning-analysis-1"><i class="fa fa-check"></i><b>12.5</b> Diversity Partitioning Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html"><i class="fa fa-check"></i><b>13</b> PacBio Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#overview-5"><i class="fa fa-check"></i><b>13.1</b> Overview</a></li>
+<li class="chapter" data-level="13.2" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#selection-criteria"><i class="fa fa-check"></i><b>13.2</b> Selection Criteria</a></li>
+<li class="chapter" data-level="13.3" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#load-data-1"><i class="fa fa-check"></i><b>13.3</b> Load Data</a></li>
+<li class="chapter" data-level="13.4" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#prepare-extract-metadata"><i class="fa fa-check"></i><b>13.4</b> Prepare Extract Metadata</a></li>
+<li class="chapter" data-level="13.5" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#merge-metadata-with-sample-information"><i class="fa fa-check"></i><b>13.5</b> Merge Metadata with Sample Information</a></li>
+<li class="chapter" data-level="13.6" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-dna-concentration-and-richness"><i class="fa fa-check"></i><b>13.6</b> Visualize DNA Concentration and Richness</a></li>
+<li class="chapter" data-level="13.7" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#identify-best-samples"><i class="fa fa-check"></i><b>13.7</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="13.8" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-selected-samples"><i class="fa fa-check"></i><b>13.8</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="13.9" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#calculate-pooling-requirements"><i class="fa fa-check"></i><b>13.9</b> Calculate Pooling Requirements</a></li>
+<li class="chapter" data-level="13.10" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#export-selected-samples"><i class="fa fa-check"></i><b>13.10</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="13.11" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#save-data"><i class="fa fa-check"></i><b>13.11</b> Save Data</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html"><i class="fa fa-check"></i><b>14</b> LMD Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#overview-6"><i class="fa fa-check"></i><b>14.1</b> Overview</a></li>
+<li class="chapter" data-level="14.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#load-data-2"><i class="fa fa-check"></i><b>14.2</b> Load Data</a></li>
+<li class="chapter" data-level="14.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#identify-best-lmd-samples"><i class="fa fa-check"></i><b>14.3</b> Identify Best LMD Samples</a></li>
+<li class="chapter" data-level="14.4" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#broiler-sample-selection"><i class="fa fa-check"></i><b>14.4</b> Broiler Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-broiler-samples"><i class="fa fa-check"></i><b>14.4.1</b> Visualize Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-broiler-samples"><i class="fa fa-check"></i><b>14.4.2</b> Mark Selected Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-broilers"><i class="fa fa-check"></i><b>14.4.3</b> PCA Analysis for Broilers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#layer-sample-selection"><i class="fa fa-check"></i><b>14.5</b> Layer Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-layer-samples"><i class="fa fa-check"></i><b>14.5.1</b> Visualize Layer Samples</a></li>
+<li class="chapter" data-level="14.5.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-layer-samples"><i class="fa fa-check"></i><b>14.5.2</b> Mark Selected Layer Samples</a></li>
+<li class="chapter" data-level="14.5.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-layers"><i class="fa fa-check"></i><b>14.5.3</b> PCA Analysis for Layers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#export-selected-samples-1"><i class="fa fa-check"></i><b>14.6</b> Export Selected Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html"><i class="fa fa-check"></i><b>15</b> Metatranscriptomics Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#overview-7"><i class="fa fa-check"></i><b>15.1</b> Overview</a></li>
+<li class="chapter" data-level="15.2" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#load-data-3"><i class="fa fa-check"></i><b>15.2</b> Load Data</a></li>
+<li class="chapter" data-level="15.3" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#prepare-rna-extract-metadata"><i class="fa fa-check"></i><b>15.3</b> Prepare RNA Extract Metadata</a></li>
+<li class="chapter" data-level="15.4" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#merge-rna-metadata-with-sample-information"><i class="fa fa-check"></i><b>15.4</b> Merge RNA Metadata with Sample Information</a></li>
+<li class="chapter" data-level="15.5" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-rna-concentration-and-richness"><i class="fa fa-check"></i><b>15.5</b> Visualize RNA Concentration and Richness</a></li>
+<li class="chapter" data-level="15.6" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#identify-best-samples-1"><i class="fa fa-check"></i><b>15.6</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="15.7" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-selected-samples-1"><i class="fa fa-check"></i><b>15.7</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="15.8" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#export-selected-samples-2"><i class="fa fa-check"></i><b>15.8</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="15.9" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#save-data-1"><i class="fa fa-check"></i><b>15.9</b> Save Data</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">3D’omics | Adenovirus: Conventional metagenomics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="beta-diversity-analysis---within-breeds" class="section level1 hasAnchor" number="11">
+<h1><span class="header-section-number">11</span> Beta Diversity Analysis - Within Breeds<a href="beta-diversity-analysis---within-breeds.html#beta-diversity-analysis---within-breeds" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="load-data-and-plotting-utilities-5" class="section level2 hasAnchor" number="11.1">
+<h2><span class="header-section-number">11.1</span> Load Data and Plotting Utilities<a href="beta-diversity-analysis---within-breeds.html#load-data-and-plotting-utilities-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb224-1"><a href="beta-diversity-analysis---within-breeds.html#cb224-1" tabindex="-1"></a><span class="co"># Load processed plotting data, color schemes, and MAG catalogue data (for genome_metadata)</span></span>
+<span id="cb224-2"><a href="beta-diversity-analysis---within-breeds.html#cb224-2" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/macro/plot_data.Rdata&quot;</span>)</span>
+<span id="cb224-3"><a href="beta-diversity-analysis---within-breeds.html#cb224-3" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/data_colors.Rdata&quot;</span>)</span>
+<span id="cb224-4"><a href="beta-diversity-analysis---within-breeds.html#cb224-4" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/MAG_catalogue/data.Rdata&quot;</span>)  <span class="co"># Needed for genome_metadata in PCA plots</span></span></code></pre></div>
+</div>
+<div id="beta-diversity-within-breeds" class="section level2 hasAnchor" number="11.2">
+<h2><span class="header-section-number">11.2</span> Beta Diversity Within Breeds<a href="beta-diversity-analysis---within-breeds.html#beta-diversity-within-breeds" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section analyzes compositional differences within each breed separately, comparing different treatments using PCA and PERMANOVA.</p>
+</div>
+<div id="broilers---composition-barplots" class="section level2 hasAnchor" number="11.3">
+<h2><span class="header-section-number">11.3</span> Broilers - Composition Barplots<a href="beta-diversity-analysis---within-breeds.html#broilers---composition-barplots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb225-1"><a href="beta-diversity-analysis---within-breeds.html#cb225-1" tabindex="-1"></a><span class="co"># Create stacked barplots showing order-level composition for broilers</span></span>
+<span id="cb225-2"><a href="beta-diversity-analysis---within-breeds.html#cb225-2" tabindex="-1"></a><span class="co"># Using filtered (non-closed) data</span></span>
+<span id="cb225-3"><a href="beta-diversity-analysis---within-breeds.html#cb225-3" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro <span class="sc">%&gt;%</span></span>
+<span id="cb225-4"><a href="beta-diversity-analysis---within-breeds.html#cb225-4" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb225-5"><a href="beta-diversity-analysis---within-breeds.html#cb225-5" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb225-6"><a href="beta-diversity-analysis---within-breeds.html#cb225-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> count, <span class="at">fill =</span> order)) <span class="sc">+</span></span>
+<span id="cb225-7"><a href="beta-diversity-analysis---within-breeds.html#cb225-7" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb225-8"><a href="beta-diversity-analysis---within-breeds.html#cb225-8" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> order_colors[<span class="sc">-</span><span class="dv">4</span>], <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb225-9"><a href="beta-diversity-analysis---within-breeds.html#cb225-9" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Metagenomic Samples&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Order composition&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;Order&quot;</span>) <span class="sc">+</span></span>
+<span id="cb225-10"><a href="beta-diversity-analysis---within-breeds.html#cb225-10" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb225-11"><a href="beta-diversity-analysis---within-breeds.html#cb225-11" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb225-12"><a href="beta-diversity-analysis---within-breeds.html#cb225-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb225-13"><a href="beta-diversity-analysis---within-breeds.html#cb225-13" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb225-14"><a href="beta-diversity-analysis---within-breeds.html#cb225-14" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb225-15"><a href="beta-diversity-analysis---within-breeds.html#cb225-15" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Composition of bacterial orders at 30% coverage filtered data (non-closed)&quot;</span>)</span>
+<span id="cb225-16"><a href="beta-diversity-analysis---within-breeds.html#cb225-16" tabindex="-1"></a></span>
+<span id="cb225-17"><a href="beta-diversity-analysis---within-breeds.html#cb225-17" tabindex="-1"></a><span class="co"># Create stacked barplot using closed (100% normalized) data</span></span>
+<span id="cb225-18"><a href="beta-diversity-analysis---within-breeds.html#cb225-18" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb225-19"><a href="beta-diversity-analysis---within-breeds.html#cb225-19" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb225-20"><a href="beta-diversity-analysis---within-breeds.html#cb225-20" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb225-21"><a href="beta-diversity-analysis---within-breeds.html#cb225-21" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> count, <span class="at">fill =</span> order)) <span class="sc">+</span></span>
+<span id="cb225-22"><a href="beta-diversity-analysis---within-breeds.html#cb225-22" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb225-23"><a href="beta-diversity-analysis---within-breeds.html#cb225-23" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> order_colors[<span class="sc">-</span><span class="dv">4</span>], <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb225-24"><a href="beta-diversity-analysis---within-breeds.html#cb225-24" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Metagenomic Samples&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Order composition&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;Order&quot;</span>) <span class="sc">+</span></span>
+<span id="cb225-25"><a href="beta-diversity-analysis---within-breeds.html#cb225-25" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb225-26"><a href="beta-diversity-analysis---within-breeds.html#cb225-26" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb225-27"><a href="beta-diversity-analysis---within-breeds.html#cb225-27" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb225-28"><a href="beta-diversity-analysis---within-breeds.html#cb225-28" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb225-29"><a href="beta-diversity-analysis---within-breeds.html#cb225-29" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb225-30"><a href="beta-diversity-analysis---within-breeds.html#cb225-30" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Composition of bacterial orders at 30% coverage filtered data (closed)&quot;</span>)</span>
+<span id="cb225-31"><a href="beta-diversity-analysis---within-breeds.html#cb225-31" tabindex="-1"></a></span>
+<span id="cb225-32"><a href="beta-diversity-analysis---within-breeds.html#cb225-32" tabindex="-1"></a><span class="co"># Display both plots (commented out - these are combined below)</span></span>
+<span id="cb225-33"><a href="beta-diversity-analysis---within-breeds.html#cb225-33" tabindex="-1"></a><span class="co"># p1</span></span>
+<span id="cb225-34"><a href="beta-diversity-analysis---within-breeds.html#cb225-34" tabindex="-1"></a><span class="co"># p2</span></span></code></pre></div>
+</div>
+<div id="broilers---pca-analysis" class="section level2 hasAnchor" number="11.4">
+<h2><span class="header-section-number">11.4</span> Broilers - PCA Analysis<a href="beta-diversity-analysis---within-breeds.html#broilers---pca-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb226-1"><a href="beta-diversity-analysis---within-breeds.html#cb226-1" tabindex="-1"></a><span class="co"># Prepare wide format data frame for PCA analysis on broilers only</span></span>
+<span id="cb226-2"><a href="beta-diversity-analysis---within-breeds.html#cb226-2" tabindex="-1"></a>PCA_df <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb226-3"><a href="beta-diversity-analysis---within-breeds.html#cb226-3" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb226-4"><a href="beta-diversity-analysis---within-breeds.html#cb226-4" tabindex="-1"></a>  <span class="co"># Remove metadata</span></span>
+<span id="cb226-5"><a href="beta-diversity-analysis---within-breeds.html#cb226-5" tabindex="-1"></a>  <span class="fu">select</span>(genome, microsample, count) <span class="sc">%&gt;%</span></span>
+<span id="cb226-6"><a href="beta-diversity-analysis---within-breeds.html#cb226-6" tabindex="-1"></a>  <span class="co"># Make tidy df into wide df</span></span>
+<span id="cb226-7"><a href="beta-diversity-analysis---within-breeds.html#cb226-7" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb226-8"><a href="beta-diversity-analysis---within-breeds.html#cb226-8" tabindex="-1"></a>    <span class="at">names_from =</span> genome,   </span>
+<span id="cb226-9"><a href="beta-diversity-analysis---within-breeds.html#cb226-9" tabindex="-1"></a>    <span class="at">values_from =</span> count,   </span>
+<span id="cb226-10"><a href="beta-diversity-analysis---within-breeds.html#cb226-10" tabindex="-1"></a>    <span class="co"># Fill missing values with 0</span></span>
+<span id="cb226-11"><a href="beta-diversity-analysis---within-breeds.html#cb226-11" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb226-12"><a href="beta-diversity-analysis---within-breeds.html#cb226-12" tabindex="-1"></a>  <span class="co"># Remove taxa (columns) that are zero for all leftover samples (rows)</span></span>
+<span id="cb226-13"><a href="beta-diversity-analysis---within-breeds.html#cb226-13" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="fu">any</span>(. <span class="sc">!=</span> <span class="dv">0</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb226-14"><a href="beta-diversity-analysis---within-breeds.html#cb226-14" tabindex="-1"></a>  <span class="co"># scale each sample to 100 (= closure to 100, not required, but common)</span></span>
+<span id="cb226-15"><a href="beta-diversity-analysis---within-breeds.html#cb226-15" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">-</span>microsample, <span class="sc">~</span> . <span class="sc">/</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric))) <span class="sc">*</span> <span class="dv">100</span> )) <span class="sc">%&gt;%</span></span>
+<span id="cb226-16"><a href="beta-diversity-analysis---within-breeds.html#cb226-16" tabindex="-1"></a>  <span class="co"># turn the column &#39;microsample&#39;into the name of the rows of the df</span></span>
+<span id="cb226-17"><a href="beta-diversity-analysis---within-breeds.html#cb226-17" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">&quot;microsample&quot;</span>)</span>
+<span id="cb226-18"><a href="beta-diversity-analysis---within-breeds.html#cb226-18" tabindex="-1"></a></span>
+<span id="cb226-19"><a href="beta-diversity-analysis---within-breeds.html#cb226-19" tabindex="-1"></a></span>
+<span id="cb226-20"><a href="beta-diversity-analysis---within-breeds.html#cb226-20" tabindex="-1"></a>MACRO_sample_metadata <span class="ot">&lt;-</span> sample_metadata_macro <span class="sc">%&gt;%</span></span>
+<span id="cb226-21"><a href="beta-diversity-analysis---within-breeds.html#cb226-21" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">microsample =</span> sample) <span class="sc">%&gt;%</span></span>
+<span id="cb226-22"><a href="beta-diversity-analysis---within-breeds.html#cb226-22" tabindex="-1"></a>  <span class="fu">select</span>(microsample, animal, animal_breed, age, treatment, treatment_expl) <span class="sc">%&gt;%</span></span>
+<span id="cb226-23"><a href="beta-diversity-analysis---within-breeds.html#cb226-23" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sample_type =</span> <span class="st">&quot;MACRO&quot;</span>) </span>
+<span id="cb226-24"><a href="beta-diversity-analysis---within-breeds.html#cb226-24" tabindex="-1"></a></span>
+<span id="cb226-25"><a href="beta-diversity-analysis---within-breeds.html#cb226-25" tabindex="-1"></a></span>
+<span id="cb226-26"><a href="beta-diversity-analysis---within-breeds.html#cb226-26" tabindex="-1"></a></span>
+<span id="cb226-27"><a href="beta-diversity-analysis---within-breeds.html#cb226-27" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">perform_pca</span>(PCA_df, <span class="at">z_delete =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre class="script-output"><code>[1] &quot;Zeros found&quot;</code></pre>
+<pre class="script-output"><code>No. adjusted imputations:  3014 
+Rows (samples) removed after zero replacement: 0 
+Columns (taxa) removed after zero replacement: 81 </code></pre>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb229-1"><a href="beta-diversity-analysis---within-breeds.html#cb229-1" tabindex="-1"></a><span class="co"># plot_scree(pca_result)  # Scree plot removed</span></span>
+<span id="cb229-2"><a href="beta-diversity-analysis---within-breeds.html#cb229-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_pca</span>(pca_result<span class="sc">$</span>pca_result,</span>
+<span id="cb229-3"><a href="beta-diversity-analysis---within-breeds.html#cb229-3" tabindex="-1"></a>         <span class="at">samples_color_metadata =</span> <span class="st">&quot;treatment&quot;</span> , </span>
+<span id="cb229-4"><a href="beta-diversity-analysis---within-breeds.html#cb229-4" tabindex="-1"></a>         <span class="at">samples_shape_metadata =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb229-5"><a href="beta-diversity-analysis---within-breeds.html#cb229-5" tabindex="-1"></a>         <span class="at">samples_color_value =</span> treatment_colours_bright, </span>
+<span id="cb229-6"><a href="beta-diversity-analysis---within-breeds.html#cb229-6" tabindex="-1"></a>         <span class="at">loadings_color_metadata =</span> <span class="st">&quot;order&quot;</span>, </span>
+<span id="cb229-7"><a href="beta-diversity-analysis---within-breeds.html#cb229-7" tabindex="-1"></a>         <span class="at">loadings_color_value =</span> order_colors, </span>
+<span id="cb229-8"><a href="beta-diversity-analysis---within-breeds.html#cb229-8" tabindex="-1"></a>         <span class="at">loadings_taxon_level =</span> <span class="st">&quot;species&quot;</span>,</span>
+<span id="cb229-9"><a href="beta-diversity-analysis---within-breeds.html#cb229-9" tabindex="-1"></a>         MACRO_sample_metadata, genome_metadata, order_colors, </span>
+<span id="cb229-10"><a href="beta-diversity-analysis---within-breeds.html#cb229-10" tabindex="-1"></a>         custom_ggplot_theme)</span>
+<span id="cb229-11"><a href="beta-diversity-analysis---within-breeds.html#cb229-11" tabindex="-1"></a></span>
+<span id="cb229-12"><a href="beta-diversity-analysis---within-breeds.html#cb229-12" tabindex="-1"></a>p2 <span class="ot">=</span> p <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Broilers&quot;</span>)</span>
+<span id="cb229-13"><a href="beta-diversity-analysis---within-breeds.html#cb229-13" tabindex="-1"></a><span class="co"># p2  # Individual plot commented out - used in combined plot</span></span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb230-1"><a href="beta-diversity-analysis---within-breeds.html#cb230-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_pca</span>(pca_result<span class="sc">$</span>pca_result,</span>
+<span id="cb230-2"><a href="beta-diversity-analysis---within-breeds.html#cb230-2" tabindex="-1"></a>         <span class="at">samples_color_metadata =</span> <span class="st">&quot;treatment&quot;</span> , </span>
+<span id="cb230-3"><a href="beta-diversity-analysis---within-breeds.html#cb230-3" tabindex="-1"></a>         <span class="at">samples_shape_metadata =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb230-4"><a href="beta-diversity-analysis---within-breeds.html#cb230-4" tabindex="-1"></a>         <span class="at">samples_color_value =</span> treatment_colours_bright, </span>
+<span id="cb230-5"><a href="beta-diversity-analysis---within-breeds.html#cb230-5" tabindex="-1"></a>         <span class="at">loadings_color_metadata =</span> <span class="st">&quot;order&quot;</span>, </span>
+<span id="cb230-6"><a href="beta-diversity-analysis---within-breeds.html#cb230-6" tabindex="-1"></a>         <span class="at">loadings_color_value =</span> order_colors, </span>
+<span id="cb230-7"><a href="beta-diversity-analysis---within-breeds.html#cb230-7" tabindex="-1"></a>         <span class="at">loadings_taxon_level =</span> <span class="st">&quot;species&quot;</span>,</span>
+<span id="cb230-8"><a href="beta-diversity-analysis---within-breeds.html#cb230-8" tabindex="-1"></a>         <span class="at">scaling_factor_value =</span> <span class="fl">1.0</span>, </span>
+<span id="cb230-9"><a href="beta-diversity-analysis---within-breeds.html#cb230-9" tabindex="-1"></a>          <span class="at">loadings_number =</span> <span class="dv">10</span>,</span>
+<span id="cb230-10"><a href="beta-diversity-analysis---within-breeds.html#cb230-10" tabindex="-1"></a>         MACRO_sample_metadata, genome_metadata, order_colors, </span>
+<span id="cb230-11"><a href="beta-diversity-analysis---within-breeds.html#cb230-11" tabindex="-1"></a>         custom_ggplot_theme,</span>
+<span id="cb230-12"><a href="beta-diversity-analysis---within-breeds.html#cb230-12" tabindex="-1"></a>         <span class="at">add_centroids =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb230-13"><a href="beta-diversity-analysis---within-breeds.html#cb230-13" tabindex="-1"></a></span>
+<span id="cb230-14"><a href="beta-diversity-analysis---within-breeds.html#cb230-14" tabindex="-1"></a>p2 <span class="ot">=</span> p <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Broilers&quot;</span>)</span>
+<span id="cb230-15"><a href="beta-diversity-analysis---within-breeds.html#cb230-15" tabindex="-1"></a><span class="co"># p2  # Individual plot commented out - used in combined plot</span></span></code></pre></div>
+<div id="permanova" class="section level3 hasAnchor" number="11.4.1">
+<h3><span class="header-section-number">11.4.1</span> PERMANOVA<a href="beta-diversity-analysis---within-breeds.html#permanova" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb231-1"><a href="beta-diversity-analysis---within-breeds.html#cb231-1" tabindex="-1"></a><span class="co"># Calculate Euclidean distance on CLR data</span></span>
+<span id="cb231-2"><a href="beta-diversity-analysis---within-breeds.html#cb231-2" tabindex="-1"></a>pca_animals_dist_matrix <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(pca_result<span class="sc">$</span>df_clr_dist, <span class="at">method =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
+<span id="cb231-3"><a href="beta-diversity-analysis---within-breeds.html#cb231-3" tabindex="-1"></a></span>
+<span id="cb231-4"><a href="beta-diversity-analysis---within-breeds.html#cb231-4" tabindex="-1"></a><span class="co"># Make sure that filtered df and metadata have the same number &amp; order of rows</span></span>
+<span id="cb231-5"><a href="beta-diversity-analysis---within-breeds.html#cb231-5" tabindex="-1"></a>pca_animals_metadata_adonis <span class="ot">&lt;-</span> plot_data_stats_macro <span class="sc">%&gt;%</span></span>
+<span id="cb231-6"><a href="beta-diversity-analysis---within-breeds.html#cb231-6" tabindex="-1"></a>  <span class="fu">filter</span>(microsample <span class="sc">%in%</span> <span class="fu">rownames</span>(pca_result<span class="sc">$</span>df_clr_dist)) <span class="sc">%&gt;%</span></span>
+<span id="cb231-7"><a href="beta-diversity-analysis---within-breeds.html#cb231-7" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">match</span>(microsample, <span class="fu">rownames</span>(pca_result<span class="sc">$</span>df_clr_dist))) <span class="sc">%&gt;%</span></span>
+<span id="cb231-8"><a href="beta-diversity-analysis---within-breeds.html#cb231-8" tabindex="-1"></a>  <span class="fu">select</span>(microsample, animal_breed, treatment, age)</span>
+<span id="cb231-9"><a href="beta-diversity-analysis---within-breeds.html#cb231-9" tabindex="-1"></a><span class="fu">all</span>(pca_animals_metadata_adonis<span class="sc">$</span>microsample <span class="sc">==</span> <span class="fu">rownames</span>(pca_result<span class="sc">$</span>df_clr_dist))</span></code></pre></div>
+<pre class="script-output"><code>[1] TRUE</code></pre>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb233-1"><a href="beta-diversity-analysis---within-breeds.html#cb233-1" tabindex="-1"></a><span class="co"># Run PERMANOVA</span></span>
+<span id="cb233-2"><a href="beta-diversity-analysis---within-breeds.html#cb233-2" tabindex="-1"></a>adonis2_result <span class="ot">&lt;-</span> <span class="fu">adonis2</span>(</span>
+<span id="cb233-3"><a href="beta-diversity-analysis---within-breeds.html#cb233-3" tabindex="-1"></a>  pca_animals_dist_matrix <span class="sc">~</span> treatment,</span>
+<span id="cb233-4"><a href="beta-diversity-analysis---within-breeds.html#cb233-4" tabindex="-1"></a>  <span class="at">data =</span> pca_animals_metadata_adonis,</span>
+<span id="cb233-5"><a href="beta-diversity-analysis---within-breeds.html#cb233-5" tabindex="-1"></a>  <span class="at">permutations =</span> <span class="dv">999</span>,</span>
+<span id="cb233-6"><a href="beta-diversity-analysis---within-breeds.html#cb233-6" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">&quot;terms&quot;</span></span>
+<span id="cb233-7"><a href="beta-diversity-analysis---within-breeds.html#cb233-7" tabindex="-1"></a>)</span>
+<span id="cb233-8"><a href="beta-diversity-analysis---within-breeds.html#cb233-8" tabindex="-1"></a></span>
+<span id="cb233-9"><a href="beta-diversity-analysis---within-breeds.html#cb233-9" tabindex="-1"></a><span class="co"># Display PERMANOVA results as formatted table</span></span>
+<span id="cb233-10"><a href="beta-diversity-analysis---within-breeds.html#cb233-10" tabindex="-1"></a>adonis2_table <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adonis2_result)</span>
+<span id="cb233-11"><a href="beta-diversity-analysis---within-breeds.html#cb233-11" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(adonis2_table, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;PERMANOVA results for beta diversity within breed&quot;</span>)</span></code></pre></div>
+<table>
+<caption>(#tab:permanova_broilers_test_04F)PERMANOVA results for beta diversity within breed</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Df</th>
+<th align="right">SumOfSqs</th>
+<th align="right">R2</th>
+<th align="right">F</th>
+<th align="right">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">treatment</td>
+<td align="right">2</td>
+<td align="right">3996.273</td>
+<td align="right">0.3279</td>
+<td align="right">17.5655</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">Residual</td>
+<td align="right">72</td>
+<td align="right">8190.247</td>
+<td align="right">0.6721</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Total</td>
+<td align="right">74</td>
+<td align="right">12186.520</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb234-1"><a href="beta-diversity-analysis---within-breeds.html#cb234-1" tabindex="-1"></a><span class="co"># #  Pick one treatment</span></span>
+<span id="cb234-2"><a href="beta-diversity-analysis---within-breeds.html#cb234-2" tabindex="-1"></a><span class="co"># trt &lt;- &quot;TF1&quot;</span></span>
+<span id="cb234-3"><a href="beta-diversity-analysis---within-breeds.html#cb234-3" tabindex="-1"></a><span class="co"># #Subset metadata safely — preserves sample IDs as rownames</span></span>
+<span id="cb234-4"><a href="beta-diversity-analysis---within-breeds.html#cb234-4" tabindex="-1"></a><span class="co"># subset_meta &lt;- pca_animals_metadata_adonis[</span></span>
+<span id="cb234-5"><a href="beta-diversity-analysis---within-breeds.html#cb234-5" tabindex="-1"></a><span class="co">#   pca_animals_metadata_adonis$treatment == trt, ,</span></span>
+<span id="cb234-6"><a href="beta-diversity-analysis---within-breeds.html#cb234-6" tabindex="-1"></a><span class="co">#   drop = FALSE</span></span>
+<span id="cb234-7"><a href="beta-diversity-analysis---within-breeds.html#cb234-7" tabindex="-1"></a><span class="co"># ]</span></span>
+<span id="cb234-8"><a href="beta-diversity-analysis---within-breeds.html#cb234-8" tabindex="-1"></a><span class="co"># #  Restore the correct sample IDs as rownames</span></span>
+<span id="cb234-9"><a href="beta-diversity-analysis---within-breeds.html#cb234-9" tabindex="-1"></a><span class="co"># rownames(subset_meta) &lt;- subset_meta$microsample</span></span>
+<span id="cb234-10"><a href="beta-diversity-analysis---within-breeds.html#cb234-10" tabindex="-1"></a><span class="co"># subset_dist &lt;- as.dist(as.matrix(pca_animals_dist_matrix)[</span></span>
+<span id="cb234-11"><a href="beta-diversity-analysis---within-breeds.html#cb234-11" tabindex="-1"></a><span class="co">#   rownames(subset_meta),</span></span>
+<span id="cb234-12"><a href="beta-diversity-analysis---within-breeds.html#cb234-12" tabindex="-1"></a><span class="co">#   rownames(subset_meta)</span></span>
+<span id="cb234-13"><a href="beta-diversity-analysis---within-breeds.html#cb234-13" tabindex="-1"></a><span class="co"># ])</span></span>
+<span id="cb234-14"><a href="beta-diversity-analysis---within-breeds.html#cb234-14" tabindex="-1"></a><span class="co"># adonis_res_TF1 &lt;- adonis2(subset_dist ~ age, data = subset_meta, permutations = 999)</span></span>
+<span id="cb234-15"><a href="beta-diversity-analysis---within-breeds.html#cb234-15" tabindex="-1"></a></span>
+<span id="cb234-16"><a href="beta-diversity-analysis---within-breeds.html#cb234-16" tabindex="-1"></a><span class="co"># LOOP</span></span>
+<span id="cb234-17"><a href="beta-diversity-analysis---within-breeds.html#cb234-17" tabindex="-1"></a>treatments <span class="ot">&lt;-</span> <span class="fu">unique</span>(pca_animals_metadata_adonis<span class="sc">$</span>treatment)</span>
+<span id="cb234-18"><a href="beta-diversity-analysis---within-breeds.html#cb234-18" tabindex="-1"></a></span>
+<span id="cb234-19"><a href="beta-diversity-analysis---within-breeds.html#cb234-19" tabindex="-1"></a>results_age <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(treatments, <span class="cf">function</span>(trt) {</span>
+<span id="cb234-20"><a href="beta-diversity-analysis---within-breeds.html#cb234-20" tabindex="-1"></a>  </span>
+<span id="cb234-21"><a href="beta-diversity-analysis---within-breeds.html#cb234-21" tabindex="-1"></a>  <span class="co"># Subset metadata and restore proper sample IDs</span></span>
+<span id="cb234-22"><a href="beta-diversity-analysis---within-breeds.html#cb234-22" tabindex="-1"></a>  subset_meta <span class="ot">&lt;-</span> pca_animals_metadata_adonis[</span>
+<span id="cb234-23"><a href="beta-diversity-analysis---within-breeds.html#cb234-23" tabindex="-1"></a>    pca_animals_metadata_adonis<span class="sc">$</span>treatment <span class="sc">==</span> trt, ,</span>
+<span id="cb234-24"><a href="beta-diversity-analysis---within-breeds.html#cb234-24" tabindex="-1"></a>    drop <span class="ot">=</span> <span class="cn">FALSE</span></span>
+<span id="cb234-25"><a href="beta-diversity-analysis---within-breeds.html#cb234-25" tabindex="-1"></a>  ]</span>
+<span id="cb234-26"><a href="beta-diversity-analysis---within-breeds.html#cb234-26" tabindex="-1"></a>  <span class="fu">rownames</span>(subset_meta) <span class="ot">&lt;-</span> subset_meta<span class="sc">$</span>microsample</span>
+<span id="cb234-27"><a href="beta-diversity-analysis---within-breeds.html#cb234-27" tabindex="-1"></a>  </span>
+<span id="cb234-28"><a href="beta-diversity-analysis---within-breeds.html#cb234-28" tabindex="-1"></a>  <span class="co"># Subset the distance matrix to those samples</span></span>
+<span id="cb234-29"><a href="beta-diversity-analysis---within-breeds.html#cb234-29" tabindex="-1"></a>  subset_dist <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="fu">as.matrix</span>(pca_animals_dist_matrix)[</span>
+<span id="cb234-30"><a href="beta-diversity-analysis---within-breeds.html#cb234-30" tabindex="-1"></a>    <span class="fu">rownames</span>(subset_meta),</span>
+<span id="cb234-31"><a href="beta-diversity-analysis---within-breeds.html#cb234-31" tabindex="-1"></a>    <span class="fu">rownames</span>(subset_meta)</span>
+<span id="cb234-32"><a href="beta-diversity-analysis---within-breeds.html#cb234-32" tabindex="-1"></a>  ])</span>
+<span id="cb234-33"><a href="beta-diversity-analysis---within-breeds.html#cb234-33" tabindex="-1"></a>  </span>
+<span id="cb234-34"><a href="beta-diversity-analysis---within-breeds.html#cb234-34" tabindex="-1"></a>  <span class="co"># Run PERMANOVA for age within this treatment</span></span>
+<span id="cb234-35"><a href="beta-diversity-analysis---within-breeds.html#cb234-35" tabindex="-1"></a>  adonis_res <span class="ot">&lt;-</span> <span class="fu">adonis2</span>(subset_dist <span class="sc">~</span> age, <span class="at">data =</span> subset_meta, <span class="at">permutations =</span> <span class="dv">999</span>)</span>
+<span id="cb234-36"><a href="beta-diversity-analysis---within-breeds.html#cb234-36" tabindex="-1"></a>  </span>
+<span id="cb234-37"><a href="beta-diversity-analysis---within-breeds.html#cb234-37" tabindex="-1"></a>  <span class="co"># Extract R² and p-value</span></span>
+<span id="cb234-38"><a href="beta-diversity-analysis---within-breeds.html#cb234-38" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb234-39"><a href="beta-diversity-analysis---within-breeds.html#cb234-39" tabindex="-1"></a>    <span class="at">Treatment =</span> trt,</span>
+<span id="cb234-40"><a href="beta-diversity-analysis---within-breeds.html#cb234-40" tabindex="-1"></a>    <span class="at">R2 =</span> adonis_res<span class="sc">$</span>R2[<span class="dv">1</span>],</span>
+<span id="cb234-41"><a href="beta-diversity-analysis---within-breeds.html#cb234-41" tabindex="-1"></a>    <span class="at">p_value =</span> adonis_res<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">1</span>]</span>
+<span id="cb234-42"><a href="beta-diversity-analysis---within-breeds.html#cb234-42" tabindex="-1"></a>  )</span>
+<span id="cb234-43"><a href="beta-diversity-analysis---within-breeds.html#cb234-43" tabindex="-1"></a>})</span>
+<span id="cb234-44"><a href="beta-diversity-analysis---within-breeds.html#cb234-44" tabindex="-1"></a></span>
+<span id="cb234-45"><a href="beta-diversity-analysis---within-breeds.html#cb234-45" tabindex="-1"></a>results_age</span></code></pre></div>
+<pre class="script-output"><code>  Treatment        R2 p_value
+1       TF1 0.2583857   0.001
+2       TF2 0.3809314   0.001
+3       TF3 0.3738688   0.001</code></pre>
+</div>
+<div id="layers" class="section level3 hasAnchor" number="11.4.2">
+<h3><span class="header-section-number">11.4.2</span> Layers<a href="beta-diversity-analysis---within-breeds.html#layers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb236-1"><a href="beta-diversity-analysis---within-breeds.html#cb236-1" tabindex="-1"></a>tidy_plot_genome_counts_filt_30_macro <span class="sc">%&gt;%</span></span>
+<span id="cb236-2"><a href="beta-diversity-analysis---within-breeds.html#cb236-2" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb236-3"><a href="beta-diversity-analysis---within-breeds.html#cb236-3" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb236-4"><a href="beta-diversity-analysis---within-breeds.html#cb236-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal , <span class="at">y =</span> count, <span class="at">fill =</span> order)) <span class="sc">+</span></span>
+<span id="cb236-5"><a href="beta-diversity-analysis---within-breeds.html#cb236-5" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">colour=</span><span class="st">&quot;white&quot;</span>, <span class="at">linewidth=</span><span class="fl">0.1</span>) <span class="sc">+</span> <span class="co">#plot stacked bars with white borders</span></span>
+<span id="cb236-6"><a href="beta-diversity-analysis---within-breeds.html#cb236-6" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> order_colors[<span class="sc">-</span><span class="dv">4</span>], <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb236-7"><a href="beta-diversity-analysis---within-breeds.html#cb236-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Metagenomic Samples&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Order composition&quot;</span>,<span class="at">fill =</span> <span class="st">&quot;Read type&quot;</span>) <span class="sc">+</span></span>
+<span id="cb236-8"><a href="beta-diversity-analysis---within-breeds.html#cb236-8" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb236-9"><a href="beta-diversity-analysis---within-breeds.html#cb236-9" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb236-10"><a href="beta-diversity-analysis---within-breeds.html#cb236-10" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb236-11"><a href="beta-diversity-analysis---within-breeds.html#cb236-11" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb236-12"><a href="beta-diversity-analysis---within-breeds.html#cb236-12" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb236-13"><a href="beta-diversity-analysis---within-breeds.html#cb236-13" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Composition of bacterial orders at 30% coverage filtered data&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/composition_layers_04F-1.png" width="672" /></p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb237-1"><a href="beta-diversity-analysis---within-breeds.html#cb237-1" tabindex="-1"></a>tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb237-2"><a href="beta-diversity-analysis---within-breeds.html#cb237-2" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb237-3"><a href="beta-diversity-analysis---within-breeds.html#cb237-3" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb237-4"><a href="beta-diversity-analysis---within-breeds.html#cb237-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal , <span class="at">y =</span> count, <span class="at">fill =</span> order)) <span class="sc">+</span></span>
+<span id="cb237-5"><a href="beta-diversity-analysis---within-breeds.html#cb237-5" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">colour=</span><span class="st">&quot;white&quot;</span>, <span class="at">linewidth=</span><span class="fl">0.1</span>) <span class="sc">+</span> <span class="co">#plot stacked bars with white borders</span></span>
+<span id="cb237-6"><a href="beta-diversity-analysis---within-breeds.html#cb237-6" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> order_colors[<span class="sc">-</span><span class="dv">4</span>], <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb237-7"><a href="beta-diversity-analysis---within-breeds.html#cb237-7" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Metagenomic Samples&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Order composition&quot;</span>,<span class="at">fill =</span> <span class="st">&quot;Read type&quot;</span>) <span class="sc">+</span></span>
+<span id="cb237-8"><a href="beta-diversity-analysis---within-breeds.html#cb237-8" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb237-9"><a href="beta-diversity-analysis---within-breeds.html#cb237-9" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb237-10"><a href="beta-diversity-analysis---within-breeds.html#cb237-10" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb237-11"><a href="beta-diversity-analysis---within-breeds.html#cb237-11" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb237-12"><a href="beta-diversity-analysis---within-breeds.html#cb237-12" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb237-13"><a href="beta-diversity-analysis---within-breeds.html#cb237-13" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Composition of bacterial orders at 30% coverage filtered data&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/composition_layers_04F-2.png" width="672" /></p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb238-1"><a href="beta-diversity-analysis---within-breeds.html#cb238-1" tabindex="-1"></a>PCA_df <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb238-2"><a href="beta-diversity-analysis---within-breeds.html#cb238-2" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb238-3"><a href="beta-diversity-analysis---within-breeds.html#cb238-3" tabindex="-1"></a>  <span class="co"># Remove metadata</span></span>
+<span id="cb238-4"><a href="beta-diversity-analysis---within-breeds.html#cb238-4" tabindex="-1"></a>  <span class="fu">select</span>(genome, microsample, count) <span class="sc">%&gt;%</span></span>
+<span id="cb238-5"><a href="beta-diversity-analysis---within-breeds.html#cb238-5" tabindex="-1"></a>  <span class="co"># Make tidy df into wide df</span></span>
+<span id="cb238-6"><a href="beta-diversity-analysis---within-breeds.html#cb238-6" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb238-7"><a href="beta-diversity-analysis---within-breeds.html#cb238-7" tabindex="-1"></a>    <span class="at">names_from =</span> genome,   </span>
+<span id="cb238-8"><a href="beta-diversity-analysis---within-breeds.html#cb238-8" tabindex="-1"></a>    <span class="at">values_from =</span> count,   </span>
+<span id="cb238-9"><a href="beta-diversity-analysis---within-breeds.html#cb238-9" tabindex="-1"></a>    <span class="co"># Fill missing values with 0</span></span>
+<span id="cb238-10"><a href="beta-diversity-analysis---within-breeds.html#cb238-10" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb238-11"><a href="beta-diversity-analysis---within-breeds.html#cb238-11" tabindex="-1"></a>  <span class="co"># Remove taxa (columns) that are zero for all leftover samples (rows)</span></span>
+<span id="cb238-12"><a href="beta-diversity-analysis---within-breeds.html#cb238-12" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="fu">any</span>(. <span class="sc">!=</span> <span class="dv">0</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb238-13"><a href="beta-diversity-analysis---within-breeds.html#cb238-13" tabindex="-1"></a>  <span class="co"># scale each sample to 100 (= closure to 100, not required, but common)</span></span>
+<span id="cb238-14"><a href="beta-diversity-analysis---within-breeds.html#cb238-14" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">-</span>microsample, <span class="sc">~</span> . <span class="sc">/</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric))) <span class="sc">*</span> <span class="dv">100</span> )) <span class="sc">%&gt;%</span></span>
+<span id="cb238-15"><a href="beta-diversity-analysis---within-breeds.html#cb238-15" tabindex="-1"></a>  <span class="co"># turn the column &#39;microsample&#39;into the name of the rows of the df</span></span>
+<span id="cb238-16"><a href="beta-diversity-analysis---within-breeds.html#cb238-16" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">&quot;microsample&quot;</span>)</span>
+<span id="cb238-17"><a href="beta-diversity-analysis---within-breeds.html#cb238-17" tabindex="-1"></a></span>
+<span id="cb238-18"><a href="beta-diversity-analysis---within-breeds.html#cb238-18" tabindex="-1"></a></span>
+<span id="cb238-19"><a href="beta-diversity-analysis---within-breeds.html#cb238-19" tabindex="-1"></a>MACRO_sample_metadata <span class="ot">&lt;-</span> sample_metadata_macro <span class="sc">%&gt;%</span></span>
+<span id="cb238-20"><a href="beta-diversity-analysis---within-breeds.html#cb238-20" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">microsample =</span> sample) <span class="sc">%&gt;%</span></span>
+<span id="cb238-21"><a href="beta-diversity-analysis---within-breeds.html#cb238-21" tabindex="-1"></a>  <span class="fu">select</span>(microsample, animal, animal_breed, age, treatment, treatment_expl) <span class="sc">%&gt;%</span></span>
+<span id="cb238-22"><a href="beta-diversity-analysis---within-breeds.html#cb238-22" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sample_type =</span> <span class="st">&quot;MACRO&quot;</span>) </span>
+<span id="cb238-23"><a href="beta-diversity-analysis---within-breeds.html#cb238-23" tabindex="-1"></a></span>
+<span id="cb238-24"><a href="beta-diversity-analysis---within-breeds.html#cb238-24" tabindex="-1"></a></span>
+<span id="cb238-25"><a href="beta-diversity-analysis---within-breeds.html#cb238-25" tabindex="-1"></a></span>
+<span id="cb238-26"><a href="beta-diversity-analysis---within-breeds.html#cb238-26" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">perform_pca</span>(PCA_df, <span class="at">z_delete =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre class="script-output"><code>[1] &quot;Zeros found&quot;</code></pre>
+<pre class="script-output"><code>No. adjusted imputations:  2125 
+Rows (samples) removed after zero replacement: 4 
+Columns (taxa) removed after zero replacement: 84 </code></pre>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb241-1"><a href="beta-diversity-analysis---within-breeds.html#cb241-1" tabindex="-1"></a><span class="co"># plot_scree(pca_result)  # Scree plot removed</span></span>
+<span id="cb241-2"><a href="beta-diversity-analysis---within-breeds.html#cb241-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_pca</span>(pca_result<span class="sc">$</span>pca_result,</span>
+<span id="cb241-3"><a href="beta-diversity-analysis---within-breeds.html#cb241-3" tabindex="-1"></a>         <span class="at">samples_color_metadata =</span> <span class="st">&quot;treatment&quot;</span> , </span>
+<span id="cb241-4"><a href="beta-diversity-analysis---within-breeds.html#cb241-4" tabindex="-1"></a>         <span class="at">samples_shape_metadata =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb241-5"><a href="beta-diversity-analysis---within-breeds.html#cb241-5" tabindex="-1"></a>         <span class="at">samples_color_value =</span> treatment_colours_bright, </span>
+<span id="cb241-6"><a href="beta-diversity-analysis---within-breeds.html#cb241-6" tabindex="-1"></a>         <span class="at">loadings_color_metadata =</span> <span class="st">&quot;order&quot;</span>, </span>
+<span id="cb241-7"><a href="beta-diversity-analysis---within-breeds.html#cb241-7" tabindex="-1"></a>         <span class="at">loadings_color_value =</span> order_colors, </span>
+<span id="cb241-8"><a href="beta-diversity-analysis---within-breeds.html#cb241-8" tabindex="-1"></a>         <span class="at">loadings_taxon_level =</span> <span class="st">&quot;species&quot;</span>,</span>
+<span id="cb241-9"><a href="beta-diversity-analysis---within-breeds.html#cb241-9" tabindex="-1"></a>         MACRO_sample_metadata, genome_metadata, order_colors, </span>
+<span id="cb241-10"><a href="beta-diversity-analysis---within-breeds.html#cb241-10" tabindex="-1"></a>         custom_ggplot_theme)</span>
+<span id="cb241-11"><a href="beta-diversity-analysis---within-breeds.html#cb241-11" tabindex="-1"></a></span>
+<span id="cb241-12"><a href="beta-diversity-analysis---within-breeds.html#cb241-12" tabindex="-1"></a>p1 <span class="ot">=</span> p <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Layers&quot;</span>)</span>
+<span id="cb241-13"><a href="beta-diversity-analysis---within-breeds.html#cb241-13" tabindex="-1"></a><span class="co"># p1  # Individual plot commented out - used in combined plot</span></span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb242-1"><a href="beta-diversity-analysis---within-breeds.html#cb242-1" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_pca</span>(pca_result<span class="sc">$</span>pca_result,</span>
+<span id="cb242-2"><a href="beta-diversity-analysis---within-breeds.html#cb242-2" tabindex="-1"></a>         <span class="at">samples_color_metadata =</span> <span class="st">&quot;treatment&quot;</span> , </span>
+<span id="cb242-3"><a href="beta-diversity-analysis---within-breeds.html#cb242-3" tabindex="-1"></a>         <span class="at">samples_shape_metadata =</span> <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb242-4"><a href="beta-diversity-analysis---within-breeds.html#cb242-4" tabindex="-1"></a>         <span class="at">samples_color_value =</span> treatment_colours_bright, </span>
+<span id="cb242-5"><a href="beta-diversity-analysis---within-breeds.html#cb242-5" tabindex="-1"></a>         <span class="at">loadings_color_metadata =</span> <span class="st">&quot;order&quot;</span>, </span>
+<span id="cb242-6"><a href="beta-diversity-analysis---within-breeds.html#cb242-6" tabindex="-1"></a>         <span class="at">loadings_color_value =</span> order_colors, </span>
+<span id="cb242-7"><a href="beta-diversity-analysis---within-breeds.html#cb242-7" tabindex="-1"></a>         <span class="at">loadings_taxon_level =</span> <span class="st">&quot;species&quot;</span>,</span>
+<span id="cb242-8"><a href="beta-diversity-analysis---within-breeds.html#cb242-8" tabindex="-1"></a>         <span class="at">scaling_factor_value =</span> <span class="fl">1.0</span>, </span>
+<span id="cb242-9"><a href="beta-diversity-analysis---within-breeds.html#cb242-9" tabindex="-1"></a>          <span class="at">loadings_number =</span> <span class="dv">10</span>,</span>
+<span id="cb242-10"><a href="beta-diversity-analysis---within-breeds.html#cb242-10" tabindex="-1"></a>         MACRO_sample_metadata, genome_metadata, order_colors, </span>
+<span id="cb242-11"><a href="beta-diversity-analysis---within-breeds.html#cb242-11" tabindex="-1"></a>         custom_ggplot_theme,</span>
+<span id="cb242-12"><a href="beta-diversity-analysis---within-breeds.html#cb242-12" tabindex="-1"></a>         <span class="at">add_centroids =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb242-13"><a href="beta-diversity-analysis---within-breeds.html#cb242-13" tabindex="-1"></a></span>
+<span id="cb242-14"><a href="beta-diversity-analysis---within-breeds.html#cb242-14" tabindex="-1"></a>p1 <span class="ot">=</span> p <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Layers&quot;</span>)</span>
+<span id="cb242-15"><a href="beta-diversity-analysis---within-breeds.html#cb242-15" tabindex="-1"></a><span class="co"># p1  # Individual plot commented out - used in combined plot</span></span></code></pre></div>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb243-1"><a href="beta-diversity-analysis---within-breeds.html#cb243-1" tabindex="-1"></a>(p1<span class="sc">/</span>p2) <span class="sc">+</span></span>
+<span id="cb243-2"><a href="beta-diversity-analysis---within-breeds.html#cb243-2" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">&quot;collect&quot;</span>) <span class="sc">&amp;</span></span>
+<span id="cb243-3"><a href="beta-diversity-analysis---within-breeds.html#cb243-3" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;right&quot;</span>, <span class="at">legend.box =</span> <span class="st">&quot;vertical&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/layers_composition_combined_04F-1.png" width="960" /></p>
+</div>
+<div id="permanova-1" class="section level3 hasAnchor" number="11.4.3">
+<h3><span class="header-section-number">11.4.3</span> PERMANOVA<a href="beta-diversity-analysis---within-breeds.html#permanova-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb244-1"><a href="beta-diversity-analysis---within-breeds.html#cb244-1" tabindex="-1"></a><span class="co"># Calculate Euclidean distance on CLR data</span></span>
+<span id="cb244-2"><a href="beta-diversity-analysis---within-breeds.html#cb244-2" tabindex="-1"></a>pca_animals_dist_matrix <span class="ot">&lt;-</span> <span class="fu">vegdist</span>(pca_result<span class="sc">$</span>df_clr_dist, <span class="at">method =</span> <span class="st">&quot;euclidean&quot;</span>)</span>
+<span id="cb244-3"><a href="beta-diversity-analysis---within-breeds.html#cb244-3" tabindex="-1"></a></span>
+<span id="cb244-4"><a href="beta-diversity-analysis---within-breeds.html#cb244-4" tabindex="-1"></a><span class="co"># Make sure that filtered df and metadata have the same number &amp; order of rows</span></span>
+<span id="cb244-5"><a href="beta-diversity-analysis---within-breeds.html#cb244-5" tabindex="-1"></a>pca_animals_metadata_adonis <span class="ot">&lt;-</span> plot_data_stats_macro <span class="sc">%&gt;%</span></span>
+<span id="cb244-6"><a href="beta-diversity-analysis---within-breeds.html#cb244-6" tabindex="-1"></a>  <span class="fu">filter</span>(microsample <span class="sc">%in%</span> <span class="fu">rownames</span>(pca_result<span class="sc">$</span>df_clr_dist)) <span class="sc">%&gt;%</span></span>
+<span id="cb244-7"><a href="beta-diversity-analysis---within-breeds.html#cb244-7" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">match</span>(microsample, <span class="fu">rownames</span>(pca_result<span class="sc">$</span>df_clr_dist))) <span class="sc">%&gt;%</span></span>
+<span id="cb244-8"><a href="beta-diversity-analysis---within-breeds.html#cb244-8" tabindex="-1"></a>  <span class="fu">select</span>(microsample, animal_breed, treatment, age)</span>
+<span id="cb244-9"><a href="beta-diversity-analysis---within-breeds.html#cb244-9" tabindex="-1"></a><span class="fu">all</span>(pca_animals_metadata_adonis<span class="sc">$</span>microsample <span class="sc">==</span> <span class="fu">rownames</span>(pca_result<span class="sc">$</span>df_clr_dist))</span></code></pre></div>
+<pre class="script-output"><code>[1] TRUE</code></pre>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb246-1"><a href="beta-diversity-analysis---within-breeds.html#cb246-1" tabindex="-1"></a><span class="co"># Run PERMANOVA</span></span>
+<span id="cb246-2"><a href="beta-diversity-analysis---within-breeds.html#cb246-2" tabindex="-1"></a>adonis2_result <span class="ot">&lt;-</span> <span class="fu">adonis2</span>(</span>
+<span id="cb246-3"><a href="beta-diversity-analysis---within-breeds.html#cb246-3" tabindex="-1"></a>  pca_animals_dist_matrix <span class="sc">~</span> treatment,</span>
+<span id="cb246-4"><a href="beta-diversity-analysis---within-breeds.html#cb246-4" tabindex="-1"></a>  <span class="at">data =</span> pca_animals_metadata_adonis,</span>
+<span id="cb246-5"><a href="beta-diversity-analysis---within-breeds.html#cb246-5" tabindex="-1"></a>  <span class="at">permutations =</span> <span class="dv">999</span>,</span>
+<span id="cb246-6"><a href="beta-diversity-analysis---within-breeds.html#cb246-6" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">&quot;terms&quot;</span></span>
+<span id="cb246-7"><a href="beta-diversity-analysis---within-breeds.html#cb246-7" tabindex="-1"></a>)</span>
+<span id="cb246-8"><a href="beta-diversity-analysis---within-breeds.html#cb246-8" tabindex="-1"></a></span>
+<span id="cb246-9"><a href="beta-diversity-analysis---within-breeds.html#cb246-9" tabindex="-1"></a><span class="co"># Display PERMANOVA results as formatted table</span></span>
+<span id="cb246-10"><a href="beta-diversity-analysis---within-breeds.html#cb246-10" tabindex="-1"></a>adonis2_table <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(adonis2_result)</span>
+<span id="cb246-11"><a href="beta-diversity-analysis---within-breeds.html#cb246-11" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(adonis2_table, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;PERMANOVA results for beta diversity within breed&quot;</span>)</span></code></pre></div>
+<table>
+<caption>(#tab:permanova_layers_test_04F)PERMANOVA results for beta diversity within breed</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Df</th>
+<th align="right">SumOfSqs</th>
+<th align="right">R2</th>
+<th align="right">F</th>
+<th align="right">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">treatment</td>
+<td align="right">2</td>
+<td align="right">1692.323</td>
+<td align="right">0.1895</td>
+<td align="right">7.2466</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">Residual</td>
+<td align="right">62</td>
+<td align="right">7239.505</td>
+<td align="right">0.8105</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Total</td>
+<td align="right">64</td>
+<td align="right">8931.828</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb247-1"><a href="beta-diversity-analysis---within-breeds.html#cb247-1" tabindex="-1"></a><span class="co"># LOOP</span></span>
+<span id="cb247-2"><a href="beta-diversity-analysis---within-breeds.html#cb247-2" tabindex="-1"></a>treatments <span class="ot">&lt;-</span> <span class="fu">unique</span>(pca_animals_metadata_adonis<span class="sc">$</span>treatment)</span>
+<span id="cb247-3"><a href="beta-diversity-analysis---within-breeds.html#cb247-3" tabindex="-1"></a></span>
+<span id="cb247-4"><a href="beta-diversity-analysis---within-breeds.html#cb247-4" tabindex="-1"></a>results_age <span class="ot">&lt;-</span> <span class="fu">map_dfr</span>(treatments, <span class="cf">function</span>(trt) {</span>
+<span id="cb247-5"><a href="beta-diversity-analysis---within-breeds.html#cb247-5" tabindex="-1"></a>  </span>
+<span id="cb247-6"><a href="beta-diversity-analysis---within-breeds.html#cb247-6" tabindex="-1"></a>  <span class="co"># Subset metadata and restore proper sample IDs</span></span>
+<span id="cb247-7"><a href="beta-diversity-analysis---within-breeds.html#cb247-7" tabindex="-1"></a>  subset_meta <span class="ot">&lt;-</span> pca_animals_metadata_adonis[</span>
+<span id="cb247-8"><a href="beta-diversity-analysis---within-breeds.html#cb247-8" tabindex="-1"></a>    pca_animals_metadata_adonis<span class="sc">$</span>treatment <span class="sc">==</span> trt, ,</span>
+<span id="cb247-9"><a href="beta-diversity-analysis---within-breeds.html#cb247-9" tabindex="-1"></a>    drop <span class="ot">=</span> <span class="cn">FALSE</span></span>
+<span id="cb247-10"><a href="beta-diversity-analysis---within-breeds.html#cb247-10" tabindex="-1"></a>  ]</span>
+<span id="cb247-11"><a href="beta-diversity-analysis---within-breeds.html#cb247-11" tabindex="-1"></a>  <span class="fu">rownames</span>(subset_meta) <span class="ot">&lt;-</span> subset_meta<span class="sc">$</span>microsample</span>
+<span id="cb247-12"><a href="beta-diversity-analysis---within-breeds.html#cb247-12" tabindex="-1"></a>  </span>
+<span id="cb247-13"><a href="beta-diversity-analysis---within-breeds.html#cb247-13" tabindex="-1"></a>  <span class="co"># Subset the distance matrix to those samples</span></span>
+<span id="cb247-14"><a href="beta-diversity-analysis---within-breeds.html#cb247-14" tabindex="-1"></a>  subset_dist <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="fu">as.matrix</span>(pca_animals_dist_matrix)[</span>
+<span id="cb247-15"><a href="beta-diversity-analysis---within-breeds.html#cb247-15" tabindex="-1"></a>    <span class="fu">rownames</span>(subset_meta),</span>
+<span id="cb247-16"><a href="beta-diversity-analysis---within-breeds.html#cb247-16" tabindex="-1"></a>    <span class="fu">rownames</span>(subset_meta)</span>
+<span id="cb247-17"><a href="beta-diversity-analysis---within-breeds.html#cb247-17" tabindex="-1"></a>  ])</span>
+<span id="cb247-18"><a href="beta-diversity-analysis---within-breeds.html#cb247-18" tabindex="-1"></a>  </span>
+<span id="cb247-19"><a href="beta-diversity-analysis---within-breeds.html#cb247-19" tabindex="-1"></a>  <span class="co"># Run PERMANOVA for age within this treatment</span></span>
+<span id="cb247-20"><a href="beta-diversity-analysis---within-breeds.html#cb247-20" tabindex="-1"></a>  adonis_res <span class="ot">&lt;-</span> <span class="fu">adonis2</span>(subset_dist <span class="sc">~</span> age, <span class="at">data =</span> subset_meta, <span class="at">permutations =</span> <span class="dv">999</span>)</span>
+<span id="cb247-21"><a href="beta-diversity-analysis---within-breeds.html#cb247-21" tabindex="-1"></a>  </span>
+<span id="cb247-22"><a href="beta-diversity-analysis---within-breeds.html#cb247-22" tabindex="-1"></a>  <span class="co"># Extract R² and p-value</span></span>
+<span id="cb247-23"><a href="beta-diversity-analysis---within-breeds.html#cb247-23" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb247-24"><a href="beta-diversity-analysis---within-breeds.html#cb247-24" tabindex="-1"></a>    <span class="at">Treatment =</span> trt,</span>
+<span id="cb247-25"><a href="beta-diversity-analysis---within-breeds.html#cb247-25" tabindex="-1"></a>    <span class="at">R2 =</span> adonis_res<span class="sc">$</span>R2[<span class="dv">1</span>],</span>
+<span id="cb247-26"><a href="beta-diversity-analysis---within-breeds.html#cb247-26" tabindex="-1"></a>    <span class="at">p_value =</span> adonis_res<span class="sc">$</span><span class="st">`</span><span class="at">Pr(&gt;F)</span><span class="st">`</span>[<span class="dv">1</span>]</span>
+<span id="cb247-27"><a href="beta-diversity-analysis---within-breeds.html#cb247-27" tabindex="-1"></a>  )</span>
+<span id="cb247-28"><a href="beta-diversity-analysis---within-breeds.html#cb247-28" tabindex="-1"></a>})</span>
+<span id="cb247-29"><a href="beta-diversity-analysis---within-breeds.html#cb247-29" tabindex="-1"></a></span>
+<span id="cb247-30"><a href="beta-diversity-analysis---within-breeds.html#cb247-30" tabindex="-1"></a>results_age</span></code></pre></div>
+<pre class="script-output"><code>  Treatment        R2 p_value
+1       TF1 0.3562835   0.006
+2       TF2 0.4380101   0.001
+3       TF3 0.3104195   0.002</code></pre>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb249-1"><a href="beta-diversity-analysis---within-breeds.html#cb249-1" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb249-2"><a href="beta-diversity-analysis---within-breeds.html#cb249-2" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb249-3"><a href="beta-diversity-analysis---within-breeds.html#cb249-3" tabindex="-1"></a>  <span class="fu">filter</span>(type_simple <span class="sc">==</span> <span class="st">&quot;P&quot;</span>, treatment <span class="sc">==</span> <span class="st">&quot;TF1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb249-4"><a href="beta-diversity-analysis---within-breeds.html#cb249-4" tabindex="-1"></a>  <span class="fu">pull</span>(genome) <span class="sc">%&gt;%</span></span>
+<span id="cb249-5"><a href="beta-diversity-analysis---within-breeds.html#cb249-5" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb249-6"><a href="beta-diversity-analysis---within-breeds.html#cb249-6" tabindex="-1"></a></span>
+<span id="cb249-7"><a href="beta-diversity-analysis---within-breeds.html#cb249-7" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb249-8"><a href="beta-diversity-analysis---within-breeds.html#cb249-8" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb249-9"><a href="beta-diversity-analysis---within-breeds.html#cb249-9" tabindex="-1"></a>  <span class="fu">filter</span>(type_simple <span class="sc">==</span> <span class="st">&quot;P&quot;</span>, treatment <span class="sc">==</span> <span class="st">&quot;TF2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb249-10"><a href="beta-diversity-analysis---within-breeds.html#cb249-10" tabindex="-1"></a>  <span class="fu">pull</span>(genome) <span class="sc">%&gt;%</span></span>
+<span id="cb249-11"><a href="beta-diversity-analysis---within-breeds.html#cb249-11" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb249-12"><a href="beta-diversity-analysis---within-breeds.html#cb249-12" tabindex="-1"></a></span>
+<span id="cb249-13"><a href="beta-diversity-analysis---within-breeds.html#cb249-13" tabindex="-1"></a>group3 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb249-14"><a href="beta-diversity-analysis---within-breeds.html#cb249-14" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb249-15"><a href="beta-diversity-analysis---within-breeds.html#cb249-15" tabindex="-1"></a>  <span class="fu">filter</span>(type_simple <span class="sc">==</span> <span class="st">&quot;P&quot;</span>, treatment <span class="sc">==</span> <span class="st">&quot;TF3&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb249-16"><a href="beta-diversity-analysis---within-breeds.html#cb249-16" tabindex="-1"></a>  <span class="fu">pull</span>(genome) <span class="sc">%&gt;%</span></span>
+<span id="cb249-17"><a href="beta-diversity-analysis---within-breeds.html#cb249-17" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb249-18"><a href="beta-diversity-analysis---within-breeds.html#cb249-18" tabindex="-1"></a></span>
+<span id="cb249-19"><a href="beta-diversity-analysis---within-breeds.html#cb249-19" tabindex="-1"></a></span>
+<span id="cb249-20"><a href="beta-diversity-analysis---within-breeds.html#cb249-20" tabindex="-1"></a>venn_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb249-21"><a href="beta-diversity-analysis---within-breeds.html#cb249-21" tabindex="-1"></a>  <span class="at">TF1 =</span> group1,</span>
+<span id="cb249-22"><a href="beta-diversity-analysis---within-breeds.html#cb249-22" tabindex="-1"></a>  <span class="at">TF2 =</span> group2,</span>
+<span id="cb249-23"><a href="beta-diversity-analysis---within-breeds.html#cb249-23" tabindex="-1"></a>  <span class="at">TF3 =</span> group3</span>
+<span id="cb249-24"><a href="beta-diversity-analysis---within-breeds.html#cb249-24" tabindex="-1"></a>)</span>
+<span id="cb249-25"><a href="beta-diversity-analysis---within-breeds.html#cb249-25" tabindex="-1"></a></span>
+<span id="cb249-26"><a href="beta-diversity-analysis---within-breeds.html#cb249-26" tabindex="-1"></a><span class="co"># # Taxa unique to group1 only</span></span>
+<span id="cb249-27"><a href="beta-diversity-analysis---within-breeds.html#cb249-27" tabindex="-1"></a><span class="co"># unique_group1 &lt;- setdiff(group1, group2) # layer</span></span>
+<span id="cb249-28"><a href="beta-diversity-analysis---within-breeds.html#cb249-28" tabindex="-1"></a><span class="co"># # Taxa unique to group2 only</span></span>
+<span id="cb249-29"><a href="beta-diversity-analysis---within-breeds.html#cb249-29" tabindex="-1"></a><span class="co"># unique_group2 &lt;- setdiff(group2, group1) # broiler</span></span>
+<span id="cb249-30"><a href="beta-diversity-analysis---within-breeds.html#cb249-30" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb249-31"><a href="beta-diversity-analysis---within-breeds.html#cb249-31" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb249-32"><a href="beta-diversity-analysis---within-breeds.html#cb249-32" tabindex="-1"></a><span class="co"># # Filter once (layer/broiler + genomes of interest)</span></span>
+<span id="cb249-33"><a href="beta-diversity-analysis---within-breeds.html#cb249-33" tabindex="-1"></a><span class="co"># filtered_group1 &lt;- tidy_plot_genome_counts_filt_30_macro_closed %&gt;%</span></span>
+<span id="cb249-34"><a href="beta-diversity-analysis---within-breeds.html#cb249-34" tabindex="-1"></a><span class="co">#   filter(type_simple == &quot;P&quot;, animal_breed == &quot;layer&quot;, genome %in% unique_group1)</span></span>
+<span id="cb249-35"><a href="beta-diversity-analysis---within-breeds.html#cb249-35" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb249-36"><a href="beta-diversity-analysis---within-breeds.html#cb249-36" tabindex="-1"></a><span class="co"># filtered_group2 &lt;- tidy_plot_genome_counts_filt_30_macro_closed %&gt;%</span></span>
+<span id="cb249-37"><a href="beta-diversity-analysis---within-breeds.html#cb249-37" tabindex="-1"></a><span class="co">#   filter(type_simple == &quot;P&quot;, animal_breed == &quot;broiler&quot;, genome %in% unique_group2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb250-1"><a href="beta-diversity-analysis---within-breeds.html#cb250-1" tabindex="-1"></a>layers_venn <span class="ot">&lt;-</span> <span class="fu">ggVennDiagram</span>(</span>
+<span id="cb250-2"><a href="beta-diversity-analysis---within-breeds.html#cb250-2" tabindex="-1"></a>  venn_data,</span>
+<span id="cb250-3"><a href="beta-diversity-analysis---within-breeds.html#cb250-3" tabindex="-1"></a>  <span class="at">label =</span> <span class="st">&quot;count&quot;</span>,       </span>
+<span id="cb250-4"><a href="beta-diversity-analysis---within-breeds.html#cb250-4" tabindex="-1"></a>  <span class="at">set_color =</span> <span class="fu">c</span>(<span class="at">TF1 =</span> <span class="st">&quot;#4059AE&quot;</span>,</span>
+<span id="cb250-5"><a href="beta-diversity-analysis---within-breeds.html#cb250-5" tabindex="-1"></a>  <span class="at">TF2 =</span> <span class="st">&quot;#97D8C4&quot;</span>,</span>
+<span id="cb250-6"><a href="beta-diversity-analysis---within-breeds.html#cb250-6" tabindex="-1"></a>  <span class="at">TF3 =</span> <span class="st">&quot;#F3B942&quot;</span>) ) <span class="sc">+</span></span>
+<span id="cb250-7"><a href="beta-diversity-analysis---within-breeds.html#cb250-7" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;white&quot;</span>, <span class="at">high =</span> <span class="st">&quot;grey&quot;</span>) <span class="sc">+</span></span>
+<span id="cb250-8"><a href="beta-diversity-analysis---within-breeds.html#cb250-8" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Layers&quot;</span>) <span class="co">#+</span></span>
+<span id="cb250-9"><a href="beta-diversity-analysis---within-breeds.html#cb250-9" tabindex="-1"></a>  <span class="co">#coord_flip()</span></span>
+<span id="cb250-10"><a href="beta-diversity-analysis---within-breeds.html#cb250-10" tabindex="-1"></a></span>
+<span id="cb250-11"><a href="beta-diversity-analysis---within-breeds.html#cb250-11" tabindex="-1"></a><span class="co">#layers_venn</span></span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb251-1"><a href="beta-diversity-analysis---within-breeds.html#cb251-1" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb251-2"><a href="beta-diversity-analysis---within-breeds.html#cb251-2" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-3"><a href="beta-diversity-analysis---within-breeds.html#cb251-3" tabindex="-1"></a>  <span class="fu">filter</span>(type_simple <span class="sc">==</span> <span class="st">&quot;P&quot;</span>, treatment <span class="sc">==</span> <span class="st">&quot;TF1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-4"><a href="beta-diversity-analysis---within-breeds.html#cb251-4" tabindex="-1"></a>  <span class="fu">pull</span>(genome) <span class="sc">%&gt;%</span></span>
+<span id="cb251-5"><a href="beta-diversity-analysis---within-breeds.html#cb251-5" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb251-6"><a href="beta-diversity-analysis---within-breeds.html#cb251-6" tabindex="-1"></a></span>
+<span id="cb251-7"><a href="beta-diversity-analysis---within-breeds.html#cb251-7" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb251-8"><a href="beta-diversity-analysis---within-breeds.html#cb251-8" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-9"><a href="beta-diversity-analysis---within-breeds.html#cb251-9" tabindex="-1"></a>  <span class="fu">filter</span>(type_simple <span class="sc">==</span> <span class="st">&quot;P&quot;</span>, treatment <span class="sc">==</span> <span class="st">&quot;TF2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-10"><a href="beta-diversity-analysis---within-breeds.html#cb251-10" tabindex="-1"></a>  <span class="fu">pull</span>(genome) <span class="sc">%&gt;%</span></span>
+<span id="cb251-11"><a href="beta-diversity-analysis---within-breeds.html#cb251-11" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb251-12"><a href="beta-diversity-analysis---within-breeds.html#cb251-12" tabindex="-1"></a></span>
+<span id="cb251-13"><a href="beta-diversity-analysis---within-breeds.html#cb251-13" tabindex="-1"></a>group3 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb251-14"><a href="beta-diversity-analysis---within-breeds.html#cb251-14" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-15"><a href="beta-diversity-analysis---within-breeds.html#cb251-15" tabindex="-1"></a>  <span class="fu">filter</span>(type_simple <span class="sc">==</span> <span class="st">&quot;P&quot;</span>, treatment <span class="sc">==</span> <span class="st">&quot;TF3&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb251-16"><a href="beta-diversity-analysis---within-breeds.html#cb251-16" tabindex="-1"></a>  <span class="fu">pull</span>(genome) <span class="sc">%&gt;%</span></span>
+<span id="cb251-17"><a href="beta-diversity-analysis---within-breeds.html#cb251-17" tabindex="-1"></a>  <span class="fu">unique</span>()</span>
+<span id="cb251-18"><a href="beta-diversity-analysis---within-breeds.html#cb251-18" tabindex="-1"></a></span>
+<span id="cb251-19"><a href="beta-diversity-analysis---within-breeds.html#cb251-19" tabindex="-1"></a></span>
+<span id="cb251-20"><a href="beta-diversity-analysis---within-breeds.html#cb251-20" tabindex="-1"></a>venn_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb251-21"><a href="beta-diversity-analysis---within-breeds.html#cb251-21" tabindex="-1"></a>  <span class="at">TF1 =</span> group1,</span>
+<span id="cb251-22"><a href="beta-diversity-analysis---within-breeds.html#cb251-22" tabindex="-1"></a>  <span class="at">TF2 =</span> group2,</span>
+<span id="cb251-23"><a href="beta-diversity-analysis---within-breeds.html#cb251-23" tabindex="-1"></a>  <span class="at">TF3 =</span> group3</span>
+<span id="cb251-24"><a href="beta-diversity-analysis---within-breeds.html#cb251-24" tabindex="-1"></a>)</span>
+<span id="cb251-25"><a href="beta-diversity-analysis---within-breeds.html#cb251-25" tabindex="-1"></a></span>
+<span id="cb251-26"><a href="beta-diversity-analysis---within-breeds.html#cb251-26" tabindex="-1"></a><span class="co"># # Taxa unique to group1 only</span></span>
+<span id="cb251-27"><a href="beta-diversity-analysis---within-breeds.html#cb251-27" tabindex="-1"></a><span class="co"># unique_group1 &lt;- setdiff(group1, group2) # layer</span></span>
+<span id="cb251-28"><a href="beta-diversity-analysis---within-breeds.html#cb251-28" tabindex="-1"></a><span class="co"># # Taxa unique to group2 only</span></span>
+<span id="cb251-29"><a href="beta-diversity-analysis---within-breeds.html#cb251-29" tabindex="-1"></a><span class="co"># unique_group2 &lt;- setdiff(group2, group1) # broiler</span></span>
+<span id="cb251-30"><a href="beta-diversity-analysis---within-breeds.html#cb251-30" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb251-31"><a href="beta-diversity-analysis---within-breeds.html#cb251-31" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb251-32"><a href="beta-diversity-analysis---within-breeds.html#cb251-32" tabindex="-1"></a><span class="co"># # Filter once (layer/broiler + genomes of interest)</span></span>
+<span id="cb251-33"><a href="beta-diversity-analysis---within-breeds.html#cb251-33" tabindex="-1"></a><span class="co"># filtered_group1 &lt;- tidy_plot_genome_counts_filt_30_macro_closed %&gt;%</span></span>
+<span id="cb251-34"><a href="beta-diversity-analysis---within-breeds.html#cb251-34" tabindex="-1"></a><span class="co">#   filter(type_simple == &quot;P&quot;, animal_breed == &quot;layer&quot;, genome %in% unique_group1)</span></span>
+<span id="cb251-35"><a href="beta-diversity-analysis---within-breeds.html#cb251-35" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb251-36"><a href="beta-diversity-analysis---within-breeds.html#cb251-36" tabindex="-1"></a><span class="co"># filtered_group2 &lt;- tidy_plot_genome_counts_filt_30_macro_closed %&gt;%</span></span>
+<span id="cb251-37"><a href="beta-diversity-analysis---within-breeds.html#cb251-37" tabindex="-1"></a><span class="co">#   filter(type_simple == &quot;P&quot;, animal_breed == &quot;broiler&quot;, genome %in% unique_group2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb252-1"><a href="beta-diversity-analysis---within-breeds.html#cb252-1" tabindex="-1"></a>broilers_ven <span class="ot">&lt;-</span> <span class="fu">ggVennDiagram</span>(</span>
+<span id="cb252-2"><a href="beta-diversity-analysis---within-breeds.html#cb252-2" tabindex="-1"></a>  venn_data,</span>
+<span id="cb252-3"><a href="beta-diversity-analysis---within-breeds.html#cb252-3" tabindex="-1"></a>  <span class="at">label =</span> <span class="st">&quot;count&quot;</span>,       </span>
+<span id="cb252-4"><a href="beta-diversity-analysis---within-breeds.html#cb252-4" tabindex="-1"></a>  <span class="at">set_color =</span> <span class="fu">c</span>(<span class="at">TF1 =</span> <span class="st">&quot;#4059AE&quot;</span>,</span>
+<span id="cb252-5"><a href="beta-diversity-analysis---within-breeds.html#cb252-5" tabindex="-1"></a>  <span class="at">TF2 =</span> <span class="st">&quot;#97D8C4&quot;</span>,</span>
+<span id="cb252-6"><a href="beta-diversity-analysis---within-breeds.html#cb252-6" tabindex="-1"></a>  <span class="at">TF3 =</span> <span class="st">&quot;#F3B942&quot;</span>) ) <span class="sc">+</span></span>
+<span id="cb252-7"><a href="beta-diversity-analysis---within-breeds.html#cb252-7" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;white&quot;</span>, <span class="at">high =</span> <span class="st">&quot;grey&quot;</span>) <span class="sc">+</span></span>
+<span id="cb252-8"><a href="beta-diversity-analysis---within-breeds.html#cb252-8" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Broilers&quot;</span>) <span class="co">#+</span></span>
+<span id="cb252-9"><a href="beta-diversity-analysis---within-breeds.html#cb252-9" tabindex="-1"></a>  <span class="co">#coord_flip()</span></span>
+<span id="cb252-10"><a href="beta-diversity-analysis---within-breeds.html#cb252-10" tabindex="-1"></a></span>
+<span id="cb252-11"><a href="beta-diversity-analysis---within-breeds.html#cb252-11" tabindex="-1"></a><span class="co">#broilers_ven</span></span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb253-1"><a href="beta-diversity-analysis---within-breeds.html#cb253-1" tabindex="-1"></a>layers_venn <span class="sc">+</span> broilers_ven</span></code></pre></div>
+<p><img src="_main_files/figure-html/venn_combined_04F-1.png" width="1152" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="beta-diversity-analysis---between-breeds.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="diversity-partitioning-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

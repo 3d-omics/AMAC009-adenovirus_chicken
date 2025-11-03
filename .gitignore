@@ -1,0 +1,79 @@
+# R related
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+*.Rproj
+*.Rhistory
+
+# Bookdown build outputs
+# Note: _book/ is excluded by default, but if you want to use it for GitHub Pages,
+# you can comment out the _book/ line below and use it instead of docs/
+_book/
+# docs/  # Uncomment this line if you want to exclude docs/ instead (not recommended)
+
+# Individual HTML files (exclude standalone HTML files, but allow docs/ or _book/ contents)
+*.html
+!docs/**/*.html
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# R package documentation
+*.Rd
+*.Rd~
+
+# Knitr cache
+*_cache/
+*.cache
+
+# Large data files (if any)
+*.zip
+*.gz
+*.tar
+
+# Large intermediate data files (not needed for bookdown compilation)
+data/01_data_preparation.Rdata
+data/01_data_preparation_complete.Rdata  # Optional complete backup (if very large)
+
+# Raw source files (used to generate Rdata, but not needed for compilation)
+data/MAG_catalogue/*.tsv
+data/MAG_catalogue/*.tree
+data/MAG_catalogue/*.fa
+data/MAG_catalogue/drep.*
+data/MAG_catalogue/preprocess_data.zip
+
+# Intermediate processing results (not needed for bookdown)
+data/macro/results/
+data/**/results/
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Developer-only documentation (not for GitHub)
+DEVELOPER_INSTRUCTIONS.md
+COMPILATION_TEST.md
+TESTING_INSTRUCTIONS.md
+SPLIT_DATA_FILE.md
+
+# Helper scripts (optional - can be included if you want)
+# copy_to_docs.R  # Uncomment to exclude the helper script
+
+# License template (not needed in repository - actual LICENSE file should be committed)
+LICENSE_TEMPLATE.txt
+

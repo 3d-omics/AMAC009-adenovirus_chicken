@@ -1,0 +1,128 @@
+# Antimicrobial Effect Analysis
+
+## Load Data and Plotting Utilities
+
+```{r load_data_04C, warning=FALSE, message=FALSE}
+# Load processed plotting data and color schemes
+load("data/macro/plot_data.Rdata")
+load("data/data_colors.Rdata")
+```
+
+## Bacteria-to-Host Read Ratio
+
+This section analyzes the ratio of bacterial reads to host (chicken) reads, which can indicate antimicrobial treatment effects on the microbiome.
+
+### Layers - Bacteria-to-Host Ratio
+
+```{r bacteria_host_ratio_layer_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics for bacteria-to-host ratio by treatment and age
+var <- "bacteria_over_chicken"
+summary_stats_layer <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%  # Exclude negative controls
+  filter(animal_breed == "layer") %>%
+  group_by(treatment_expl, age) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = formatC(median, format = "f", digits = 2))
+
+# Display summary statistics table with proper formatting
+knitr::kable(summary_stats_layer, digits = 3, caption = "Summary statistics (median and IQR) for bacteria:host ratio in layers by treatment and age")
+```
+
+```{r bacteria_host_ratio_layer_plot, warning=FALSE, message=FALSE, fig.height=5, fig.width=10}
+# Create boxplot showing bacteria-to-host ratio over time for layers
+boxplot_reads_prc_1 <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "layer") %>%
+  ggplot(aes(x = age, y = bacteria_over_chicken, color = treatment)) +
+  geom_boxplot(outlier.shape = NA, color = "black") +  # Boxplot without outliers
+  geom_jitter(width = 0.05, alpha = 0.5) +  # Individual data points
+  scale_color_manual(values = treatment_colours_bright) +
+  facet_nested(. ~ treatment_expl, scales = "fixed", space = "fixed", switch = "y") +
+  labs(x = "Days post infection", y = "Bacteria/host reads ratio") +
+  guides(color = "none") +  # Remove legend
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(panel.spacing = unit(0.3, "lines"),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) + 
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+  # Add median values as text labels above boxes
+  geom_text(
+    data = summary_stats_layer,
+    aes(x = age, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -3.0,
+    size = 3, alpha = 1, color = "black"
+  ) +
+  ggtitle("Layers")
+
+# Display the plot (commented out - used in combined plot)
+# boxplot_reads_prc_1
+```
+
+### Broilers - Bacteria-to-Host Ratio
+
+```{r bacteria_host_ratio_broiler_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics for bacteria-to-host ratio by treatment and age
+var <- "bacteria_over_chicken"
+summary_stats_broiler <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%  # Exclude negative controls
+  filter(animal_breed == "broiler") %>%
+  group_by(treatment_expl, age) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = formatC(median, format = "f", digits = 2))
+
+# Display summary statistics table with proper formatting
+knitr::kable(summary_stats_broiler, digits = 3, caption = "Summary statistics (median and IQR) for bacteria:host ratio in broilers by treatment and age")
+```
+
+```{r bacteria_host_ratio_broiler_plot, warning=FALSE, message=FALSE, fig.height=5, fig.width=10}
+# Create boxplot showing bacteria-to-host ratio over time for broilers
+
+boxplot_reads_prc_2 <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "broiler") %>%
+  ggplot(aes(x = age, y = bacteria_over_chicken, color = treatment)) +
+  geom_boxplot(outlier.shape = NA, color = "black") +  # Boxplot without outliers
+  geom_jitter(width = 0.05, alpha = 0.5) +  # Individual data points
+  scale_color_manual(values = treatment_colours_bright) +
+  facet_nested(. ~ treatment_expl, scales = "fixed", space = "fixed", switch = "y") +
+  labs(x = "Days post infection", y = "Bacteria/host reads ratio") +
+  guides(color = "none") +  # Remove legend
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(panel.spacing = unit(0.3, "lines"),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) + 
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+  # Add median values as text labels above boxes
+  geom_text(
+    data = summary_stats_broiler,
+    aes(x = age, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -3.0,
+    size = 3, alpha = 1, color = "black"
+  ) +
+  ggtitle("Broilers")
+
+# Display the plot (commented out - used in combined plot)
+# boxplot_reads_prc_2
+```
+
+### Combined Visualization
+
+```{r bacteria_host_ratio_combined, warning=FALSE, message=FALSE, fig.height=7, fig.width=8}
+# Combine both plots for side-by-side comparison
+boxplot_reads_prc_1 / boxplot_reads_prc_2 + 
+  plot_annotation(tag_levels = 'a')
+```

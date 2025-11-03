@@ -1,0 +1,887 @@
+# Data Import - Metadata and Sequencing Statistics
+
+## Overview
+
+This chapter processes sample metadata, sequencing statistics, and defines global plotting settings. All data processing steps are shown for transparency, but code chunks are set to `eval=FALSE` so they do not execute during bookdown compilation. The processed data is saved to `.Rdata` files which are then loaded in subsequent plotting chapters.
+
+## Define Plotting Settings
+
+This section defines the custom ggplot theme and treatment color schemes used consistently across all plots in this bookdown.
+
+```{r custom_ggplot_theme_01B, warning=FALSE, message=FALSE, eval=FALSE}
+# Define custom ggplot theme for consistent plot styling across all figures
+# This theme controls facet labels, axis formatting, grid lines, and margins
+custom_ggplot_theme <- theme(
+  strip.text.y.left = element_text(angle = 0),
+  strip.text.y.right = element_text(angle = 0),
+  axis.text = element_text(size = 10),
+  axis.title = element_text(size = 12, face = "bold"),
+  strip.background = element_rect(fill = "#dde3e9", color = "white", size = 0.8), # Custom facet strip background
+  strip.text = element_text(size = 8, face = "bold", color = "black"), # Custom facet text
+  strip.placement = "outside", # Place strip outside the panel grid
+  panel.spacing = unit(0.1, "lines"), # Adjust space between panels
+  panel.grid.major = element_line(color = "#dde3e9"), # Customize major grid lines
+  panel.grid.minor = element_blank(), # Remove minor grid lines
+  panel.background = element_rect(fill = "white"), # Change panel background color
+  plot.margin = unit(c(1, 1, 1, 1), "cm") # Adjust plot margins to ensure content fits
+)
+```
+
+
+## Sample metadata
+
+### Micro-samples
+Import sample metadata from the Airtable.
+Get base ID from Airtable browser URL.
+
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+```{r sample_metadata_micro_01B, message=FALSE, eval=FALSE}
+# sample_metadata <- airtable("4-MSE-Info", "appKakM1bnKSekwuW") %>% 
+#   # select fields to extract
+#   read_airtable(., fields = c(
+#     "ID", "LabBatch_text", "IntestinalSection", "SampleType",
+#     "Xcoord", "Ycoord", "SizeApprox", "cryosection_text", "buffer_text",
+#     "Collection_Success", "Collection_attempts", "UsedCycles", 
+#     "animal_temp", "Protocol_text", "Collection_method_text", 
+#     "Treatment_from_Sample", "SeriesDayCount_from_Sample"
+#   ), id_to_col = TRUE) %>%
+#   # select relevant batches
+#   filter(LabBatch_text %in% c(
+#                               "MSEB0011",             # REMOVE THESE FOR THE Sequencing stats ANALYSIS!
+#                              # "MSEB0014", "MSEB0015", # REMOVE THESE FOR THE Community ANALYSIS!
+#                               "MSEB0016", "MSEB0017", 
+#                               "MSEB0018", "MSEB0019", 
+#                               "MSEB0020", "MSEB0021", 
+#                               "MSEB0022", "MSEB0023", 
+#                               "MSEB0024", "MSEB0025", 
+#                               "MSEB0026", "MSEB0027",
+#                               "MSEB0028", "MSEB0029",
+#                               "MSEB0030", "MSEB0031")) %>% 
+#   # rename columns
+#   rename(
+#     batch = LabBatch_text,
+#     microsample = ID,
+#     section = IntestinalSection,
+#     type = SampleType,
+#     cryosection = cryosection_text,
+#     buffer = buffer_text,
+#     collection = Collection_Success,
+#     collection_attempts = Collection_attempts,
+#     cycles = UsedCycles,
+#     animal = animal_temp,
+#     size = SizeApprox,
+#     protocol = Protocol_text,
+#     collection_method = Collection_method_text,
+#     treatment = Treatment_from_Sample,
+#     day = SeriesDayCount_from_Sample
+#   ) %>%
+#   # select relevant columns
+#   select(
+#     microsample, section, type, batch,
+#     cryosection, buffer, Xcoord, Ycoord,
+#     size, collection, collection_attempts,
+#     cycles, animal, protocol, collection_method,
+#     treatment, day
+#   ) %>%
+#   # unnest columns that appearred as a list
+#   unnest(c(section, Xcoord, Ycoord, size, collection, cycles, collection_method, treatment, day)) %>%
+#   # create new column with simplified type by taking first letter 
+#   # P = Positive, N = Negative collection/reaction/membrane, C =Control Human
+#   mutate(type_simple = substr(type, 1, 1)) %>%
+#   mutate(
+#       treatment_expl = case_when(
+#         treatment == "TG1" ~ "Pathogen&Probiotic",
+#         treatment == "TG4" ~ "PathogenOnly",
+#         treatment == "TG5" ~ "Control")
+#     )  %>%
+#   # order df by microsample
+#   arrange(microsample)
+# 
+# # Get vector of microsamples to keep
+# microsamples_to_keep <- sample_metadata$microsample
+```
+
+
+### Macro-samples
+```{r load_sample_metadata_macro_01B, message=FALSE, eval=FALSE}
+# sample_metadata_macro <- read_csv("data/macro/sample_metadata.csv")
+sample_metadata_macro <- airtable("5-SE-Info", "apphvsV2YKhTCMKGS") %>% 
+  # select columns to extract
+  read_airtable(., fields = c(
+    "ID", "LabBatch_text", "ExperimentalUnitIndexedLibrary", 
+    "SampleTypeIndexedLibrary", "TreatmentIndexedLibrary", "AgeIndexedLibrary"), id_to_col = TRUE) %>%
+  # rename columns
+  rename(
+    batch = "LabBatch_text",
+    sample = "ID",
+    animal = "ExperimentalUnitIndexedLibrary",
+    tissue = "SampleTypeIndexedLibrary",
+    treatment = "TreatmentIndexedLibrary",
+    age = "AgeIndexedLibrary"
+  ) %>%
+    # select relevant batches
+  filter(batch %in% c("S3B017","S3B018")) %>%
+  # select relevant columns
+  select(sample, batch, animal, tissue, treatment, age) %>%
+  # un-nest columns that appeared as a list
+  unnest(c(sample, batch, animal, tissue, treatment, age)) %>%
+  # order the column 'size' - for plotting in correct order later
+  mutate(age = factor(age, levels = c(0, 3, 5, 7, 14))) %>%
+  # order df by sample
+  mutate(
+      treatment_expl = case_when(
+        treatment == "TF1" ~ "Pathogen",
+        treatment == "TF2" ~ "Disruption&Pathogen",
+        treatment == "TF3" ~ "Control",
+        treatment == "TF0" ~ "LabNegControl")
+    )  %>%
+  # WARNING: I am doing this manually as the animal_type column in General airtable is not transferred to the Macro airtable. To fix in the future.
+  mutate(animal_breed = case_when(
+    animal == "F000" ~ "LabNegControl",
+    as.numeric(sub("F", "", animal)) >= 1 & as.numeric(sub("F", "", animal)) <= 75 ~ "broiler",
+    as.numeric(sub("F", "", animal)) >= 76 & as.numeric(sub("F", "", animal)) <= 150 ~ "layer",
+    TRUE ~ NA_character_
+  ),
+  type_simple = case_when(
+    treatment == "TF0" ~ "N",
+    treatment %in% c("TF1", "TF2","TF3") ~ "P"
+  )) %>%
+  arrange(sample)
+```
+
+```{r treatment_colors_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# Bright colors (opaque)
+treatment_colours_bright <- c(
+  TF1 = "#4059AE",
+  TF2 = "#97D8C4",
+  TF3 = "#F3B942",
+  TF0 = "grey"
+)
+
+# Pastel / transparent (for fill, with ~50% opacity)
+treatment_colours_pastel <- paste0(treatment_colours_bright, "50")
+```
+
+
+
+## Bacterial reads (counts)
+
+This are the documents containing the number of sequencing reads from each sample have been mapped to each MAG. Note that these are raw data that need to be further processed before running any statistics on them.
+
+
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+! Needs Update
+Location on ERDA:
+
+Batches: xx
+ID:xx
+Path: 3D-omics/processed_data/xx
+Access: read
+
+```{r load_count_micro_01B, message=FALSE, eval=FALSE, warning=FALSE, comments=""}
+# read_counts <- read_tsv( "https://sid.erda.dk/share_redirect/AnbtDUWqTb/results/quantify/coverm/genome.count.REF0015-g_mg_hybrid-0.95.tsv.gz", show_col_types = FALSE) %>% 
+#   left_join(read_tsv("https://sid.erda.dk/share_redirect/crNpXmjSKn/results/quantify/coverm/genome.count.REF0015-g_mg_hybrid-0.95.tsv.gz", show_col_types = FALSE), by = "sequence_id") %>% 
+#   left_join(read_tsv("https://sid.erda.dk/share_redirect/e0AdKjIfTW/results/quantify/coverm/REF0015-g_mg_hybrid-0.95.genome.count.tsv.gz", show_col_types = FALSE), by = "sequence_id") %>% 
+#   # rename first column to 'genome'
+#   rename(genome = 1) %>% 
+#   # pivot to a long 2-column table (columns: data, counts)
+#   pivot_longer(!genome, names_to = "data", values_to = "counts") %>% 
+#   # make new column ('sample') from column 'data', by keeping the first 7 characters - i.e. remove the .lib1 ending
+#   mutate(sample = substr(data, 1, 7)) %>% 
+#   # filter to only keep microsamples starting from M (so, remove the 'undetermined' )
+#   filter(grepl("^M", sample)) %>% 
+#   # sum counts from same genome-sample group (i.e. for MSEB0009 & MSEB0010)
+#   group_by(genome, sample) %>%
+#   summarise(counts = sum(counts), .groups = "drop") %>% 
+#   # make table wide again (i.e. columns become sample)
+#   pivot_wider(names_from = "sample", values_from = "counts") %>%
+#   # sort genomes based on the order of the genome metadata df
+#   arrange(match(genome,genome_metadata$genome)) %>%
+#   # select only microsamples present in selected metadata & the column 'genome'
+#   select(genome, any_of(microsamples_to_keep))
+```
+
+### Macro-samples
+Location on ERDA:
+ID: ELPE6LATFN
+Path: 3D-omics/processed_data/f_mg-mg_assembly
+Access: read
+
+Genome counts: https://sid.erda.dk/share_redirect/Fbw1zRJFuo/results/prokaryotes/quantify/coverm/genome.count.drep.0.95.tsv.gz
+Genome covered bases: https://sid.erda.dk/share_redirect/Fbw1zRJFuo/results/prokaryotes/quantify/coverm/genome.covered_bases.drep.0.95.tsv.gz
+
+!Important: I unzip in case it causes any problem with reading the table. Usually problems are found with zip files from ERDA.
+pwd
+/Users/psl853/OneDrive - University of Copenhagen/Documents/Github projects/Adenovirus/data/macro/results/prokaryotes/quantify/coverm
+gunzip genome.count.drep.0.95.tsv.gz 
+% gunzip genome.covered_bases.drep.0.95.tsv.gz 
+
+```{r load_count_macro_01B, message=FALSE, eval=FALSE}
+read_counts_macro <- read_tsv("data/macro/results/prokaryotes/quantify/coverm/genome.count.drep.0.95.tsv") %>%
+  #simplify column names
+  rename_all(~ str_remove_all(., ".lib1")) %>% 
+  # rename first column to 'genome'
+  rename(genome = 1) %>%
+  select(all_of(c("genome",sample_metadata_macro$sample))) %>% # sort samples
+  # sort genomes based on the order of the genome metadata df
+  arrange(match(genome,genome_metadata$genome)) # sort genomes
+```
+
+
+
+## Genome covered bases
+
+This is the document containing the number of nucleotide bases have been covered by at least one read in each sample and MAG. This information is used to calculate MAG coverage values.
+
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r load_hits_micro_01B, message=FALSE, eval=FALSE}
+# genome_covered_bases <- read_tsv("https://sid.erda.dk/share_redirect/AnbtDUWqTb/results/quantify/coverm/genome.covered_bases.REF0015-g_mg_hybrid-0.95.tsv.gz", show_col_types = FALSE) %>% 
+#   left_join(read_tsv("https://sid.erda.dk/share_redirect/crNpXmjSKn/results/quantify/coverm/genome.covered_bases.REF0015-g_mg_hybrid-0.95.tsv.gz", show_col_types = FALSE), by = "sequence_id") %>% 
+#     left_join(read_tsv("https://sid.erda.dk/share_redirect/e0AdKjIfTW/results/quantify/coverm/REF0015-g_mg_hybrid-0.95.genome.covered_bases.tsv.gz", show_col_types = FALSE), by = "sequence_id") %>% 
+#   rename(genome = 1) %>%
+#   pivot_longer(!genome, names_to = "data", values_to = "counts") %>%
+#   mutate(sample = substr(data, 1, 7)) %>%
+#   group_by(genome, sample) %>%
+#   summarise(counts = sum(counts), .groups = "drop") %>%
+#   pivot_wider(names_from = "sample", values_from = "counts") %>% 
+#   arrange(match(genome, read_counts$genome)) %>%
+#   select(genome, any_of(microsamples_to_keep))
+```
+
+### Macro-samples
+```{r load_hits_macro_01B, message=FALSE, eval=FALSE}
+genome_covered_bases_macro <- read_tsv("data/macro/results/prokaryotes/quantify/coverm/genome.covered_bases.drep.0.95.tsv") %>%
+  #simplify column names
+  rename_all(~ str_remove_all(., ".lib1")) %>% 
+  rename(genome = 1) %>%
+  # sort samples
+  select(all_of(c("genome",sample_metadata_macro$sample))) %>% 
+  # sort genomes
+  arrange(match(genome,genome_metadata$genome))
+```
+
+
+
+## Sequencing statistics 
+
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+
+3D-omics/processed_data/xx
+ID: xx
+FastP results, including QC:
+https://sid.erda.dk/share_redirect/xx/results/preprocess_fastp_multiqc_report_data/multiqc_fastp.txt
+Packed in JSON format. This is a very large file, this is why we download it from ERDA here.
+
+```{r stats_fastp_micro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# fastp_seq_stats <- bind_rows(
+#   read_tsv("https://sid.erda.dk/share_redirect/DLBJI7VkVQ/results/preprocess_fastp_multiqc_report_data/multiqc_fastp.txt", 
+#            col_select = c("Sample", "summary", "duplication", "filtering_result", "adapter_cutting"), 
+#            show_col_types = FALSE),
+#   
+#   read_tsv("data/micro/MSEB16-23-mg_quant/preprocess_data/multiqc_fastp.txt", 
+#            col_select = c("Sample", "summary", "duplication", "filtering_result", "adapter_cutting"), 
+#            show_col_types = FALSE),
+#   
+#   read_tsv("data/micro/MSEB24-31-mg_quant/preprocess_data/multiqc_fastp.txt", 
+#            col_select = c("Sample", "summary", "duplication", "filtering_result", "adapter_cutting"), 
+#            show_col_types = FALSE)
+#   ) %>%
+#   mutate(Sample = str_extract(Sample, "M\\d+"))%>%
+#   mutate(duplication = as.numeric(gsub(".*:\\s*([0-9\\.]+).*", "\\1", duplication))) %>%
+#   rename(microsample = Sample) %>%
+#   mutate(
+#     summary_clean = gsub("'", "\"", summary),
+#     total_sequences_before_trim = map_dbl(summary_clean, ~ fromJSON(.)$before_filtering$total_reads),
+#     total_bases_before_trim = map_dbl(summary_clean, ~ fromJSON(.)$before_filtering$total_bases),
+#     percent_gc_before_trim = map_dbl(summary_clean, ~ fromJSON(.)$before_filtering$gc_content),
+#     total_sequences_after_trim = map_dbl(summary_clean, ~ fromJSON(.)$after_filtering$total_reads),
+#     total_bases_after_trim = map_dbl(summary_clean, ~ fromJSON(.)$after_filtering$total_bases),
+#     percent_gc_after_trim = map_dbl(summary_clean, ~ fromJSON(.)$after_filtering$gc_content)
+#   ) %>%
+#   mutate(
+#     adaptor_clean = gsub("'", "\"", adapter_cutting),
+#     adapter_trimmed_reads = map_dbl(adaptor_clean, ~ fromJSON(.)$adapter_trimmed_reads),
+#     adapter_trimmed_bases = map_dbl(adaptor_clean, ~ fromJSON(.)$adapter_trimmed_bases)
+#   ) %>%
+#   mutate(
+#     filtering_clean = gsub("'", "\"", filtering_result),
+#     passed_filter_reads = map_dbl(filtering_clean, ~ fromJSON(.)$passed_filter_reads),
+#     low_quality_reads = map_dbl(filtering_clean, ~ fromJSON(.)$low_quality_reads),
+#     too_many_N_reads = map_dbl(filtering_clean, ~ fromJSON(.)$too_many_N_reads),
+#     too_short_reads = map_dbl(filtering_clean, ~ fromJSON(.)$too_short_reads)
+#   ) %>%
+#   select(-summary_clean,-summary, -adaptor_clean, -filtering_result, -filtering_clean) %>%
+#   filter(grepl("^M", microsample)) %>%
+#   group_by(microsample) %>%
+#   summarise(
+#     total_sequences_before_trim = sum(total_sequences_before_trim, na.rm = TRUE),
+#     total_bases_before_trim = sum(total_bases_before_trim, na.rm = TRUE),
+#     total_sequences_after_trim = sum(total_sequences_after_trim, na.rm = TRUE),
+#     total_bases_after_trim = sum(total_bases_after_trim, na.rm = TRUE),
+#     percent_gc_before_trim = mean(percent_gc_before_trim, na.rm = TRUE)*100,
+#     percent_gc_after_trim = mean(percent_gc_after_trim, na.rm = TRUE),
+#     duplication = mean(duplication, na.rm = TRUE)*100,
+#     adapter_trimmed_reads = sum(adapter_trimmed_reads, na.rm = TRUE),
+#     adapter_trimmed_bases = sum(adapter_trimmed_bases, na.rm = TRUE),
+#     passed_filter_reads = sum(passed_filter_reads, na.rm = TRUE),
+#     low_quality_reads = sum(low_quality_reads, na.rm = TRUE),
+#     too_many_N_reads = sum(too_many_N_reads, na.rm = TRUE),
+#     too_short_reads = sum(too_short_reads, na.rm = TRUE)   
+#     ) %>%
+#   filter(microsample %in% sample_metadata$microsample)
+
+```
+
+### Macro-samples
+Remember to change M to D, as only microsamples start from M, an these are macro-samples.
+
+I downloaded the folder preprocess_data.zip from results inside ID: ELPE6LATFN Path: 3D-omics/processed_data/f_mg-mg_assembly
+```{r stats_fastp_macro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+fastp_seq_stats_macro <- read_tsv("data/macro/results/preprocess_data/multiqc_fastp.txt", 
+           col_select = c("Sample", "summary", "duplication", "filtering_result", "adapter_cutting"), 
+           show_col_types = FALSE) %>%
+  mutate(Sample = str_extract(Sample, "D\\d+"))%>%
+  mutate(duplication = as.numeric(gsub(".*:\\s*([0-9\\.]+).*", "\\1", duplication))) %>%
+  rename(microsample = Sample) %>%
+  mutate(
+    summary_clean = gsub("'", "\"", summary),
+    total_sequences_before_trim = map_dbl(summary_clean, ~ fromJSON(.)$before_filtering$total_reads),
+    total_bases_before_trim = map_dbl(summary_clean, ~ fromJSON(.)$before_filtering$total_bases),
+    percent_gc_before_trim = map_dbl(summary_clean, ~ fromJSON(.)$before_filtering$gc_content),
+    total_sequences_after_trim = map_dbl(summary_clean, ~ fromJSON(.)$after_filtering$total_reads),
+    total_bases_after_trim = map_dbl(summary_clean, ~ fromJSON(.)$after_filtering$total_bases),
+    percent_gc_after_trim = map_dbl(summary_clean, ~ fromJSON(.)$after_filtering$gc_content)
+  ) %>%
+  mutate(
+    adaptor_clean = gsub("'", "\"", adapter_cutting),
+    adapter_trimmed_reads = map_dbl(adaptor_clean, ~ fromJSON(.)$adapter_trimmed_reads),
+    adapter_trimmed_bases = map_dbl(adaptor_clean, ~ fromJSON(.)$adapter_trimmed_bases)
+  ) %>%
+  mutate(
+    filtering_clean = gsub("'", "\"", filtering_result),
+    passed_filter_reads = map_dbl(filtering_clean, ~ fromJSON(.)$passed_filter_reads),
+    low_quality_reads = map_dbl(filtering_clean, ~ fromJSON(.)$low_quality_reads),
+    too_many_N_reads = map_dbl(filtering_clean, ~ fromJSON(.)$too_many_N_reads),
+    too_short_reads = map_dbl(filtering_clean, ~ fromJSON(.)$too_short_reads)
+  ) %>%
+  select(-summary_clean,-summary, -adaptor_clean, -filtering_result, -filtering_clean) %>%
+  filter(grepl("^D", microsample)) %>%
+  group_by(microsample) %>%
+  summarise(
+    total_sequences_before_trim = sum(total_sequences_before_trim, na.rm = TRUE),
+    total_bases_before_trim = sum(total_bases_before_trim, na.rm = TRUE),
+    total_sequences_after_trim = sum(total_sequences_after_trim, na.rm = TRUE),
+    total_bases_after_trim = sum(total_bases_after_trim, na.rm = TRUE),
+    percent_gc_before_trim = mean(percent_gc_before_trim, na.rm = TRUE)*100,
+    percent_gc_after_trim = mean(percent_gc_after_trim, na.rm = TRUE),
+    duplication = mean(duplication, na.rm = TRUE)*100,
+    adapter_trimmed_reads = sum(adapter_trimmed_reads, na.rm = TRUE),
+    adapter_trimmed_bases = sum(adapter_trimmed_bases, na.rm = TRUE),
+    passed_filter_reads = sum(passed_filter_reads, na.rm = TRUE),
+    low_quality_reads = sum(low_quality_reads, na.rm = TRUE),
+    too_many_N_reads = sum(too_many_N_reads, na.rm = TRUE),
+    too_short_reads = sum(too_short_reads, na.rm = TRUE)   
+    ) %>%
+  filter(microsample %in% sample_metadata_macro$sample)
+```
+
+
+
+## Non-bacterial mapped reads: human, chicken, swine 
+
+### Micro
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+3D-omics/processed_data/xx/
+ID: xx 
+https://sid.erda.dk/share_redirect/xx/results/preprocess_bowtie2_multiqc_report_data/multiqc_samtools_stats.txt
+
+"data/micro/non_bacterial_mapping/multiqc_samtools_stats.txt"
+This is calculated on the trimmed reads. 
+To find the number of reads mapped to each reference you have to either
+  - estimate number from the columns: reads_mapped + (reads_mapped - reads_mapped_and_paired) OR
+  - subtract the number of reads that entered the analysis (e.g. column 'total_passed' of human - from column 'total_passed' of chicken = reads mapped to human).
+If you try both, these numbers should be equal. 
+  
+```{r stats_non_bacteria_mapping_micro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# stats_non_bacteria_mapping <- bind_rows(
+#   read_tsv("data/micro/MSEBXXXX-mg_quant-chicken-2/preprocess_bowtie2_multiqc_report_data/multiqc_samtools_stats.txt", show_col_types = FALSE),
+#   read_tsv("data/micro/MSEB16-23-mg_quant/preprocess_data/multiqc_samtools_stats.txt", show_col_types = FALSE),
+#   read_tsv("data/micro/MSEB24-31-mg_quant/preprocess_data/multiqc_samtools_stats.txt", show_col_types = FALSE)
+#   ) %>%
+#   # make new columns
+#   mutate(reference = case_when(
+#       # for type of reference based on reference code
+#       grepl("GRCh38", Sample, ignore.case = TRUE) ~ "human",
+#       grepl("GRCg7b", Sample, ignore.case = TRUE) ~ "chicken",
+#       grepl("Sscrofa11.1", Sample, ignore.case = TRUE) ~ "swine",
+#       TRUE ~ NA_character_),
+#       # for microsample names
+#       microsample = str_extract(Sample, "M\\d+"),
+#       # for number of reads as input to each reference mapping
+#       chicken_total_passed = ifelse(reference == "chicken", raw_total_sequences, NA_real_),
+#       human_total_passed = ifelse(reference == "human", raw_total_sequences, NA_real_),
+#       swine_total_passed = ifelse(reference == "swine", raw_total_sequences, NA_real_),
+#       # for number of reads that mapped to each reference 
+#       chicken_total_mapped = ifelse(reference == "chicken", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+#       human_total_mapped = ifelse(reference == "human", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+#       swine_total_mapped = ifelse(reference == "swine", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+#       # for unmapped reads after mapping to all three references
+#       swine_unmapped = ifelse(reference == "swine", swine_total_passed - swine_total_mapped, NA_real_)) %>%
+#   # select relevant columns
+#   select(microsample,
+#         chicken_total_passed, human_total_passed, swine_total_passed,
+#         chicken_total_mapped, human_total_mapped, swine_total_mapped, 
+#          swine_unmapped) %>%
+#   # sum reads for same microsample for each reference
+#   group_by(microsample) %>%
+#   summarise(across(
+#     starts_with("chicken_") | starts_with("human_") | starts_with("swine_"), 
+#     sum, na.rm = TRUE)) %>%
+#   # keep microsamples starting with M (i.e., remove 'NA' or 'undetermined')
+#   filter(grepl("^M", microsample)) %>%
+#   filter(microsample %in% sample_metadata$microsample)
+```
+
+
+### Macro-samples
+I downloaded the folder preprocess_data.zip from results inside ID: ELPE6LATFN Path: 3D-omics/processed_data/f_mg-mg_assembly
+```{r stats_non_bacteria_mapping_macro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+stats_non_bacteria_mapping_macro <- read_tsv("data/macro/results/preprocess_data/multiqc_samtools_stats.txt", show_col_types = FALSE) %>%
+  # make new columns
+  mutate(reference = case_when(
+      # for type of reference based on reference code
+      grepl("GRCh38", Sample, ignore.case = TRUE) ~ "human",
+      grepl("GRCg7b", Sample, ignore.case = TRUE) ~ "chicken",
+      grepl("Sscrofa11.1", Sample, ignore.case = TRUE) ~ "swine",
+      grepl("Turkey_5.1", Sample, ignore.case = TRUE) ~ "turkey",
+      grepl("fadve", Sample, ignore.case = TRUE) ~ "adenovirus",
+      TRUE ~ NA_character_),
+      # for microsample names
+      microsample = str_extract(Sample, "D\\d+"),
+      # for number of reads as input to each reference mapping
+      chicken_total_passed = ifelse(reference == "chicken", raw_total_sequences, NA_real_),
+      human_total_passed = ifelse(reference == "human", raw_total_sequences, NA_real_),
+      swine_total_passed = ifelse(reference == "swine", raw_total_sequences, NA_real_),
+      turkey_total_passed = ifelse(reference == "turkey", raw_total_sequences, NA_real_),
+      adenovirus_total_passed = ifelse(reference == "adenovirus", raw_total_sequences, NA_real_),
+      # for number of reads that mapped to each reference 
+      chicken_total_mapped = ifelse(reference == "chicken", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+      human_total_mapped = ifelse(reference == "human", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+      swine_total_mapped = ifelse(reference == "swine", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+      turkey_total_mapped = ifelse(reference == "turkey", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+      adenovirus_total_mapped = ifelse(reference == "adenovirus", reads_mapped + (reads_mapped - reads_mapped_and_paired), NA_real_),
+      # for unmapped reads after mapping to all three references
+      swine_unmapped = ifelse(reference == "swine", swine_total_passed - swine_total_mapped, NA_real_)) %>%
+  # select relevant columns
+  select(microsample,
+        chicken_total_passed, human_total_passed, swine_total_passed, turkey_total_passed, adenovirus_total_passed,
+        chicken_total_mapped, human_total_mapped, swine_total_mapped, turkey_total_mapped, adenovirus_total_mapped,
+        swine_unmapped) %>%
+  # sum reads for same microsample for each reference
+  group_by(microsample) %>%
+  summarise(across(
+    starts_with("chicken_") | starts_with("human_") | starts_with("swine_")| starts_with("turkey_") | starts_with("adenovirus_"), 
+    sum, na.rm = TRUE)) %>%
+  filter(grepl("^D", microsample)) %>%
+  filter(microsample %in% sample_metadata_macro$sample)
+```
+
+
+## Bacterial mapped reads.
+
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r stats_bacteria_mapping_micro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# stats_bacteria_mapping <- bind_rows(
+#   read_tsv("data/micro/MSEBXXXX-mg_quant-chicken-2/quantify/multiqc_samtools_stats.txt", show_col_types = FALSE),
+#   read_tsv("data/micro/MSEB16-23-mg_quant/quantify/multiqc_samtools_stats.txt", show_col_types = FALSE),
+#   read_tsv("data/micro/MSEB24-31-mg_quant/quantify/multiqc_samtools_stats.txt", show_col_types = FALSE)
+#   ) %>%
+#     # make new columns
+#   mutate(
+#     microsample = str_extract(Sample, "M\\d+"),
+#     bacteria_total_passed = raw_total_sequences,
+#     bacteria_total_mapped = reads_mapped,
+#     unmapped = reads_unmapped
+#   ) %>%
+#   # sum reads of the same microsample because some samples were sequence multiple times
+#   group_by(microsample) %>% 
+#   summarise(
+#     bacteria_total_passed = sum(bacteria_total_passed, na.rm = TRUE), 
+#     bacteria_total_mapped = sum(bacteria_total_mapped, na.rm = TRUE),
+#     unmapped = sum(unmapped, na.rm = TRUE)
+#   ) %>%
+#   # select relevant columns
+#   select(microsample, bacteria_total_passed, bacteria_total_mapped, unmapped) %>%
+#   # keep microsamples starting with M (i.e., remove 'NA' or 'undetermined')
+#   filter(grepl("^M", microsample)) %>%
+#   filter(microsample %in% sample_metadata$microsample)
+```
+
+### Macro-samples
+I downloaded the folder prokaryotes_data.zip from results inside ID: ELPE6LATFN Path: 3D-omics/processed_data/f_mg-mg_assembly
+```{r stats_bacteria_mapping_macro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+stats_bacteria_mapping_macro <- read_tsv("data/macro/results/prokaryotes_data/multiqc_samtools_stats.txt", show_col_types = FALSE) %>%
+    # select only the dereplicated to 95% (as the file includes also the 98% and 99%)
+  filter(str_detect(Sample, "0\\.95"))%>%
+    # make new columns
+  mutate(
+    microsample = str_extract(Sample, "D\\d+"),
+    bacteria_total_passed = raw_total_sequences,
+    bacteria_total_mapped = reads_mapped,
+    unmapped = reads_unmapped
+  ) %>%
+  # sum reads of the same microsample because some samples were sequence multiple times
+  group_by(microsample) %>% 
+  summarise(
+    bacteria_total_passed = sum(bacteria_total_passed, na.rm = TRUE), 
+    bacteria_total_mapped = sum(bacteria_total_mapped, na.rm = TRUE),
+    unmapped = sum(unmapped, na.rm = TRUE)
+  ) %>%
+  # select relevant columns
+  select(microsample, bacteria_total_passed, bacteria_total_mapped, unmapped) %>%
+  # keep microsamples starting with M (i.e., remove 'NA' or 'undetermined')
+  filter(grepl("^D", microsample)) 
+```
+
+
+## Alternative way to estimate bacterial read counts (from count table):
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r stats_bacteria_mapping_alternative_micro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# stats_bacteria_mapping_alternative <- read_counts %>%
+#   # Move genome names to rownames
+#   column_to_rownames(var = "genome") %>%
+#   # Transpose the data
+#   t() %>% 
+#   # Convert back to a data frame
+#   as.data.frame() %>%
+#   # Move sample names into a column
+#   rownames_to_column(var = "microsample") %>%
+#   # sum the counts of all genomes in each sample (i.e., sum of each row)
+#   mutate(bacteria_total_read_counts = rowSums(select(., -microsample))) %>% 
+#   # select to show only the total_counts column
+#   select(microsample, bacteria_total_read_counts) %>% 
+#   # select only microsamples starting with 'M' (i.e. not 'NA' or 'Undetermined')
+#   filter(grepl("^M", microsample))
+```
+
+### Macro-samples
+```{r stats_bacteria_mapping_alternative_macro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+stats_bacteria_mapping_alternative_macro <- read_counts_macro %>%
+  # Move genome names to rownames
+  column_to_rownames(var = "genome") %>%
+  # Transpose the data
+  t() %>% 
+  # Convert back to a data frame
+  as.data.frame() %>%
+  # Move sample names into a column
+  rownames_to_column(var = "microsample") %>%
+  # sum the counts of all genomes in each sample (i.e., sum of each row)
+  mutate(bacteria_total_read_counts = rowSums(select(., -microsample))) %>% 
+  # select to show only the total_counts column
+  select(microsample, bacteria_total_read_counts) %>% 
+  # select only microsamples starting with 'M' (i.e. not 'NA' or 'Undetermined')
+  filter(grepl("^D", microsample))
+```
+
+
+
+
+## Sanity checks
+
+Check if the two methods of counting bacterial reads agree:
+
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r compare_bacterial_mapping_micro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# comparison_bacteria_mapping <- stats_bacteria_mapping_alternative %>%
+#   # Join on 'microsample'
+#   inner_join(stats_bacteria_mapping, by = "microsample") %>% 
+#   # Compare the two columns
+#   mutate(same_counts = bacteria_total_read_counts == bacteria_total_mapped) 
+# 
+# # Check if all values are the same
+# # TRUE if all are the same, FALSE otherwise
+# all(comparison_bacteria_mapping$same_counts) 
+# 
+# # Filter & show rows where the counts between the two columns differ
+# comparison_bacteria_mapping %>%
+#   filter(!same_counts) %>%
+#   mutate(difference = bacteria_total_read_counts- bacteria_total_mapped) %>%
+#   select(microsample, bacteria_total_read_counts, bacteria_total_mapped, difference)
+```
+Difference of 1-3 reads (out of X*1e7 reads) in 26 microsamples. I'd say this is fine.
+
+
+### Macro-samples
+```{r compare_bacterial_mapping_macro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+comparison_bacteria_mapping_macro <- stats_bacteria_mapping_alternative_macro %>%
+  # Join on 'microsample'
+  inner_join(stats_bacteria_mapping_macro, by = "microsample") %>% 
+  # Compare the two columns
+  mutate(same_counts = bacteria_total_read_counts == bacteria_total_mapped) 
+
+# Check if all values are the same
+# TRUE if all are the same, FALSE otherwise
+all(comparison_bacteria_mapping_macro$same_counts) 
+
+# Filter & show rows where the counts between the two columns differ
+comparison_bacteria_mapping_macro %>%
+  filter(!same_counts) %>%
+  mutate(difference = bacteria_total_read_counts- bacteria_total_mapped) %>%
+  select(microsample, bacteria_total_read_counts, bacteria_total_mapped, difference)
+```
+Difference of 1 read in 1 sample. I will ignore this.
+
+
+## Combine relevant sequencing statistics
+
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r stats_combined_micro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# stats_combined <- reduce(list(fastp_seq_stats,
+#                               stats_non_bacteria_mapping, 
+#                               stats_bacteria_mapping,
+#                               stats_bacteria_mapping_alternative), 
+#                          full_join, by = "microsample") %>%
+#   filter(grepl("^M", microsample))  %>%
+#   mutate(removed_sequences_after_trim = total_sequences_before_trim - total_sequences_after_trim)
+# 
+# # estimate some percentages for easier plotting.
+# final_combined_stats <- stats_combined %>%
+#   mutate(
+#     trimmed_reads_percentage = ((total_sequences_before_trim-total_sequences_after_trim)/total_sequences_before_trim)*100,
+#     human_percentage_before_trim = (human_total_mapped/total_sequences_before_trim)*100,
+#     human_percentage = (human_total_mapped/total_sequences_after_trim)*100,
+#     chicken_percentage = (chicken_total_mapped/total_sequences_after_trim)*100,
+#     swine_percentage = (swine_total_mapped/total_sequences_after_trim)*100,
+#     bacteria_percentage = (bacteria_total_mapped/total_sequences_after_trim)*100,
+#     unmapped_percentage = (unmapped/total_sequences_after_trim)*100,
+#     bacteria_percentage_enriched = (bacteria_total_mapped/(bacteria_total_mapped+unmapped)*100),
+#     adapter_contamination_pct = (adapter_trimmed_bases / total_bases_before_trim)*100,
+#     unique_pct = 100-duplication
+# )
+```
+
+### Macro-samples
+```{r stats_combined_macro_01B, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+stats_combined_macro <- reduce(list(fastp_seq_stats_macro,
+                              stats_non_bacteria_mapping_macro, 
+                              stats_bacteria_mapping_macro,
+                              stats_bacteria_mapping_alternative_macro), 
+                         full_join, by = "microsample") %>%
+  filter(grepl("^D", microsample))  %>%
+  mutate(removed_sequences_after_trim = total_sequences_before_trim - total_sequences_after_trim)
+
+# estimate some percentages for easier plotting.
+final_combined_stats_macro <- stats_combined_macro %>%
+  mutate(
+    trimmed_reads_percentage = ((total_sequences_before_trim-total_sequences_after_trim)/total_sequences_before_trim)*100,
+    human_percentage = (human_total_mapped/total_sequences_after_trim)*100,
+    chicken_percentage = (chicken_total_mapped/total_sequences_after_trim)*100,
+    swine_percentage = (swine_total_mapped/total_sequences_after_trim)*100,
+    turkey_percentage = (turkey_total_mapped/total_sequences_after_trim)*100,
+    adenovirus_percentage = round((adenovirus_total_mapped/total_sequences_after_trim)*100, 7),
+    bacteria_percentage = (bacteria_total_mapped/total_sequences_after_trim)*100,
+    unmapped_percentage = (unmapped/total_sequences_after_trim)*100,
+    bacteria_percentage_enriched = (bacteria_total_mapped/(bacteria_total_mapped+unmapped)*100),
+    unmapped_percentage_enriched = (unmapped/(bacteria_total_mapped+unmapped)*100),
+    adapter_contamination_pct = (adapter_trimmed_bases / total_bases_before_trim)*100,
+    adenovirus_over_bacteria = round((adenovirus_total_mapped/bacteria_total_mapped),7),
+    bacteria_over_chicken = (bacteria_total_mapped/chicken_total_mapped),
+    unique_pct = 100-duplication
+)
+```
+
+
+
+## Filter and normalise data
+Raw data needs to be filtered and normalised to make it useful for downstream analyses. 
+
+
+### Generate coverage table
+By dividing the number of base hits by the length of each genome, coverage values can be calculated.
+
+#### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r calc_coverage_micro_01B, eval=FALSE}
+# genome_coverage <- genome_covered_bases %>%
+#   mutate(across(where(is.numeric), ~ . / genome_metadata$length))
+```
+
+#### Macro-samples
+```{r calc_coverage_macro_01B, eval=FALSE}
+genome_coverage_macro <- genome_covered_bases_macro %>%
+  mutate(across(where(is.numeric), ~ . / genome_metadata$length))
+```
+
+
+
+### Coverage filtering
+Genomes that have less than 30% of their length covered by reads are turned into zeros to account for the random allocation of reads across genomes due to mapping heuristics. 
+
+#### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r filter_coverage_micro_01B, eval=FALSE}
+# min_coverage <- 0.3
+# read_counts_filt_30 <- genome_coverage %>%
+#   # turn entries of <0.3 to 0, keep the rest to 1
+#   mutate(across(where(is.numeric), ~ ifelse(. > min_coverage, 1, 0))) %>% 
+#   # to all columns except first (genomes), multiply read_counts with the number (0 or 1)
+#   # select(-Undeter) %>% 
+#   mutate(across(-1, ~ . * read_counts[[cur_column()]])) 
+```
+
+#### Macro-samples
+```{r filter_coverage_macro_01B, eval=FALSE}
+min_coverage <- 0.3
+read_counts_macro_filt_30 <- genome_coverage_macro %>%
+  mutate(across(where(is.numeric), ~ ifelse(. > min_coverage, 1, 0))) %>% 
+  mutate(across(-1, ~ . * read_counts_macro[[cur_column()]])) 
+```
+
+### Generate genome count table
+Read counts are transformed into genome counts using genome-length and read-length information.
+
+Explanation:
+Read counts are influenced by sequencing depth and genome size. Larger genomes will naturally attract more reads than smaller ones, even if their actual abundance is the same. By normalizing read counts to genome size, genome counts provide a size-independent estimate of how many genome copies (or organisms carrying that genome) are present in a sample.
+
+#### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r calc_genometable_micro_01B, eval=FALSE}
+# readlength <- 150 # change if sequencing read length is different
+# 
+# # Reads without low-coverage filtering:
+# genome_counts <- read_counts %>%
+#   mutate(across(where(is.numeric), ~ . / (genome_metadata$length / readlength)))
+# 
+# # Reads after filtering the low-coverage reads:
+# genome_counts_filt_30 <- read_counts_filt_30 %>%
+#   mutate(across(where(is.numeric), ~ . / (genome_metadata$length / readlength)))
+```
+
+
+```{r calc_genometable_micro_filtered_01B, eval=FALSE}
+# # Find which samples are retained vs excluded by the 30% coverage filtering
+# genome_counts_filt_30_zerosrem <- genome_counts_filt_30 %>%
+#   # select columns that are not all zeros
+#   select(where(~ any(. != 0)) | where(is.character) | where(is.factor))  %>%
+#   filter(rowSums(select(., where(is.numeric)) != 0) > 0)
+# 
+# # Vector of retained sample names
+# retained_samples_filt_30 <- colnames(genome_counts_filt_30_zerosrem)[-1]
+# 
+# # Add new column to tidy dataframe
+# final_combined_stats <- final_combined_stats %>%
+#   mutate(filter_status = if_else(
+#     microsample %in% retained_samples_filt_30,
+#     "Retained by filtering",
+#     "Excluded from filtering"
+#   ))
+```
+
+#### Macro-samples
+```{r calc_genometable_macro_01B, eval=FALSE}
+readlength <- 150 # change if sequencing read length is different
+
+# Reads without low-coverage filtering:
+genome_counts_macro <- read_counts_macro %>%
+  mutate(across(where(is.numeric), ~ . / (genome_metadata$length / readlength)))
+
+# Reads after filtering the low-coverage reads:
+genome_counts_macro_filt_30 <- read_counts_macro_filt_30 %>%
+  mutate(across(where(is.numeric), ~ . / (genome_metadata$length / readlength)))
+```
+
+```{r calc_genometable_macro_filtered_01B, eval=FALSE}
+# Find which samples are retained vs excluded by the 30% coverage filtering
+
+genome_counts_macro_filt_30_zerosrem <- genome_counts_macro_filt_30 %>%
+  # select columns that are not all zeros
+  select(where(~ any(. != 0)) | where(is.character) | where(is.factor))  %>%
+  filter(rowSums(select(., where(is.numeric)) != 0) > 0)
+
+# Vector of retained genome names
+retained_samples_macro_filt_30 <- colnames(genome_counts_macro_filt_30_zerosrem)[-1]
+
+# Add new column to tidy dataframe
+final_combined_stats_macro <- final_combined_stats_macro %>%
+  mutate(filter_status = if_else(
+    microsample %in% retained_samples_macro_filt_30,
+    "Retained by filtering",
+    "Excluded from filtering"
+  ))
+```
+
+
+
+### Generate length-corrected read count tables
+#### Macro-samples
+```{r calc_read_counts_micro, eval=FALSE}
+c_read_counts_macro <- read_counts_macro %>%
+  mutate(across(where(is.numeric), ~ round(. / genome_metadata$length_ratio)))
+
+c_read_counts_macro_filt_30 <- read_counts_macro_filt_30 %>%
+  mutate(across(where(is.numeric), ~ round(. / genome_metadata$length_ratio)))
+```
+
+
+
+## Wrap working objects
+In the last step, the objects that are needed for downstream analyses are stored in an R object.
+```{r wrap_objects_01B, eval=FALSE}
+#WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+# save(
+#   read_counts,
+#   read_counts_filt_30,
+#   genome_coverage,
+#   genome_counts,
+#   genome_counts_filt_30,
+#   sample_metadata,
+#   final_combined_stats,
+#   file = "data/micro/data.Rdata"
+# )
+
+# Save only objects needed for plotting analyses
+# Note: raw data objects (read_counts_macro, genome_counts_macro, etc.) 
+# are not needed for plots since plotting uses processed tidy tables from plot_data.Rdata
+save(
+  sample_metadata_macro,
+  final_combined_stats_macro,
+  file = "data/macro/data.Rdata"
+)
+
+# Save plotting theme and treatment colors to data_colors.Rdata for use in plotting chapters
+# Load existing color data, add new objects, and save
+load("data/data_colors.Rdata")
+save(
+  phylum_colors,
+  order_colors,
+  custom_ggplot_theme,
+  treatment_colours_bright,
+  treatment_colours_pastel,
+  file = "data/data_colors.Rdata"
+)
+```
+
+- **read_counts**: Number of reads mapped to each genome in each sample. Note this is the unfiltered and unnormalised raw community composition table.
+- **genome_counts**: Number of genomes quantified in each sample, calculated through filtering and normalising ***read_counts***. This is the community composition table to be used in downstream analyses unless otherwise stated.
+- **genome_tree**: Phylogenetic tree of the genomes, to be employed in downstream phylogenetic analyses.
+- **genome_metadata**: Taxonomic and quality information of the genomes.
+- **sample_metadata**: Treatment/population and other relevant metadata of the samples.

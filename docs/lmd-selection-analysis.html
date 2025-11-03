@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>14 LMD Selection Analysis | 3D’omics | Adenovirus: Conventional metagenomics</title>
+  <meta name="description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="14 LMD Selection Analysis | 3D’omics | Adenovirus: Conventional metagenomics" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="github-repo" content="3d-omics/XXX" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="14 LMD Selection Analysis | 3D’omics | Adenovirus: Conventional metagenomics" />
+  
+  <meta name="twitter:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  
+
+<meta name="author" content="Amalia Bogri" />
+<meta name="author" content="Antton Alberdi" />
+<meta name="author" content="Jorge Langa" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="pacbio-selection-analysis.html"/>
+<link rel="next" href="metatranscriptomics-selection-analysis.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prepare-the-r-environment"><i class="fa fa-check"></i><b>1.1</b> Prepare the R environment</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#environment"><i class="fa fa-check"></i><b>1.1.1</b> Environment</a></li>
+<li class="chapter" data-level="1.1.2" data-path="index.html"><a href="index.html#libraries"><i class="fa fa-check"></i><b>1.1.2</b> Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-essential-functions"><i class="fa fa-check"></i><b>1.2</b> Load Essential Functions</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notes"><i class="fa fa-check"></i><b>1.3</b> Notes</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#installation-of-modules"><i class="fa fa-check"></i><b>1.3.1</b> Installation of modules</a></li>
+<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#airtable-access"><i class="fa fa-check"></i><b>1.3.2</b> Airtable access:</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html"><i class="fa fa-check"></i><b>2</b> Data Import - MAG Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-catalogue"><i class="fa fa-check"></i><b>2.2</b> Genome (MAGs) Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#dereplicated-genomes"><i class="fa fa-check"></i><b>2.2.1</b> Dereplicated Genomes</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-taxonomy"><i class="fa fa-check"></i><b>2.2.2</b> Genome (MAGs) Taxonomy</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-quality"><i class="fa fa-check"></i><b>2.2.3</b> Genome (MAGs) Quality</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-phylogenetic-tree"><i class="fa fa-check"></i><b>2.2.4</b> Genome (MAGs) Phylogenetic Tree</a></li>
+<li class="chapter" data-level="2.2.5" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#merged-genome-mags-taxonomy-quality"><i class="fa fa-check"></i><b>2.2.5</b> Merged Genome (MAGs) taxonomy &amp; quality</a></li>
+<li class="chapter" data-level="2.2.6" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-functional-annotations"><i class="fa fa-check"></i><b>2.2.6</b> Genome (MAGs) functional annotations</a></li>
+<li class="chapter" data-level="2.2.7" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#distil-functional-annotations"><i class="fa fa-check"></i><b>2.2.7</b> Distil functional annotations</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#bacterial-phyla-order-color-scheme-data"><i class="fa fa-check"></i><b>2.3</b> Bacterial phyla &amp; order color scheme data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-working-objects"><i class="fa fa-check"></i><b>2.4</b> Save Working Objects</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-core-mag-catalogue-data-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.1</b> Save Core MAG Catalogue Data (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-color-schemes-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.2</b> Save Color Schemes (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-complete-preparation-data-for-colleagues-analyses"><i class="fa fa-check"></i><b>2.4.3</b> Save Complete Preparation Data (for colleagues’ analyses)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html"><i class="fa fa-check"></i><b>3</b> Data Import - Metadata and Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#overview-1"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#define-plotting-settings"><i class="fa fa-check"></i><b>3.2</b> Define Plotting Settings</a></li>
+<li class="chapter" data-level="3.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sample-metadata"><i class="fa fa-check"></i><b>3.3</b> Sample metadata</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples"><i class="fa fa-check"></i><b>3.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples"><i class="fa fa-check"></i><b>3.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-reads-counts"><i class="fa fa-check"></i><b>3.4</b> Bacterial reads (counts)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-1"><i class="fa fa-check"></i><b>3.4.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.4.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-1"><i class="fa fa-check"></i><b>3.4.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#genome-covered-bases"><i class="fa fa-check"></i><b>3.5</b> Genome covered bases</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-2"><i class="fa fa-check"></i><b>3.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.5.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-2"><i class="fa fa-check"></i><b>3.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sequencing-statistics"><i class="fa fa-check"></i><b>3.6</b> Sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-3"><i class="fa fa-check"></i><b>3.6.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.6.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-3"><i class="fa fa-check"></i><b>3.6.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#non-bacterial-mapped-reads-human-chicken-swine"><i class="fa fa-check"></i><b>3.7</b> Non-bacterial mapped reads: human, chicken, swine</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro"><i class="fa fa-check"></i><b>3.7.1</b> Micro</a></li>
+<li class="chapter" data-level="3.7.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-4"><i class="fa fa-check"></i><b>3.7.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-mapped-reads."><i class="fa fa-check"></i><b>3.8</b> Bacterial mapped reads.</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-4"><i class="fa fa-check"></i><b>3.8.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.8.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-5"><i class="fa fa-check"></i><b>3.8.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#alternative-way-to-estimate-bacterial-read-counts-from-count-table"><i class="fa fa-check"></i><b>3.9</b> Alternative way to estimate bacterial read counts (from count table):</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-5"><i class="fa fa-check"></i><b>3.9.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.9.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-6"><i class="fa fa-check"></i><b>3.9.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sanity-checks"><i class="fa fa-check"></i><b>3.10</b> Sanity checks</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-6"><i class="fa fa-check"></i><b>3.10.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.10.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-7"><i class="fa fa-check"></i><b>3.10.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#combine-relevant-sequencing-statistics"><i class="fa fa-check"></i><b>3.11</b> Combine relevant sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.11.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-7"><i class="fa fa-check"></i><b>3.11.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.11.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-8"><i class="fa fa-check"></i><b>3.11.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.12" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#filter-and-normalise-data"><i class="fa fa-check"></i><b>3.12</b> Filter and normalise data</a>
+<ul>
+<li class="chapter" data-level="3.12.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-coverage-table"><i class="fa fa-check"></i><b>3.12.1</b> Generate coverage table</a></li>
+<li class="chapter" data-level="3.12.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#coverage-filtering"><i class="fa fa-check"></i><b>3.12.2</b> Coverage filtering</a></li>
+<li class="chapter" data-level="3.12.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-genome-count-table"><i class="fa fa-check"></i><b>3.12.3</b> Generate genome count table</a></li>
+<li class="chapter" data-level="3.12.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-length-corrected-read-count-tables"><i class="fa fa-check"></i><b>3.12.4</b> Generate length-corrected read count tables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.13" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#wrap-working-objects"><i class="fa fa-check"></i><b>3.13</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html"><i class="fa fa-check"></i><b>4</b> Data Preparation for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#overview-2"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#load-the-data"><i class="fa fa-check"></i><b>4.2</b> Load the Data</a></li>
+<li class="chapter" data-level="4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#sequencing-statistics-data-frames"><i class="fa fa-check"></i><b>4.3</b> Sequencing Statistics Data Frames</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-11"><i class="fa fa-check"></i><b>4.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.3.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-13"><i class="fa fa-check"></i><b>4.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-tables-for-plotting"><i class="fa fa-check"></i><b>4.4</b> Tidy Tables for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after-trimming-comparison"><i class="fa fa-check"></i><b>4.4.1</b> Before-After Trimming Comparison</a></li>
+<li class="chapter" data-level="4.4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after"><i class="fa fa-check"></i><b>4.4.2</b> Before-after</a></li>
+<li class="chapter" data-level="4.4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#samtools-mapping-to-different-references"><i class="fa fa-check"></i><b>4.4.3</b> Samtools mapping to different references</a></li>
+<li class="chapter" data-level="4.4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#percentages-of-different-references"><i class="fa fa-check"></i><b>4.4.4</b> Percentages of different references</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-genome-counts"><i class="fa fa-check"></i><b>4.5</b> Tidy genome counts</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-15"><i class="fa fa-check"></i><b>4.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.5.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-17"><i class="fa fa-check"></i><b>4.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#read-count-tables-length-corrected-dataframes"><i class="fa fa-check"></i><b>4.6</b> Read count tables (length corrected) dataframes</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data"><i class="fa fa-check"></i><b>4.6.1</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#alpha-diversity-dataframes"><i class="fa fa-check"></i><b>4.7</b> Alpha diversity dataframes</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data"><i class="fa fa-check"></i><b>4.7.1</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-1"><i class="fa fa-check"></i><b>4.7.2</b> Macro-data</a></li>
+<li class="chapter" data-level="4.7.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data-1"><i class="fa fa-check"></i><b>4.7.3</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-2"><i class="fa fa-check"></i><b>4.7.4</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#wrap-working-objects-1"><i class="fa fa-check"></i><b>4.8</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html"><i class="fa fa-check"></i><b>5</b> MAG Catalogue Overview</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#overview-3"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#load-data"><i class="fa fa-check"></i><b>5.2</b> Load Data</a></li>
+<li class="chapter" data-level="5.3" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-summary"><i class="fa fa-check"></i><b>5.3</b> Genome Quality Summary</a></li>
+<li class="chapter" data-level="5.4" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-circularity-and-taxonomic-distribution"><i class="fa fa-check"></i><b>5.4</b> Genome Circularity and Taxonomic Distribution</a></li>
+<li class="chapter" data-level="5.5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-visualization"><i class="fa fa-check"></i><b>5.5</b> Genome Quality Visualization</a></li>
+<li class="chapter" data-level="5.6" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours"><i class="fa fa-check"></i><b>5.6</b> MAG catalogue phyla and order colours</a></li>
+<li class="chapter" data-level="5.7" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours-and-genera-number"><i class="fa fa-check"></i><b>5.7</b> MAG catalogue phyla and order colours, and genera number</a></li>
+<li class="chapter" data-level="5.8" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot"><i class="fa fa-check"></i><b>5.8</b> Genome phylogeny plot</a></li>
+<li class="chapter" data-level="5.9" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot-without-legend"><i class="fa fa-check"></i><b>5.9</b> Genome phylogeny plot without legend</a></li>
+<li class="chapter" data-level="5.10" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-overview"><i class="fa fa-check"></i><b>5.10</b> Functional overview</a></li>
+<li class="chapter" data-level="5.11" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-distances"><i class="fa fa-check"></i><b>5.11</b> Functional distances</a></li>
+<li class="chapter" data-level="5.12" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-ordination"><i class="fa fa-check"></i><b>5.12</b> Functional ordination</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html"><i class="fa fa-check"></i><b>6</b> Adenovirus Presence Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#load-data-and-plotting-utilities"><i class="fa fa-check"></i><b>6.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="6.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-percentage-over-time"><i class="fa fa-check"></i><b>6.2</b> Adenovirus Percentage Over Time</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.1</b> Broilers - Adenovirus Percentage</a></li>
+<li class="chapter" data-level="6.2.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.2</b> Layers - Adenovirus Percentage</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-read-counts-by-sample"><i class="fa fa-check"></i><b>6.3</b> Adenovirus Read Counts by Sample</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.1</b> Layers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.2</b> Broilers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#combined-visualization"><i class="fa fa-check"></i><b>6.3.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html"><i class="fa fa-check"></i><b>7</b> Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#load-data-and-plotting-utilities-1"><i class="fa fa-check"></i><b>7.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="7.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#number-of-bases-and-reads"><i class="fa fa-check"></i><b>7.2</b> Number of Bases and Reads</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-bases-before-trimming"><i class="fa fa-check"></i><b>7.2.1</b> Total Bases Before Trimming</a></li>
+<li class="chapter" data-level="7.2.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-reads-after-trimming"><i class="fa fa-check"></i><b>7.2.2</b> Total Reads After Trimming</a></li>
+<li class="chapter" data-level="7.2.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-1"><i class="fa fa-check"></i><b>7.2.3</b> Combined Visualization</a></li>
+<li class="chapter" data-level="7.2.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#low-data-samples"><i class="fa fa-check"></i><b>7.2.4</b> Low Data Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#percentage-of-reads-mapped-trimmed-and-unmapped"><i class="fa fa-check"></i><b>7.3</b> Percentage of Reads: Mapped, Trimmed, and Unmapped</a></li>
+<li class="chapter" data-level="7.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#composition-of-reads-vs.-references"><i class="fa fa-check"></i><b>7.4</b> Composition of Reads vs. References</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#relative-composition-proportions"><i class="fa fa-check"></i><b>7.4.1</b> Relative Composition (Proportions)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#absolute-composition-counts"><i class="fa fa-check"></i><b>7.4.2</b> Absolute Composition (Counts)</a></li>
+<li class="chapter" data-level="7.4.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-2"><i class="fa fa-check"></i><b>7.4.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html"><i class="fa fa-check"></i><b>8</b> Antimicrobial Effect Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#load-data-and-plotting-utilities-2"><i class="fa fa-check"></i><b>8.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="8.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#bacteria-to-host-read-ratio"><i class="fa fa-check"></i><b>8.2</b> Bacteria-to-Host Read Ratio</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#layers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.1</b> Layers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#broilers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.2</b> Broilers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.3" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#combined-visualization-3"><i class="fa fa-check"></i><b>8.2.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity Analysis</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#load-data-and-plotting-utilities-3"><i class="fa fa-check"></i><b>9.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="9.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#alpha-diversity-by-breed"><i class="fa fa-check"></i><b>9.2</b> Alpha Diversity by Breed</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#layers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.1</b> Layers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#broilers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.2</b> Broilers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#combined-visualization-4"><i class="fa fa-check"></i><b>9.2.3</b> Combined Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#detailed-alpha-diversity---layers-with-animal-labels"><i class="fa fa-check"></i><b>9.3</b> Detailed Alpha Diversity - Layers with Animal Labels</a></li>
+<li class="chapter" data-level="9.4" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#relationship-between-genome-length-and-alpha-diversity"><i class="fa fa-check"></i><b>9.4</b> Relationship Between Genome Length and Alpha Diversity</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#prepare-data-calculate-median-genome-length"><i class="fa fa-check"></i><b>9.4.1</b> Prepare Data: Calculate Median Genome Length</a></li>
+<li class="chapter" data-level="9.4.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#visualize-relationship-linear-model"><i class="fa fa-check"></i><b>9.4.2</b> Visualize Relationship: Linear Model</a></li>
+<li class="chapter" data-level="9.4.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#statistical-modeling-negative-binomial-regression"><i class="fa fa-check"></i><b>9.4.3</b> Statistical Modeling: Negative Binomial Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html"><i class="fa fa-check"></i><b>10</b> Beta Diversity Analysis - Between Breeds</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#load-data-and-plotting-utilities-4"><i class="fa fa-check"></i><b>10.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="10.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#composition-barplots"><i class="fa fa-check"></i><b>10.2</b> Composition Barplots</a></li>
+<li class="chapter" data-level="10.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#layer-vs-broiler-composition"><i class="fa fa-check"></i><b>10.3</b> Layer vs Broiler Composition</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#pca"><i class="fa fa-check"></i><b>10.3.1</b> PCA</a></li>
+<li class="chapter" data-level="10.3.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#genomes-overlap-between-breeds"><i class="fa fa-check"></i><b>10.3.2</b> Genomes Overlap Between Breeds</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.4</b> ALDEx2 Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-aldex2"><i class="fa fa-check"></i><b>10.4.1</b> Prepare Data for ALDEx2</a></li>
+<li class="chapter" data-level="10.4.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#run-aldex2-analysis"><i class="fa fa-check"></i><b>10.4.2</b> Run ALDEx2 Analysis</a></li>
+<li class="chapter" data-level="10.4.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-diagnostic-plots"><i class="fa fa-check"></i><b>10.4.3</b> ALDEx2 Diagnostic Plots</a></li>
+<li class="chapter" data-level="10.4.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-significant-taxa-visualization"><i class="fa fa-check"></i><b>10.4.4</b> ALDEx2 Significant Taxa Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#ancom-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.5</b> ANCOM Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-ancom"><i class="fa fa-check"></i><b>10.5.1</b> Prepare Data for ANCOM</a></li>
+<li class="chapter" data-level="10.5.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-diagram-control-treatment-tf3-only"><i class="fa fa-check"></i><b>10.5.2</b> Venn Diagram: Control Treatment (TF3) Only</a></li>
+<li class="chapter" data-level="10.5.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-of-all-groups-separately"><i class="fa fa-check"></i><b>10.5.3</b> Venn of all groups separately</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html"><i class="fa fa-check"></i><b>11</b> Beta Diversity Analysis - Within Breeds</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#load-data-and-plotting-utilities-5"><i class="fa fa-check"></i><b>11.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="11.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#beta-diversity-within-breeds"><i class="fa fa-check"></i><b>11.2</b> Beta Diversity Within Breeds</a></li>
+<li class="chapter" data-level="11.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---composition-barplots"><i class="fa fa-check"></i><b>11.3</b> Broilers - Composition Barplots</a></li>
+<li class="chapter" data-level="11.4" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---pca-analysis"><i class="fa fa-check"></i><b>11.4</b> Broilers - PCA Analysis</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova"><i class="fa fa-check"></i><b>11.4.1</b> PERMANOVA</a></li>
+<li class="chapter" data-level="11.4.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#layers"><i class="fa fa-check"></i><b>11.4.2</b> Layers</a></li>
+<li class="chapter" data-level="11.4.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova-1"><i class="fa fa-check"></i><b>11.4.3</b> PERMANOVA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html"><i class="fa fa-check"></i><b>12</b> Diversity Partitioning Analysis</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#overview-4"><i class="fa fa-check"></i><b>12.1</b> Overview</a></li>
+<li class="chapter" data-level="12.2" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#load-data-and-plotting-utilities-6"><i class="fa fa-check"></i><b>12.2</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="12.3" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#hierarchical-diversity-partitioning-functions"><i class="fa fa-check"></i><b>12.3</b> Hierarchical Diversity Partitioning Functions</a></li>
+<li class="chapter" data-level="12.4" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#prepare-data-for-diversity-partitioning"><i class="fa fa-check"></i><b>12.4</b> Prepare Data for Diversity Partitioning</a></li>
+<li class="chapter" data-level="12.5" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#diversity-partitioning-analysis-1"><i class="fa fa-check"></i><b>12.5</b> Diversity Partitioning Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html"><i class="fa fa-check"></i><b>13</b> PacBio Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#overview-5"><i class="fa fa-check"></i><b>13.1</b> Overview</a></li>
+<li class="chapter" data-level="13.2" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#selection-criteria"><i class="fa fa-check"></i><b>13.2</b> Selection Criteria</a></li>
+<li class="chapter" data-level="13.3" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#load-data-1"><i class="fa fa-check"></i><b>13.3</b> Load Data</a></li>
+<li class="chapter" data-level="13.4" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#prepare-extract-metadata"><i class="fa fa-check"></i><b>13.4</b> Prepare Extract Metadata</a></li>
+<li class="chapter" data-level="13.5" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#merge-metadata-with-sample-information"><i class="fa fa-check"></i><b>13.5</b> Merge Metadata with Sample Information</a></li>
+<li class="chapter" data-level="13.6" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-dna-concentration-and-richness"><i class="fa fa-check"></i><b>13.6</b> Visualize DNA Concentration and Richness</a></li>
+<li class="chapter" data-level="13.7" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#identify-best-samples"><i class="fa fa-check"></i><b>13.7</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="13.8" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-selected-samples"><i class="fa fa-check"></i><b>13.8</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="13.9" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#calculate-pooling-requirements"><i class="fa fa-check"></i><b>13.9</b> Calculate Pooling Requirements</a></li>
+<li class="chapter" data-level="13.10" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#export-selected-samples"><i class="fa fa-check"></i><b>13.10</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="13.11" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#save-data"><i class="fa fa-check"></i><b>13.11</b> Save Data</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html"><i class="fa fa-check"></i><b>14</b> LMD Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#overview-6"><i class="fa fa-check"></i><b>14.1</b> Overview</a></li>
+<li class="chapter" data-level="14.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#load-data-2"><i class="fa fa-check"></i><b>14.2</b> Load Data</a></li>
+<li class="chapter" data-level="14.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#identify-best-lmd-samples"><i class="fa fa-check"></i><b>14.3</b> Identify Best LMD Samples</a></li>
+<li class="chapter" data-level="14.4" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#broiler-sample-selection"><i class="fa fa-check"></i><b>14.4</b> Broiler Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-broiler-samples"><i class="fa fa-check"></i><b>14.4.1</b> Visualize Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-broiler-samples"><i class="fa fa-check"></i><b>14.4.2</b> Mark Selected Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-broilers"><i class="fa fa-check"></i><b>14.4.3</b> PCA Analysis for Broilers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#layer-sample-selection"><i class="fa fa-check"></i><b>14.5</b> Layer Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-layer-samples"><i class="fa fa-check"></i><b>14.5.1</b> Visualize Layer Samples</a></li>
+<li class="chapter" data-level="14.5.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-layer-samples"><i class="fa fa-check"></i><b>14.5.2</b> Mark Selected Layer Samples</a></li>
+<li class="chapter" data-level="14.5.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-layers"><i class="fa fa-check"></i><b>14.5.3</b> PCA Analysis for Layers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#export-selected-samples-1"><i class="fa fa-check"></i><b>14.6</b> Export Selected Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html"><i class="fa fa-check"></i><b>15</b> Metatranscriptomics Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#overview-7"><i class="fa fa-check"></i><b>15.1</b> Overview</a></li>
+<li class="chapter" data-level="15.2" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#load-data-3"><i class="fa fa-check"></i><b>15.2</b> Load Data</a></li>
+<li class="chapter" data-level="15.3" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#prepare-rna-extract-metadata"><i class="fa fa-check"></i><b>15.3</b> Prepare RNA Extract Metadata</a></li>
+<li class="chapter" data-level="15.4" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#merge-rna-metadata-with-sample-information"><i class="fa fa-check"></i><b>15.4</b> Merge RNA Metadata with Sample Information</a></li>
+<li class="chapter" data-level="15.5" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-rna-concentration-and-richness"><i class="fa fa-check"></i><b>15.5</b> Visualize RNA Concentration and Richness</a></li>
+<li class="chapter" data-level="15.6" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#identify-best-samples-1"><i class="fa fa-check"></i><b>15.6</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="15.7" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-selected-samples-1"><i class="fa fa-check"></i><b>15.7</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="15.8" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#export-selected-samples-2"><i class="fa fa-check"></i><b>15.8</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="15.9" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#save-data-1"><i class="fa fa-check"></i><b>15.9</b> Save Data</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">3D’omics | Adenovirus: Conventional metagenomics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="lmd-selection-analysis" class="section level1 hasAnchor" number="14">
+<h1><span class="header-section-number">14</span> LMD Selection Analysis<a href="lmd-selection-analysis.html#lmd-selection-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="overview-6" class="section level2 hasAnchor" number="14.1">
+<h2><span class="header-section-number">14.1</span> Overview<a href="lmd-selection-analysis.html#overview-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This chapter identifies samples suitable for Laser Microdissection (LMD) based on DNA concentration and alpha diversity metrics. LMD requires high-quality DNA samples with sufficient quantity and taxonomic diversity for downstream spatial analyses. This analysis prioritizes samples with high richness and adequate DNA yield from day 7 post-infection samples.</p>
+</div>
+<div id="load-data-2" class="section level2 hasAnchor" number="14.2">
+<h2><span class="header-section-number">14.2</span> Load Data<a href="lmd-selection-analysis.html#load-data-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb272-1"><a href="lmd-selection-analysis.html#cb272-1" tabindex="-1"></a><span class="co"># Load data required for plotting</span></span>
+<span id="cb272-2"><a href="lmd-selection-analysis.html#cb272-2" tabindex="-1"></a><span class="co"># Note: extract_concentration_data.Rdata is created in 05A-PacBio_selection.Rmd</span></span>
+<span id="cb272-3"><a href="lmd-selection-analysis.html#cb272-3" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/macro/plot_data.Rdata&quot;</span>)</span>
+<span id="cb272-4"><a href="lmd-selection-analysis.html#cb272-4" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/data_colors.Rdata&quot;</span>)</span>
+<span id="cb272-5"><a href="lmd-selection-analysis.html#cb272-5" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/macro/extract_concentration_data.Rdata&quot;</span>)</span></code></pre></div>
+</div>
+<div id="identify-best-lmd-samples" class="section level2 hasAnchor" number="14.3">
+<h2><span class="header-section-number">14.3</span> Identify Best LMD Samples<a href="lmd-selection-analysis.html#identify-best-lmd-samples" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section identifies the best samples for LMD by ranking all day 7 samples based on combined richness and DNA concentration metrics.</p>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb273-1"><a href="lmd-selection-analysis.html#cb273-1" tabindex="-1"></a><span class="co"># Select best LMD samples based on combined ranking of richness and DNA concentration</span></span>
+<span id="cb273-2"><a href="lmd-selection-analysis.html#cb273-2" tabindex="-1"></a><span class="co"># Filter for day 7 samples only (optimal time point for LMD analysis)</span></span>
+<span id="cb273-3"><a href="lmd-selection-analysis.html#cb273-3" tabindex="-1"></a><span class="co"># Rank by combined score: richness (weighted 1.2x) + DNA concentration</span></span>
+<span id="cb273-4"><a href="lmd-selection-analysis.html#cb273-4" tabindex="-1"></a><span class="co"># Select top 2 samples per breed × treatment combination</span></span>
+<span id="cb273-5"><a href="lmd-selection-analysis.html#cb273-5" tabindex="-1"></a>best_samples_LMD <span class="ot">&lt;-</span> extract_sample_div_metadata_macro <span class="sc">%&gt;%</span></span>
+<span id="cb273-6"><a href="lmd-selection-analysis.html#cb273-6" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb273-7"><a href="lmd-selection-analysis.html#cb273-7" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">==</span> <span class="dv">7</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb273-8"><a href="lmd-selection-analysis.html#cb273-8" tabindex="-1"></a>  <span class="fu">group_by</span>(animal_breed, treatment_expl, age) <span class="sc">%&gt;%</span></span>
+<span id="cb273-9"><a href="lmd-selection-analysis.html#cb273-9" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb273-10"><a href="lmd-selection-analysis.html#cb273-10" tabindex="-1"></a>    <span class="at">richness_rank =</span> <span class="fu">rank</span>(<span class="fu">desc</span>(richness), <span class="at">ties.method =</span> <span class="st">&quot;min&quot;</span>),</span>
+<span id="cb273-11"><a href="lmd-selection-analysis.html#cb273-11" tabindex="-1"></a>    <span class="at">leftover_rank =</span> <span class="fu">rank</span>(<span class="fu">desc</span>(DNA_concentration), <span class="at">ties.method =</span> <span class="st">&quot;min&quot;</span>),</span>
+<span id="cb273-12"><a href="lmd-selection-analysis.html#cb273-12" tabindex="-1"></a>    <span class="at">combined_rank =</span> richness_rank<span class="sc">*</span><span class="fl">1.2</span> <span class="sc">+</span> leftover_rank</span>
+<span id="cb273-13"><a href="lmd-selection-analysis.html#cb273-13" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb273-14"><a href="lmd-selection-analysis.html#cb273-14" tabindex="-1"></a>  <span class="fu">slice_min</span>(combined_rank, <span class="at">n =</span> <span class="dv">2</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb273-15"><a href="lmd-selection-analysis.html#cb273-15" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div>
+</div>
+<div id="broiler-sample-selection" class="section level2 hasAnchor" number="14.4">
+<h2><span class="header-section-number">14.4</span> Broiler Sample Selection<a href="lmd-selection-analysis.html#broiler-sample-selection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section identifies and visualizes the best LMD samples for broilers based on combined ranking of richness and DNA concentration.</p>
+<div id="visualize-broiler-samples" class="section level3 hasAnchor" number="14.4.1">
+<h3><span class="header-section-number">14.4.1</span> Visualize Broiler Samples<a href="lmd-selection-analysis.html#visualize-broiler-samples" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This section creates visualizations to assess broiler samples for LMD selection, showing richness, DNA concentration, and taxonomic composition.</p>
+<div class="sourceCode" id="cb274"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb274-1"><a href="lmd-selection-analysis.html#cb274-1" tabindex="-1"></a><span class="co"># Plot 1: Broiler richness by animal, colored by DNA concentration</span></span>
+<span id="cb274-2"><a href="lmd-selection-analysis.html#cb274-2" tabindex="-1"></a><span class="co"># Shows alpha diversity combined with DNA quality metrics</span></span>
+<span id="cb274-3"><a href="lmd-selection-analysis.html#cb274-3" tabindex="-1"></a>barplot_2 <span class="ot">&lt;-</span> extract_sample_div_metadata_macro <span class="sc">%&gt;%</span></span>
+<span id="cb274-4"><a href="lmd-selection-analysis.html#cb274-4" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb274-5"><a href="lmd-selection-analysis.html#cb274-5" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb274-6"><a href="lmd-selection-analysis.html#cb274-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> richness, <span class="at">fill =</span> DNA_concentration)) <span class="sc">+</span>   <span class="co"># leftover_ng</span></span>
+<span id="cb274-7"><a href="lmd-selection-analysis.html#cb274-7" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb274-8"><a href="lmd-selection-analysis.html#cb274-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;DNA extracts&quot;</span>, <span class="at">y =</span> <span class="st">&quot;richness&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;Read type&quot;</span>) <span class="sc">+</span></span>
+<span id="cb274-9"><a href="lmd-selection-analysis.html#cb274-9" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#c90076&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#3598bf&quot;</span>, <span class="at">name =</span> <span class="st">&quot;extract DNA concentration&quot;</span>) <span class="sc">+</span></span>
+<span id="cb274-10"><a href="lmd-selection-analysis.html#cb274-10" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> treatment <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb274-11"><a href="lmd-selection-analysis.html#cb274-11" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb274-12"><a href="lmd-selection-analysis.html#cb274-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb274-13"><a href="lmd-selection-analysis.html#cb274-13" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(), <span class="co">#axis.text.x = element_blank(),</span></span>
+<span id="cb274-14"><a href="lmd-selection-analysis.html#cb274-14" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>,</span>
+<span id="cb274-15"><a href="lmd-selection-analysis.html#cb274-15" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb274-16"><a href="lmd-selection-analysis.html#cb274-16" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Broilers&quot;</span>)</span>
+<span id="cb274-17"><a href="lmd-selection-analysis.html#cb274-17" tabindex="-1"></a><span class="co"># barplot_2</span></span>
+<span id="cb274-18"><a href="lmd-selection-analysis.html#cb274-18" tabindex="-1"></a></span>
+<span id="cb274-19"><a href="lmd-selection-analysis.html#cb274-19" tabindex="-1"></a></span>
+<span id="cb274-20"><a href="lmd-selection-analysis.html#cb274-20" tabindex="-1"></a><span class="co"># Plot 2: Broiler taxonomic composition by order</span></span>
+<span id="cb274-21"><a href="lmd-selection-analysis.html#cb274-21" tabindex="-1"></a><span class="co"># Shows community structure to ensure taxonomic diversity in selected samples</span></span>
+<span id="cb274-22"><a href="lmd-selection-analysis.html#cb274-22" tabindex="-1"></a>barplot_3 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro <span class="sc">%&gt;%</span></span>
+<span id="cb274-23"><a href="lmd-selection-analysis.html#cb274-23" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb274-24"><a href="lmd-selection-analysis.html#cb274-24" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb274-25"><a href="lmd-selection-analysis.html#cb274-25" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal , <span class="at">y =</span> count, <span class="at">fill =</span> order)) <span class="sc">+</span></span>
+<span id="cb274-26"><a href="lmd-selection-analysis.html#cb274-26" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">colour=</span><span class="st">&quot;white&quot;</span>, <span class="at">linewidth=</span><span class="fl">0.1</span>) <span class="sc">+</span> <span class="co">#plot stacked bars with white borders</span></span>
+<span id="cb274-27"><a href="lmd-selection-analysis.html#cb274-27" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> order_colors[<span class="sc">-</span><span class="dv">4</span>], <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb274-28"><a href="lmd-selection-analysis.html#cb274-28" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Composition&quot;</span>,<span class="at">y =</span> <span class="st">&quot;Microsamples&quot;</span>,<span class="at">fill =</span> <span class="st">&quot;Read type&quot;</span>) <span class="sc">+</span></span>
+<span id="cb274-29"><a href="lmd-selection-analysis.html#cb274-29" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> treatment <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb274-30"><a href="lmd-selection-analysis.html#cb274-30" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb274-31"><a href="lmd-selection-analysis.html#cb274-31" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb274-32"><a href="lmd-selection-analysis.html#cb274-32" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb274-33"><a href="lmd-selection-analysis.html#cb274-33" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb274-34"><a href="lmd-selection-analysis.html#cb274-34" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Composition of bacterial orders - 30% filt&quot;</span>)</span>
+<span id="cb274-35"><a href="lmd-selection-analysis.html#cb274-35" tabindex="-1"></a><span class="co"># barplot_3</span></span>
+<span id="cb274-36"><a href="lmd-selection-analysis.html#cb274-36" tabindex="-1"></a></span>
+<span id="cb274-37"><a href="lmd-selection-analysis.html#cb274-37" tabindex="-1"></a>best_samples_LMD_broiler <span class="ot">&lt;-</span> best_samples_LMD <span class="sc">%&gt;%</span></span>
+<span id="cb274-38"><a href="lmd-selection-analysis.html#cb274-38" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&#39;broiler&#39;</span>)</span></code></pre></div>
+</div>
+<div id="mark-selected-broiler-samples" class="section level3 hasAnchor" number="14.4.2">
+<h3><span class="header-section-number">14.4.2</span> Mark Selected Broiler Samples<a href="lmd-selection-analysis.html#mark-selected-broiler-samples" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This section marks the selected broiler samples on the visualization plots.</p>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb275-1"><a href="lmd-selection-analysis.html#cb275-1" tabindex="-1"></a><span class="co"># Mark selected broiler samples with star symbols on the richness plot</span></span>
+<span id="cb275-2"><a href="lmd-selection-analysis.html#cb275-2" tabindex="-1"></a>barplot_4 <span class="ot">&lt;-</span> barplot_2 <span class="sc">+</span></span>
+<span id="cb275-3"><a href="lmd-selection-analysis.html#cb275-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb275-4"><a href="lmd-selection-analysis.html#cb275-4" tabindex="-1"></a>    <span class="at">data =</span> best_samples_LMD_broiler,</span>
+<span id="cb275-5"><a href="lmd-selection-analysis.html#cb275-5" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> richness),</span>
+<span id="cb275-6"><a href="lmd-selection-analysis.html#cb275-6" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">8</span>,          <span class="co"># star shape</span></span>
+<span id="cb275-7"><a href="lmd-selection-analysis.html#cb275-7" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb275-8"><a href="lmd-selection-analysis.html#cb275-8" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb275-9"><a href="lmd-selection-analysis.html#cb275-9" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb275-10"><a href="lmd-selection-analysis.html#cb275-10" tabindex="-1"></a>  )</span>
+<span id="cb275-11"><a href="lmd-selection-analysis.html#cb275-11" tabindex="-1"></a></span>
+<span id="cb275-12"><a href="lmd-selection-analysis.html#cb275-12" tabindex="-1"></a>barplot_5 <span class="ot">&lt;-</span> barplot_3 <span class="sc">+</span></span>
+<span id="cb275-13"><a href="lmd-selection-analysis.html#cb275-13" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb275-14"><a href="lmd-selection-analysis.html#cb275-14" tabindex="-1"></a>    <span class="at">data =</span> best_samples_LMD_broiler,</span>
+<span id="cb275-15"><a href="lmd-selection-analysis.html#cb275-15" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> <span class="dv">1</span>),</span>
+<span id="cb275-16"><a href="lmd-selection-analysis.html#cb275-16" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">8</span>,          <span class="co"># star shape</span></span>
+<span id="cb275-17"><a href="lmd-selection-analysis.html#cb275-17" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb275-18"><a href="lmd-selection-analysis.html#cb275-18" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb275-19"><a href="lmd-selection-analysis.html#cb275-19" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb275-20"><a href="lmd-selection-analysis.html#cb275-20" tabindex="-1"></a>  )</span>
+<span id="cb275-21"><a href="lmd-selection-analysis.html#cb275-21" tabindex="-1"></a></span>
+<span id="cb275-22"><a href="lmd-selection-analysis.html#cb275-22" tabindex="-1"></a><span class="co"># barplot_4/barplot_5</span></span></code></pre></div>
+</div>
+<div id="pca-analysis-for-broilers" class="section level3 hasAnchor" number="14.4.3">
+<h3><span class="header-section-number">14.4.3</span> PCA Analysis for Broilers<a href="lmd-selection-analysis.html#pca-analysis-for-broilers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This section performs PCA analysis on broiler samples to visualize community structure and highlight selected samples in ordination space.</p>
+<div class="sourceCode" id="cb276"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb276-1"><a href="lmd-selection-analysis.html#cb276-1" tabindex="-1"></a><span class="co"># Prepare community matrix for PCA analysis</span></span>
+<span id="cb276-2"><a href="lmd-selection-analysis.html#cb276-2" tabindex="-1"></a><span class="co"># Filter for broiler samples at day 7, convert to wide format, and normalize to percentages</span></span>
+<span id="cb276-3"><a href="lmd-selection-analysis.html#cb276-3" tabindex="-1"></a>PCA_df <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb276-4"><a href="lmd-selection-analysis.html#cb276-4" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb276-5"><a href="lmd-selection-analysis.html#cb276-5" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">==</span> <span class="dv">7</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb276-6"><a href="lmd-selection-analysis.html#cb276-6" tabindex="-1"></a>  <span class="co"># Remove metadata</span></span>
+<span id="cb276-7"><a href="lmd-selection-analysis.html#cb276-7" tabindex="-1"></a>  <span class="fu">select</span>(genome, microsample, count) <span class="sc">%&gt;%</span></span>
+<span id="cb276-8"><a href="lmd-selection-analysis.html#cb276-8" tabindex="-1"></a>  <span class="co"># Make tidy df into wide df</span></span>
+<span id="cb276-9"><a href="lmd-selection-analysis.html#cb276-9" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb276-10"><a href="lmd-selection-analysis.html#cb276-10" tabindex="-1"></a>    <span class="at">names_from =</span> genome,   </span>
+<span id="cb276-11"><a href="lmd-selection-analysis.html#cb276-11" tabindex="-1"></a>    <span class="at">values_from =</span> count,   </span>
+<span id="cb276-12"><a href="lmd-selection-analysis.html#cb276-12" tabindex="-1"></a>    <span class="co"># Fill missing values with 0</span></span>
+<span id="cb276-13"><a href="lmd-selection-analysis.html#cb276-13" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb276-14"><a href="lmd-selection-analysis.html#cb276-14" tabindex="-1"></a>  <span class="co"># Remove taxa (columns) that are zero for all leftover samples (rows)</span></span>
+<span id="cb276-15"><a href="lmd-selection-analysis.html#cb276-15" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="fu">any</span>(. <span class="sc">!=</span> <span class="dv">0</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb276-16"><a href="lmd-selection-analysis.html#cb276-16" tabindex="-1"></a>  <span class="co"># scale each sample to 100 (= closure to 100, not required, but common)</span></span>
+<span id="cb276-17"><a href="lmd-selection-analysis.html#cb276-17" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">-</span>microsample, <span class="sc">~</span> . <span class="sc">/</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric))) <span class="sc">*</span> <span class="dv">100</span> )) <span class="sc">%&gt;%</span></span>
+<span id="cb276-18"><a href="lmd-selection-analysis.html#cb276-18" tabindex="-1"></a>  <span class="co"># turn the column &#39;microsample&#39;into the name of the rows of the df</span></span>
+<span id="cb276-19"><a href="lmd-selection-analysis.html#cb276-19" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">&quot;microsample&quot;</span>)</span>
+<span id="cb276-20"><a href="lmd-selection-analysis.html#cb276-20" tabindex="-1"></a></span>
+<span id="cb276-21"><a href="lmd-selection-analysis.html#cb276-21" tabindex="-1"></a></span>
+<span id="cb276-22"><a href="lmd-selection-analysis.html#cb276-22" tabindex="-1"></a><span class="co"># Create sample metadata with selection status for visualization</span></span>
+<span id="cb276-23"><a href="lmd-selection-analysis.html#cb276-23" tabindex="-1"></a>MACRO_sample_metadata <span class="ot">&lt;-</span> sample_metadata_macro <span class="sc">%&gt;%</span></span>
+<span id="cb276-24"><a href="lmd-selection-analysis.html#cb276-24" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">microsample =</span> sample) <span class="sc">%&gt;%</span></span>
+<span id="cb276-25"><a href="lmd-selection-analysis.html#cb276-25" tabindex="-1"></a>  <span class="fu">select</span>(microsample, animal, animal_breed, age, treatment, treatment_expl) <span class="sc">%&gt;%</span></span>
+<span id="cb276-26"><a href="lmd-selection-analysis.html#cb276-26" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">selection_status =</span> <span class="fu">if_else</span>(animal <span class="sc">%in%</span> best_samples_LMD_broiler<span class="sc">$</span>animal, </span>
+<span id="cb276-27"><a href="lmd-selection-analysis.html#cb276-27" tabindex="-1"></a>                                    <span class="st">&quot;selected&quot;</span>, </span>
+<span id="cb276-28"><a href="lmd-selection-analysis.html#cb276-28" tabindex="-1"></a>                                    <span class="st">&quot;not-selected&quot;</span>))</span>
+<span id="cb276-29"><a href="lmd-selection-analysis.html#cb276-29" tabindex="-1"></a></span>
+<span id="cb276-30"><a href="lmd-selection-analysis.html#cb276-30" tabindex="-1"></a></span>
+<span id="cb276-31"><a href="lmd-selection-analysis.html#cb276-31" tabindex="-1"></a></span>
+<span id="cb276-32"><a href="lmd-selection-analysis.html#cb276-32" tabindex="-1"></a><span class="co"># Perform PCA with CLR transformation</span></span>
+<span id="cb276-33"><a href="lmd-selection-analysis.html#cb276-33" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">perform_pca</span>(PCA_df, <span class="at">z_delete =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre class="script-output"><code>[1] &quot;Zeros found&quot;</code></pre>
+<pre class="script-output"><code>No. adjusted imputations:  383 
+Rows (samples) removed after zero replacement: 0 
+Columns (taxa) removed after zero replacement: 40 </code></pre>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb279-1"><a href="lmd-selection-analysis.html#cb279-1" tabindex="-1"></a><span class="co"># Create PCA ordination plot</span></span>
+<span id="cb279-2"><a href="lmd-selection-analysis.html#cb279-2" tabindex="-1"></a><span class="co"># Colors indicate treatment, shapes indicate selection status (selected vs not-selected)</span></span>
+<span id="cb279-3"><a href="lmd-selection-analysis.html#cb279-3" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_pca</span>(pca_result<span class="sc">$</span>pca_result,</span>
+<span id="cb279-4"><a href="lmd-selection-analysis.html#cb279-4" tabindex="-1"></a>         <span class="at">samples_color_metadata =</span> <span class="st">&quot;treatment&quot;</span> , </span>
+<span id="cb279-5"><a href="lmd-selection-analysis.html#cb279-5" tabindex="-1"></a>         <span class="at">samples_shape_metadata =</span> <span class="st">&quot;selection_status&quot;</span>,</span>
+<span id="cb279-6"><a href="lmd-selection-analysis.html#cb279-6" tabindex="-1"></a>         <span class="at">samples_color_value =</span> treatment_colours_bright, </span>
+<span id="cb279-7"><a href="lmd-selection-analysis.html#cb279-7" tabindex="-1"></a>         <span class="at">loadings_color_metadata =</span> <span class="st">&quot;order&quot;</span>, </span>
+<span id="cb279-8"><a href="lmd-selection-analysis.html#cb279-8" tabindex="-1"></a>         <span class="at">loadings_color_value =</span> order_colors, </span>
+<span id="cb279-9"><a href="lmd-selection-analysis.html#cb279-9" tabindex="-1"></a>         <span class="at">loadings_taxon_level =</span> <span class="st">&quot;species&quot;</span>,</span>
+<span id="cb279-10"><a href="lmd-selection-analysis.html#cb279-10" tabindex="-1"></a>         <span class="at">show_labels =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb279-11"><a href="lmd-selection-analysis.html#cb279-11" tabindex="-1"></a>         MACRO_sample_metadata, genome_metadata, order_colors, </span>
+<span id="cb279-12"><a href="lmd-selection-analysis.html#cb279-12" tabindex="-1"></a>         custom_ggplot_theme)</span>
+<span id="cb279-13"><a href="lmd-selection-analysis.html#cb279-13" tabindex="-1"></a></span>
+<span id="cb279-14"><a href="lmd-selection-analysis.html#cb279-14" tabindex="-1"></a>p2 <span class="ot">=</span> p </span>
+<span id="cb279-15"><a href="lmd-selection-analysis.html#cb279-15" tabindex="-1"></a><span class="co"># p2  # Individual plot commented out - used in combined plot</span></span>
+<span id="cb279-16"><a href="lmd-selection-analysis.html#cb279-16" tabindex="-1"></a></span>
+<span id="cb279-17"><a href="lmd-selection-analysis.html#cb279-17" tabindex="-1"></a><span class="co"># # Calculate Euclidean distance on CLR data</span></span>
+<span id="cb279-18"><a href="lmd-selection-analysis.html#cb279-18" tabindex="-1"></a><span class="co"># pca_animals_dist_matrix &lt;- vegdist(pca_result$df_clr_dist, method = &quot;euclidean&quot;)</span></span>
+<span id="cb279-19"><a href="lmd-selection-analysis.html#cb279-19" tabindex="-1"></a><span class="co"># pca_animals_dist_matrix</span></span></code></pre></div>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb280-1"><a href="lmd-selection-analysis.html#cb280-1" tabindex="-1"></a><span class="co"># Combined visualization: barplots and PCA for broilers</span></span>
+<span id="cb280-2"><a href="lmd-selection-analysis.html#cb280-2" tabindex="-1"></a><span class="co"># Shows richness, composition, and ordination space with selected samples highlighted</span></span>
+<span id="cb280-3"><a href="lmd-selection-analysis.html#cb280-3" tabindex="-1"></a>(barplot_4<span class="sc">/</span>barplot_5) <span class="sc">|</span> p2</span></code></pre></div>
+<p><img src="_main_files/figure-html/lmd_combined_broiler_plot_05B-1.png" width="1824" /></p>
+</div>
+</div>
+<div id="layer-sample-selection" class="section level2 hasAnchor" number="14.5">
+<h2><span class="header-section-number">14.5</span> Layer Sample Selection<a href="lmd-selection-analysis.html#layer-sample-selection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section identifies and visualizes the best LMD samples for layers based on combined ranking of richness and DNA concentration.</p>
+<div id="visualize-layer-samples" class="section level3 hasAnchor" number="14.5.1">
+<h3><span class="header-section-number">14.5.1</span> Visualize Layer Samples<a href="lmd-selection-analysis.html#visualize-layer-samples" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This section creates visualizations to assess layer samples for LMD selection, showing richness, DNA concentration, and taxonomic composition.</p>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb281-1"><a href="lmd-selection-analysis.html#cb281-1" tabindex="-1"></a><span class="co"># Plot 1: Layer richness by animal, colored by DNA concentration</span></span>
+<span id="cb281-2"><a href="lmd-selection-analysis.html#cb281-2" tabindex="-1"></a><span class="co"># Shows alpha diversity combined with DNA quality metrics</span></span>
+<span id="cb281-3"><a href="lmd-selection-analysis.html#cb281-3" tabindex="-1"></a>barplot_2 <span class="ot">&lt;-</span> extract_sample_div_metadata_macro <span class="sc">%&gt;%</span></span>
+<span id="cb281-4"><a href="lmd-selection-analysis.html#cb281-4" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb281-5"><a href="lmd-selection-analysis.html#cb281-5" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb281-6"><a href="lmd-selection-analysis.html#cb281-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> richness, <span class="at">fill =</span> DNA_concentration)) <span class="sc">+</span></span>
+<span id="cb281-7"><a href="lmd-selection-analysis.html#cb281-7" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="at">linewidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb281-8"><a href="lmd-selection-analysis.html#cb281-8" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;DNA extracts&quot;</span>, <span class="at">y =</span> <span class="st">&quot;richness&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;Read type&quot;</span>) <span class="sc">+</span></span>
+<span id="cb281-9"><a href="lmd-selection-analysis.html#cb281-9" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#c90076&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#3598bf&quot;</span>, <span class="at">name =</span> <span class="st">&quot;extract DNA concentration&quot;</span>) <span class="sc">+</span></span>
+<span id="cb281-10"><a href="lmd-selection-analysis.html#cb281-10" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> treatment <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb281-11"><a href="lmd-selection-analysis.html#cb281-11" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb281-12"><a href="lmd-selection-analysis.html#cb281-12" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb281-13"><a href="lmd-selection-analysis.html#cb281-13" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(),</span>
+<span id="cb281-14"><a href="lmd-selection-analysis.html#cb281-14" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>,</span>
+<span id="cb281-15"><a href="lmd-selection-analysis.html#cb281-15" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb281-16"><a href="lmd-selection-analysis.html#cb281-16" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Layers&quot;</span>)</span>
+<span id="cb281-17"><a href="lmd-selection-analysis.html#cb281-17" tabindex="-1"></a><span class="co"># barplot_2</span></span>
+<span id="cb281-18"><a href="lmd-selection-analysis.html#cb281-18" tabindex="-1"></a></span>
+<span id="cb281-19"><a href="lmd-selection-analysis.html#cb281-19" tabindex="-1"></a><span class="co"># Plot 2: Layer taxonomic composition by order</span></span>
+<span id="cb281-20"><a href="lmd-selection-analysis.html#cb281-20" tabindex="-1"></a><span class="co"># Shows community structure to ensure taxonomic diversity in selected samples</span></span>
+<span id="cb281-21"><a href="lmd-selection-analysis.html#cb281-21" tabindex="-1"></a>barplot_3 <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro <span class="sc">%&gt;%</span></span>
+<span id="cb281-22"><a href="lmd-selection-analysis.html#cb281-22" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb281-23"><a href="lmd-selection-analysis.html#cb281-23" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb281-24"><a href="lmd-selection-analysis.html#cb281-24" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> animal , <span class="at">y =</span> count, <span class="at">fill =</span> order)) <span class="sc">+</span></span>
+<span id="cb281-25"><a href="lmd-selection-analysis.html#cb281-25" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">colour=</span><span class="st">&quot;white&quot;</span>, <span class="at">linewidth=</span><span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb281-26"><a href="lmd-selection-analysis.html#cb281-26" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> order_colors[<span class="sc">-</span><span class="dv">4</span>], <span class="at">drop =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb281-27"><a href="lmd-selection-analysis.html#cb281-27" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Composition&quot;</span>,<span class="at">y =</span> <span class="st">&quot;Microsamples&quot;</span>,<span class="at">fill =</span> <span class="st">&quot;Read type&quot;</span>) <span class="sc">+</span></span>
+<span id="cb281-28"><a href="lmd-selection-analysis.html#cb281-28" tabindex="-1"></a>  <span class="fu">facet_nested</span>(. <span class="sc">~</span> animal_breed <span class="sc">+</span> treatment_expl <span class="sc">+</span> treatment <span class="sc">+</span> age, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;free&quot;</span>) <span class="sc">+</span></span>
+<span id="cb281-29"><a href="lmd-selection-analysis.html#cb281-29" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb281-30"><a href="lmd-selection-analysis.html#cb281-30" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb281-31"><a href="lmd-selection-analysis.html#cb281-31" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb281-32"><a href="lmd-selection-analysis.html#cb281-32" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb281-33"><a href="lmd-selection-analysis.html#cb281-33" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Composition of bacterial orders - 30% filt&quot;</span>)</span>
+<span id="cb281-34"><a href="lmd-selection-analysis.html#cb281-34" tabindex="-1"></a><span class="co"># barplot_3</span></span>
+<span id="cb281-35"><a href="lmd-selection-analysis.html#cb281-35" tabindex="-1"></a></span>
+<span id="cb281-36"><a href="lmd-selection-analysis.html#cb281-36" tabindex="-1"></a><span class="co"># Note: best_samples_LMD was already created in lmd_selection_all_05B chunk</span></span>
+<span id="cb281-37"><a href="lmd-selection-analysis.html#cb281-37" tabindex="-1"></a><span class="co"># This section just creates the layer-specific visualizations</span></span></code></pre></div>
+<div class="sourceCode" id="cb282"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb282-1"><a href="lmd-selection-analysis.html#cb282-1" tabindex="-1"></a>best_samples_LMD_layer <span class="ot">&lt;-</span> best_samples_LMD <span class="sc">%&gt;%</span></span>
+<span id="cb282-2"><a href="lmd-selection-analysis.html#cb282-2" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&#39;layer&#39;</span>)</span></code></pre></div>
+</div>
+<div id="mark-selected-layer-samples" class="section level3 hasAnchor" number="14.5.2">
+<h3><span class="header-section-number">14.5.2</span> Mark Selected Layer Samples<a href="lmd-selection-analysis.html#mark-selected-layer-samples" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This section marks the selected layer samples on the visualization plots.</p>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb283-1"><a href="lmd-selection-analysis.html#cb283-1" tabindex="-1"></a><span class="co"># Mark selected layer samples with star symbols on the richness plot</span></span>
+<span id="cb283-2"><a href="lmd-selection-analysis.html#cb283-2" tabindex="-1"></a>barplot_4 <span class="ot">&lt;-</span> barplot_2 <span class="sc">+</span></span>
+<span id="cb283-3"><a href="lmd-selection-analysis.html#cb283-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb283-4"><a href="lmd-selection-analysis.html#cb283-4" tabindex="-1"></a>    <span class="at">data =</span> best_samples_LMD_layer,</span>
+<span id="cb283-5"><a href="lmd-selection-analysis.html#cb283-5" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> richness),</span>
+<span id="cb283-6"><a href="lmd-selection-analysis.html#cb283-6" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">8</span>,          <span class="co"># star shape</span></span>
+<span id="cb283-7"><a href="lmd-selection-analysis.html#cb283-7" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb283-8"><a href="lmd-selection-analysis.html#cb283-8" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb283-9"><a href="lmd-selection-analysis.html#cb283-9" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb283-10"><a href="lmd-selection-analysis.html#cb283-10" tabindex="-1"></a>  )</span>
+<span id="cb283-11"><a href="lmd-selection-analysis.html#cb283-11" tabindex="-1"></a></span>
+<span id="cb283-12"><a href="lmd-selection-analysis.html#cb283-12" tabindex="-1"></a>barplot_5 <span class="ot">&lt;-</span> barplot_3 <span class="sc">+</span></span>
+<span id="cb283-13"><a href="lmd-selection-analysis.html#cb283-13" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb283-14"><a href="lmd-selection-analysis.html#cb283-14" tabindex="-1"></a>    <span class="at">data =</span> best_samples_LMD_layer,</span>
+<span id="cb283-15"><a href="lmd-selection-analysis.html#cb283-15" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> animal, <span class="at">y =</span> <span class="dv">1</span>),</span>
+<span id="cb283-16"><a href="lmd-selection-analysis.html#cb283-16" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">8</span>,          <span class="co"># star shape</span></span>
+<span id="cb283-17"><a href="lmd-selection-analysis.html#cb283-17" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb283-18"><a href="lmd-selection-analysis.html#cb283-18" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb283-19"><a href="lmd-selection-analysis.html#cb283-19" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb283-20"><a href="lmd-selection-analysis.html#cb283-20" tabindex="-1"></a>  )</span>
+<span id="cb283-21"><a href="lmd-selection-analysis.html#cb283-21" tabindex="-1"></a></span>
+<span id="cb283-22"><a href="lmd-selection-analysis.html#cb283-22" tabindex="-1"></a><span class="co"># barplot_4/barplot_5</span></span></code></pre></div>
+</div>
+<div id="pca-analysis-for-layers" class="section level3 hasAnchor" number="14.5.3">
+<h3><span class="header-section-number">14.5.3</span> PCA Analysis for Layers<a href="lmd-selection-analysis.html#pca-analysis-for-layers" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This section performs PCA analysis on layer samples to visualize community structure and highlight selected samples in ordination space.</p>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb284-1"><a href="lmd-selection-analysis.html#cb284-1" tabindex="-1"></a><span class="co"># Prepare community matrix for PCA analysis</span></span>
+<span id="cb284-2"><a href="lmd-selection-analysis.html#cb284-2" tabindex="-1"></a><span class="co"># Filter for layer samples at day 7, convert to wide format, and normalize to percentages</span></span>
+<span id="cb284-3"><a href="lmd-selection-analysis.html#cb284-3" tabindex="-1"></a>PCA_df <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb284-4"><a href="lmd-selection-analysis.html#cb284-4" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb284-5"><a href="lmd-selection-analysis.html#cb284-5" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">==</span> <span class="dv">7</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb284-6"><a href="lmd-selection-analysis.html#cb284-6" tabindex="-1"></a>  <span class="co"># Remove metadata</span></span>
+<span id="cb284-7"><a href="lmd-selection-analysis.html#cb284-7" tabindex="-1"></a>  <span class="fu">select</span>(genome, microsample, count) <span class="sc">%&gt;%</span></span>
+<span id="cb284-8"><a href="lmd-selection-analysis.html#cb284-8" tabindex="-1"></a>  <span class="co"># Make tidy df into wide df</span></span>
+<span id="cb284-9"><a href="lmd-selection-analysis.html#cb284-9" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb284-10"><a href="lmd-selection-analysis.html#cb284-10" tabindex="-1"></a>    <span class="at">names_from =</span> genome,   </span>
+<span id="cb284-11"><a href="lmd-selection-analysis.html#cb284-11" tabindex="-1"></a>    <span class="at">values_from =</span> count,   </span>
+<span id="cb284-12"><a href="lmd-selection-analysis.html#cb284-12" tabindex="-1"></a>    <span class="co"># Fill missing values with 0</span></span>
+<span id="cb284-13"><a href="lmd-selection-analysis.html#cb284-13" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb284-14"><a href="lmd-selection-analysis.html#cb284-14" tabindex="-1"></a>  <span class="co"># Remove taxa (columns) that are zero for all leftover samples (rows)</span></span>
+<span id="cb284-15"><a href="lmd-selection-analysis.html#cb284-15" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="fu">any</span>(. <span class="sc">!=</span> <span class="dv">0</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb284-16"><a href="lmd-selection-analysis.html#cb284-16" tabindex="-1"></a>  <span class="co"># scale each sample to 100 (= closure to 100, not required, but common)</span></span>
+<span id="cb284-17"><a href="lmd-selection-analysis.html#cb284-17" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">-</span>microsample, <span class="sc">~</span> . <span class="sc">/</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric))) <span class="sc">*</span> <span class="dv">100</span> )) <span class="sc">%&gt;%</span></span>
+<span id="cb284-18"><a href="lmd-selection-analysis.html#cb284-18" tabindex="-1"></a>  <span class="co"># turn the column &#39;microsample&#39;into the name of the rows of the df</span></span>
+<span id="cb284-19"><a href="lmd-selection-analysis.html#cb284-19" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">&quot;microsample&quot;</span>)</span>
+<span id="cb284-20"><a href="lmd-selection-analysis.html#cb284-20" tabindex="-1"></a></span>
+<span id="cb284-21"><a href="lmd-selection-analysis.html#cb284-21" tabindex="-1"></a></span>
+<span id="cb284-22"><a href="lmd-selection-analysis.html#cb284-22" tabindex="-1"></a><span class="co"># Create sample metadata with selection status for visualization</span></span>
+<span id="cb284-23"><a href="lmd-selection-analysis.html#cb284-23" tabindex="-1"></a>MACRO_sample_metadata <span class="ot">&lt;-</span> sample_metadata_macro <span class="sc">%&gt;%</span></span>
+<span id="cb284-24"><a href="lmd-selection-analysis.html#cb284-24" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">microsample =</span> sample) <span class="sc">%&gt;%</span></span>
+<span id="cb284-25"><a href="lmd-selection-analysis.html#cb284-25" tabindex="-1"></a>  <span class="fu">select</span>(microsample, animal, animal_breed, age, treatment, treatment_expl) <span class="sc">%&gt;%</span></span>
+<span id="cb284-26"><a href="lmd-selection-analysis.html#cb284-26" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">selection_status =</span> <span class="fu">if_else</span>(animal <span class="sc">%in%</span> best_samples_LMD_layer<span class="sc">$</span>animal, </span>
+<span id="cb284-27"><a href="lmd-selection-analysis.html#cb284-27" tabindex="-1"></a>                                    <span class="st">&quot;selected&quot;</span>, </span>
+<span id="cb284-28"><a href="lmd-selection-analysis.html#cb284-28" tabindex="-1"></a>                                    <span class="st">&quot;not-selected&quot;</span>))</span>
+<span id="cb284-29"><a href="lmd-selection-analysis.html#cb284-29" tabindex="-1"></a></span>
+<span id="cb284-30"><a href="lmd-selection-analysis.html#cb284-30" tabindex="-1"></a></span>
+<span id="cb284-31"><a href="lmd-selection-analysis.html#cb284-31" tabindex="-1"></a></span>
+<span id="cb284-32"><a href="lmd-selection-analysis.html#cb284-32" tabindex="-1"></a><span class="co"># Perform PCA with CLR transformation</span></span>
+<span id="cb284-33"><a href="lmd-selection-analysis.html#cb284-33" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">perform_pca</span>(PCA_df, <span class="at">z_delete =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre class="script-output"><code>[1] &quot;Zeros found&quot;</code></pre>
+<pre class="script-output"><code>No. adjusted imputations:  254 
+Rows (samples) removed after zero replacement: 2 
+Columns (taxa) removed after zero replacement: 43 </code></pre>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb287-1"><a href="lmd-selection-analysis.html#cb287-1" tabindex="-1"></a><span class="co"># Create PCA ordination plot</span></span>
+<span id="cb287-2"><a href="lmd-selection-analysis.html#cb287-2" tabindex="-1"></a><span class="co"># Colors indicate treatment, shapes indicate selection status (selected vs not-selected)</span></span>
+<span id="cb287-3"><a href="lmd-selection-analysis.html#cb287-3" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_pca</span>(pca_result<span class="sc">$</span>pca_result,</span>
+<span id="cb287-4"><a href="lmd-selection-analysis.html#cb287-4" tabindex="-1"></a>         <span class="at">samples_color_metadata =</span> <span class="st">&quot;treatment&quot;</span> , </span>
+<span id="cb287-5"><a href="lmd-selection-analysis.html#cb287-5" tabindex="-1"></a>         <span class="at">samples_shape_metadata =</span> <span class="st">&quot;selection_status&quot;</span>,</span>
+<span id="cb287-6"><a href="lmd-selection-analysis.html#cb287-6" tabindex="-1"></a>         <span class="at">samples_color_value =</span> treatment_colours_bright, </span>
+<span id="cb287-7"><a href="lmd-selection-analysis.html#cb287-7" tabindex="-1"></a>         <span class="at">loadings_color_metadata =</span> <span class="st">&quot;order&quot;</span>, </span>
+<span id="cb287-8"><a href="lmd-selection-analysis.html#cb287-8" tabindex="-1"></a>         <span class="at">loadings_color_value =</span> order_colors, </span>
+<span id="cb287-9"><a href="lmd-selection-analysis.html#cb287-9" tabindex="-1"></a>         <span class="at">loadings_taxon_level =</span> <span class="st">&quot;species&quot;</span>,</span>
+<span id="cb287-10"><a href="lmd-selection-analysis.html#cb287-10" tabindex="-1"></a>         <span class="at">show_labels =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb287-11"><a href="lmd-selection-analysis.html#cb287-11" tabindex="-1"></a>         MACRO_sample_metadata, genome_metadata, order_colors, </span>
+<span id="cb287-12"><a href="lmd-selection-analysis.html#cb287-12" tabindex="-1"></a>         custom_ggplot_theme)</span>
+<span id="cb287-13"><a href="lmd-selection-analysis.html#cb287-13" tabindex="-1"></a></span>
+<span id="cb287-14"><a href="lmd-selection-analysis.html#cb287-14" tabindex="-1"></a>p2 <span class="ot">=</span> p </span>
+<span id="cb287-15"><a href="lmd-selection-analysis.html#cb287-15" tabindex="-1"></a><span class="co"># p2  # Individual plot commented out - used in combined plot</span></span>
+<span id="cb287-16"><a href="lmd-selection-analysis.html#cb287-16" tabindex="-1"></a></span>
+<span id="cb287-17"><a href="lmd-selection-analysis.html#cb287-17" tabindex="-1"></a><span class="co"># # Calculate Euclidean distance on CLR data</span></span>
+<span id="cb287-18"><a href="lmd-selection-analysis.html#cb287-18" tabindex="-1"></a><span class="co"># pca_animals_dist_matrix &lt;- vegdist(pca_result$df_clr_dist, method = &quot;euclidean&quot;)</span></span>
+<span id="cb287-19"><a href="lmd-selection-analysis.html#cb287-19" tabindex="-1"></a><span class="co"># pca_animals_dist_matrix</span></span></code></pre></div>
+<div class="sourceCode" id="cb288"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb288-1"><a href="lmd-selection-analysis.html#cb288-1" tabindex="-1"></a><span class="co"># Combined visualization: barplots and PCA for layers</span></span>
+<span id="cb288-2"><a href="lmd-selection-analysis.html#cb288-2" tabindex="-1"></a><span class="co"># Shows richness, composition, and ordination space with selected samples highlighted</span></span>
+<span id="cb288-3"><a href="lmd-selection-analysis.html#cb288-3" tabindex="-1"></a>(barplot_4<span class="sc">/</span>barplot_5) <span class="sc">|</span> p2 </span></code></pre></div>
+<p><img src="_main_files/figure-html/lmd_combined_layer_05B-1.png" width="1824" /></p>
+</div>
+</div>
+<div id="export-selected-samples-1" class="section level2 hasAnchor" number="14.6">
+<h2><span class="header-section-number">14.6</span> Export Selected Samples<a href="lmd-selection-analysis.html#export-selected-samples-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section prepares and exports the final list of selected LMD samples.</p>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb289-1"><a href="lmd-selection-analysis.html#cb289-1" tabindex="-1"></a><span class="co"># Prepare export data frame with essential information</span></span>
+<span id="cb289-2"><a href="lmd-selection-analysis.html#cb289-2" tabindex="-1"></a>best_samples_LMD_export <span class="ot">&lt;-</span> best_samples_LMD <span class="sc">%&gt;%</span></span>
+<span id="cb289-3"><a href="lmd-selection-analysis.html#cb289-3" tabindex="-1"></a>  <span class="fu">select</span>(animal, animal_breed, treatment, age, richness, microsample)</span>
+<span id="cb289-4"><a href="lmd-selection-analysis.html#cb289-4" tabindex="-1"></a></span>
+<span id="cb289-5"><a href="lmd-selection-analysis.html#cb289-5" tabindex="-1"></a>best_samples_LMD_export</span>
+<span id="cb289-6"><a href="lmd-selection-analysis.html#cb289-6" tabindex="-1"></a></span>
+<span id="cb289-7"><a href="lmd-selection-analysis.html#cb289-7" tabindex="-1"></a><span class="fu">write.csv</span>(best_samples_LMD_export, </span>
+<span id="cb289-8"><a href="lmd-selection-analysis.html#cb289-8" tabindex="-1"></a>          <span class="at">file =</span> <span class="st">&quot;LMD_selection_adenovirus.csv&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="pacbio-selection-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="metatranscriptomics-selection-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

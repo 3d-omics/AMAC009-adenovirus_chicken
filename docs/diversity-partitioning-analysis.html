@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>12 Diversity Partitioning Analysis | 3D’omics | Adenovirus: Conventional metagenomics</title>
+  <meta name="description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="12 Diversity Partitioning Analysis | 3D’omics | Adenovirus: Conventional metagenomics" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="github-repo" content="3d-omics/XXX" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="12 Diversity Partitioning Analysis | 3D’omics | Adenovirus: Conventional metagenomics" />
+  
+  <meta name="twitter:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  
+
+<meta name="author" content="Amalia Bogri" />
+<meta name="author" content="Antton Alberdi" />
+<meta name="author" content="Jorge Langa" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="beta-diversity-analysis---within-breeds.html"/>
+<link rel="next" href="pacbio-selection-analysis.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prepare-the-r-environment"><i class="fa fa-check"></i><b>1.1</b> Prepare the R environment</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#environment"><i class="fa fa-check"></i><b>1.1.1</b> Environment</a></li>
+<li class="chapter" data-level="1.1.2" data-path="index.html"><a href="index.html#libraries"><i class="fa fa-check"></i><b>1.1.2</b> Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-essential-functions"><i class="fa fa-check"></i><b>1.2</b> Load Essential Functions</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notes"><i class="fa fa-check"></i><b>1.3</b> Notes</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#installation-of-modules"><i class="fa fa-check"></i><b>1.3.1</b> Installation of modules</a></li>
+<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#airtable-access"><i class="fa fa-check"></i><b>1.3.2</b> Airtable access:</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html"><i class="fa fa-check"></i><b>2</b> Data Import - MAG Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-catalogue"><i class="fa fa-check"></i><b>2.2</b> Genome (MAGs) Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#dereplicated-genomes"><i class="fa fa-check"></i><b>2.2.1</b> Dereplicated Genomes</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-taxonomy"><i class="fa fa-check"></i><b>2.2.2</b> Genome (MAGs) Taxonomy</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-quality"><i class="fa fa-check"></i><b>2.2.3</b> Genome (MAGs) Quality</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-phylogenetic-tree"><i class="fa fa-check"></i><b>2.2.4</b> Genome (MAGs) Phylogenetic Tree</a></li>
+<li class="chapter" data-level="2.2.5" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#merged-genome-mags-taxonomy-quality"><i class="fa fa-check"></i><b>2.2.5</b> Merged Genome (MAGs) taxonomy &amp; quality</a></li>
+<li class="chapter" data-level="2.2.6" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-functional-annotations"><i class="fa fa-check"></i><b>2.2.6</b> Genome (MAGs) functional annotations</a></li>
+<li class="chapter" data-level="2.2.7" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#distil-functional-annotations"><i class="fa fa-check"></i><b>2.2.7</b> Distil functional annotations</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#bacterial-phyla-order-color-scheme-data"><i class="fa fa-check"></i><b>2.3</b> Bacterial phyla &amp; order color scheme data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-working-objects"><i class="fa fa-check"></i><b>2.4</b> Save Working Objects</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-core-mag-catalogue-data-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.1</b> Save Core MAG Catalogue Data (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-color-schemes-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.2</b> Save Color Schemes (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-complete-preparation-data-for-colleagues-analyses"><i class="fa fa-check"></i><b>2.4.3</b> Save Complete Preparation Data (for colleagues’ analyses)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html"><i class="fa fa-check"></i><b>3</b> Data Import - Metadata and Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#overview-1"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#define-plotting-settings"><i class="fa fa-check"></i><b>3.2</b> Define Plotting Settings</a></li>
+<li class="chapter" data-level="3.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sample-metadata"><i class="fa fa-check"></i><b>3.3</b> Sample metadata</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples"><i class="fa fa-check"></i><b>3.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples"><i class="fa fa-check"></i><b>3.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-reads-counts"><i class="fa fa-check"></i><b>3.4</b> Bacterial reads (counts)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-1"><i class="fa fa-check"></i><b>3.4.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.4.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-1"><i class="fa fa-check"></i><b>3.4.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#genome-covered-bases"><i class="fa fa-check"></i><b>3.5</b> Genome covered bases</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-2"><i class="fa fa-check"></i><b>3.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.5.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-2"><i class="fa fa-check"></i><b>3.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sequencing-statistics"><i class="fa fa-check"></i><b>3.6</b> Sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-3"><i class="fa fa-check"></i><b>3.6.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.6.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-3"><i class="fa fa-check"></i><b>3.6.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#non-bacterial-mapped-reads-human-chicken-swine"><i class="fa fa-check"></i><b>3.7</b> Non-bacterial mapped reads: human, chicken, swine</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro"><i class="fa fa-check"></i><b>3.7.1</b> Micro</a></li>
+<li class="chapter" data-level="3.7.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-4"><i class="fa fa-check"></i><b>3.7.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-mapped-reads."><i class="fa fa-check"></i><b>3.8</b> Bacterial mapped reads.</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-4"><i class="fa fa-check"></i><b>3.8.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.8.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-5"><i class="fa fa-check"></i><b>3.8.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#alternative-way-to-estimate-bacterial-read-counts-from-count-table"><i class="fa fa-check"></i><b>3.9</b> Alternative way to estimate bacterial read counts (from count table):</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-5"><i class="fa fa-check"></i><b>3.9.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.9.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-6"><i class="fa fa-check"></i><b>3.9.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sanity-checks"><i class="fa fa-check"></i><b>3.10</b> Sanity checks</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-6"><i class="fa fa-check"></i><b>3.10.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.10.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-7"><i class="fa fa-check"></i><b>3.10.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#combine-relevant-sequencing-statistics"><i class="fa fa-check"></i><b>3.11</b> Combine relevant sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.11.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-7"><i class="fa fa-check"></i><b>3.11.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.11.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-8"><i class="fa fa-check"></i><b>3.11.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.12" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#filter-and-normalise-data"><i class="fa fa-check"></i><b>3.12</b> Filter and normalise data</a>
+<ul>
+<li class="chapter" data-level="3.12.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-coverage-table"><i class="fa fa-check"></i><b>3.12.1</b> Generate coverage table</a></li>
+<li class="chapter" data-level="3.12.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#coverage-filtering"><i class="fa fa-check"></i><b>3.12.2</b> Coverage filtering</a></li>
+<li class="chapter" data-level="3.12.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-genome-count-table"><i class="fa fa-check"></i><b>3.12.3</b> Generate genome count table</a></li>
+<li class="chapter" data-level="3.12.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-length-corrected-read-count-tables"><i class="fa fa-check"></i><b>3.12.4</b> Generate length-corrected read count tables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.13" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#wrap-working-objects"><i class="fa fa-check"></i><b>3.13</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html"><i class="fa fa-check"></i><b>4</b> Data Preparation for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#overview-2"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#load-the-data"><i class="fa fa-check"></i><b>4.2</b> Load the Data</a></li>
+<li class="chapter" data-level="4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#sequencing-statistics-data-frames"><i class="fa fa-check"></i><b>4.3</b> Sequencing Statistics Data Frames</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-11"><i class="fa fa-check"></i><b>4.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.3.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-13"><i class="fa fa-check"></i><b>4.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-tables-for-plotting"><i class="fa fa-check"></i><b>4.4</b> Tidy Tables for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after-trimming-comparison"><i class="fa fa-check"></i><b>4.4.1</b> Before-After Trimming Comparison</a></li>
+<li class="chapter" data-level="4.4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after"><i class="fa fa-check"></i><b>4.4.2</b> Before-after</a></li>
+<li class="chapter" data-level="4.4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#samtools-mapping-to-different-references"><i class="fa fa-check"></i><b>4.4.3</b> Samtools mapping to different references</a></li>
+<li class="chapter" data-level="4.4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#percentages-of-different-references"><i class="fa fa-check"></i><b>4.4.4</b> Percentages of different references</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-genome-counts"><i class="fa fa-check"></i><b>4.5</b> Tidy genome counts</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-15"><i class="fa fa-check"></i><b>4.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.5.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-17"><i class="fa fa-check"></i><b>4.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#read-count-tables-length-corrected-dataframes"><i class="fa fa-check"></i><b>4.6</b> Read count tables (length corrected) dataframes</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data"><i class="fa fa-check"></i><b>4.6.1</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#alpha-diversity-dataframes"><i class="fa fa-check"></i><b>4.7</b> Alpha diversity dataframes</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data"><i class="fa fa-check"></i><b>4.7.1</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-1"><i class="fa fa-check"></i><b>4.7.2</b> Macro-data</a></li>
+<li class="chapter" data-level="4.7.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data-1"><i class="fa fa-check"></i><b>4.7.3</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-2"><i class="fa fa-check"></i><b>4.7.4</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#wrap-working-objects-1"><i class="fa fa-check"></i><b>4.8</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html"><i class="fa fa-check"></i><b>5</b> MAG Catalogue Overview</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#overview-3"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#load-data"><i class="fa fa-check"></i><b>5.2</b> Load Data</a></li>
+<li class="chapter" data-level="5.3" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-summary"><i class="fa fa-check"></i><b>5.3</b> Genome Quality Summary</a></li>
+<li class="chapter" data-level="5.4" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-circularity-and-taxonomic-distribution"><i class="fa fa-check"></i><b>5.4</b> Genome Circularity and Taxonomic Distribution</a></li>
+<li class="chapter" data-level="5.5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-visualization"><i class="fa fa-check"></i><b>5.5</b> Genome Quality Visualization</a></li>
+<li class="chapter" data-level="5.6" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours"><i class="fa fa-check"></i><b>5.6</b> MAG catalogue phyla and order colours</a></li>
+<li class="chapter" data-level="5.7" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours-and-genera-number"><i class="fa fa-check"></i><b>5.7</b> MAG catalogue phyla and order colours, and genera number</a></li>
+<li class="chapter" data-level="5.8" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot"><i class="fa fa-check"></i><b>5.8</b> Genome phylogeny plot</a></li>
+<li class="chapter" data-level="5.9" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot-without-legend"><i class="fa fa-check"></i><b>5.9</b> Genome phylogeny plot without legend</a></li>
+<li class="chapter" data-level="5.10" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-overview"><i class="fa fa-check"></i><b>5.10</b> Functional overview</a></li>
+<li class="chapter" data-level="5.11" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-distances"><i class="fa fa-check"></i><b>5.11</b> Functional distances</a></li>
+<li class="chapter" data-level="5.12" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-ordination"><i class="fa fa-check"></i><b>5.12</b> Functional ordination</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html"><i class="fa fa-check"></i><b>6</b> Adenovirus Presence Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#load-data-and-plotting-utilities"><i class="fa fa-check"></i><b>6.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="6.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-percentage-over-time"><i class="fa fa-check"></i><b>6.2</b> Adenovirus Percentage Over Time</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.1</b> Broilers - Adenovirus Percentage</a></li>
+<li class="chapter" data-level="6.2.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.2</b> Layers - Adenovirus Percentage</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-read-counts-by-sample"><i class="fa fa-check"></i><b>6.3</b> Adenovirus Read Counts by Sample</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.1</b> Layers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.2</b> Broilers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#combined-visualization"><i class="fa fa-check"></i><b>6.3.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html"><i class="fa fa-check"></i><b>7</b> Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#load-data-and-plotting-utilities-1"><i class="fa fa-check"></i><b>7.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="7.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#number-of-bases-and-reads"><i class="fa fa-check"></i><b>7.2</b> Number of Bases and Reads</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-bases-before-trimming"><i class="fa fa-check"></i><b>7.2.1</b> Total Bases Before Trimming</a></li>
+<li class="chapter" data-level="7.2.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-reads-after-trimming"><i class="fa fa-check"></i><b>7.2.2</b> Total Reads After Trimming</a></li>
+<li class="chapter" data-level="7.2.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-1"><i class="fa fa-check"></i><b>7.2.3</b> Combined Visualization</a></li>
+<li class="chapter" data-level="7.2.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#low-data-samples"><i class="fa fa-check"></i><b>7.2.4</b> Low Data Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#percentage-of-reads-mapped-trimmed-and-unmapped"><i class="fa fa-check"></i><b>7.3</b> Percentage of Reads: Mapped, Trimmed, and Unmapped</a></li>
+<li class="chapter" data-level="7.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#composition-of-reads-vs.-references"><i class="fa fa-check"></i><b>7.4</b> Composition of Reads vs. References</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#relative-composition-proportions"><i class="fa fa-check"></i><b>7.4.1</b> Relative Composition (Proportions)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#absolute-composition-counts"><i class="fa fa-check"></i><b>7.4.2</b> Absolute Composition (Counts)</a></li>
+<li class="chapter" data-level="7.4.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-2"><i class="fa fa-check"></i><b>7.4.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html"><i class="fa fa-check"></i><b>8</b> Antimicrobial Effect Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#load-data-and-plotting-utilities-2"><i class="fa fa-check"></i><b>8.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="8.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#bacteria-to-host-read-ratio"><i class="fa fa-check"></i><b>8.2</b> Bacteria-to-Host Read Ratio</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#layers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.1</b> Layers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#broilers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.2</b> Broilers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.3" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#combined-visualization-3"><i class="fa fa-check"></i><b>8.2.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity Analysis</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#load-data-and-plotting-utilities-3"><i class="fa fa-check"></i><b>9.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="9.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#alpha-diversity-by-breed"><i class="fa fa-check"></i><b>9.2</b> Alpha Diversity by Breed</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#layers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.1</b> Layers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#broilers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.2</b> Broilers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#combined-visualization-4"><i class="fa fa-check"></i><b>9.2.3</b> Combined Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#detailed-alpha-diversity---layers-with-animal-labels"><i class="fa fa-check"></i><b>9.3</b> Detailed Alpha Diversity - Layers with Animal Labels</a></li>
+<li class="chapter" data-level="9.4" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#relationship-between-genome-length-and-alpha-diversity"><i class="fa fa-check"></i><b>9.4</b> Relationship Between Genome Length and Alpha Diversity</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#prepare-data-calculate-median-genome-length"><i class="fa fa-check"></i><b>9.4.1</b> Prepare Data: Calculate Median Genome Length</a></li>
+<li class="chapter" data-level="9.4.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#visualize-relationship-linear-model"><i class="fa fa-check"></i><b>9.4.2</b> Visualize Relationship: Linear Model</a></li>
+<li class="chapter" data-level="9.4.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#statistical-modeling-negative-binomial-regression"><i class="fa fa-check"></i><b>9.4.3</b> Statistical Modeling: Negative Binomial Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html"><i class="fa fa-check"></i><b>10</b> Beta Diversity Analysis - Between Breeds</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#load-data-and-plotting-utilities-4"><i class="fa fa-check"></i><b>10.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="10.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#composition-barplots"><i class="fa fa-check"></i><b>10.2</b> Composition Barplots</a></li>
+<li class="chapter" data-level="10.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#layer-vs-broiler-composition"><i class="fa fa-check"></i><b>10.3</b> Layer vs Broiler Composition</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#pca"><i class="fa fa-check"></i><b>10.3.1</b> PCA</a></li>
+<li class="chapter" data-level="10.3.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#genomes-overlap-between-breeds"><i class="fa fa-check"></i><b>10.3.2</b> Genomes Overlap Between Breeds</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.4</b> ALDEx2 Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-aldex2"><i class="fa fa-check"></i><b>10.4.1</b> Prepare Data for ALDEx2</a></li>
+<li class="chapter" data-level="10.4.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#run-aldex2-analysis"><i class="fa fa-check"></i><b>10.4.2</b> Run ALDEx2 Analysis</a></li>
+<li class="chapter" data-level="10.4.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-diagnostic-plots"><i class="fa fa-check"></i><b>10.4.3</b> ALDEx2 Diagnostic Plots</a></li>
+<li class="chapter" data-level="10.4.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-significant-taxa-visualization"><i class="fa fa-check"></i><b>10.4.4</b> ALDEx2 Significant Taxa Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#ancom-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.5</b> ANCOM Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-ancom"><i class="fa fa-check"></i><b>10.5.1</b> Prepare Data for ANCOM</a></li>
+<li class="chapter" data-level="10.5.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-diagram-control-treatment-tf3-only"><i class="fa fa-check"></i><b>10.5.2</b> Venn Diagram: Control Treatment (TF3) Only</a></li>
+<li class="chapter" data-level="10.5.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-of-all-groups-separately"><i class="fa fa-check"></i><b>10.5.3</b> Venn of all groups separately</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html"><i class="fa fa-check"></i><b>11</b> Beta Diversity Analysis - Within Breeds</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#load-data-and-plotting-utilities-5"><i class="fa fa-check"></i><b>11.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="11.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#beta-diversity-within-breeds"><i class="fa fa-check"></i><b>11.2</b> Beta Diversity Within Breeds</a></li>
+<li class="chapter" data-level="11.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---composition-barplots"><i class="fa fa-check"></i><b>11.3</b> Broilers - Composition Barplots</a></li>
+<li class="chapter" data-level="11.4" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---pca-analysis"><i class="fa fa-check"></i><b>11.4</b> Broilers - PCA Analysis</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova"><i class="fa fa-check"></i><b>11.4.1</b> PERMANOVA</a></li>
+<li class="chapter" data-level="11.4.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#layers"><i class="fa fa-check"></i><b>11.4.2</b> Layers</a></li>
+<li class="chapter" data-level="11.4.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova-1"><i class="fa fa-check"></i><b>11.4.3</b> PERMANOVA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html"><i class="fa fa-check"></i><b>12</b> Diversity Partitioning Analysis</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#overview-4"><i class="fa fa-check"></i><b>12.1</b> Overview</a></li>
+<li class="chapter" data-level="12.2" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#load-data-and-plotting-utilities-6"><i class="fa fa-check"></i><b>12.2</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="12.3" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#hierarchical-diversity-partitioning-functions"><i class="fa fa-check"></i><b>12.3</b> Hierarchical Diversity Partitioning Functions</a></li>
+<li class="chapter" data-level="12.4" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#prepare-data-for-diversity-partitioning"><i class="fa fa-check"></i><b>12.4</b> Prepare Data for Diversity Partitioning</a></li>
+<li class="chapter" data-level="12.5" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#diversity-partitioning-analysis-1"><i class="fa fa-check"></i><b>12.5</b> Diversity Partitioning Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html"><i class="fa fa-check"></i><b>13</b> PacBio Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#overview-5"><i class="fa fa-check"></i><b>13.1</b> Overview</a></li>
+<li class="chapter" data-level="13.2" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#selection-criteria"><i class="fa fa-check"></i><b>13.2</b> Selection Criteria</a></li>
+<li class="chapter" data-level="13.3" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#load-data-1"><i class="fa fa-check"></i><b>13.3</b> Load Data</a></li>
+<li class="chapter" data-level="13.4" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#prepare-extract-metadata"><i class="fa fa-check"></i><b>13.4</b> Prepare Extract Metadata</a></li>
+<li class="chapter" data-level="13.5" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#merge-metadata-with-sample-information"><i class="fa fa-check"></i><b>13.5</b> Merge Metadata with Sample Information</a></li>
+<li class="chapter" data-level="13.6" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-dna-concentration-and-richness"><i class="fa fa-check"></i><b>13.6</b> Visualize DNA Concentration and Richness</a></li>
+<li class="chapter" data-level="13.7" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#identify-best-samples"><i class="fa fa-check"></i><b>13.7</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="13.8" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-selected-samples"><i class="fa fa-check"></i><b>13.8</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="13.9" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#calculate-pooling-requirements"><i class="fa fa-check"></i><b>13.9</b> Calculate Pooling Requirements</a></li>
+<li class="chapter" data-level="13.10" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#export-selected-samples"><i class="fa fa-check"></i><b>13.10</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="13.11" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#save-data"><i class="fa fa-check"></i><b>13.11</b> Save Data</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html"><i class="fa fa-check"></i><b>14</b> LMD Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#overview-6"><i class="fa fa-check"></i><b>14.1</b> Overview</a></li>
+<li class="chapter" data-level="14.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#load-data-2"><i class="fa fa-check"></i><b>14.2</b> Load Data</a></li>
+<li class="chapter" data-level="14.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#identify-best-lmd-samples"><i class="fa fa-check"></i><b>14.3</b> Identify Best LMD Samples</a></li>
+<li class="chapter" data-level="14.4" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#broiler-sample-selection"><i class="fa fa-check"></i><b>14.4</b> Broiler Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-broiler-samples"><i class="fa fa-check"></i><b>14.4.1</b> Visualize Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-broiler-samples"><i class="fa fa-check"></i><b>14.4.2</b> Mark Selected Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-broilers"><i class="fa fa-check"></i><b>14.4.3</b> PCA Analysis for Broilers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#layer-sample-selection"><i class="fa fa-check"></i><b>14.5</b> Layer Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-layer-samples"><i class="fa fa-check"></i><b>14.5.1</b> Visualize Layer Samples</a></li>
+<li class="chapter" data-level="14.5.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-layer-samples"><i class="fa fa-check"></i><b>14.5.2</b> Mark Selected Layer Samples</a></li>
+<li class="chapter" data-level="14.5.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-layers"><i class="fa fa-check"></i><b>14.5.3</b> PCA Analysis for Layers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#export-selected-samples-1"><i class="fa fa-check"></i><b>14.6</b> Export Selected Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html"><i class="fa fa-check"></i><b>15</b> Metatranscriptomics Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#overview-7"><i class="fa fa-check"></i><b>15.1</b> Overview</a></li>
+<li class="chapter" data-level="15.2" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#load-data-3"><i class="fa fa-check"></i><b>15.2</b> Load Data</a></li>
+<li class="chapter" data-level="15.3" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#prepare-rna-extract-metadata"><i class="fa fa-check"></i><b>15.3</b> Prepare RNA Extract Metadata</a></li>
+<li class="chapter" data-level="15.4" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#merge-rna-metadata-with-sample-information"><i class="fa fa-check"></i><b>15.4</b> Merge RNA Metadata with Sample Information</a></li>
+<li class="chapter" data-level="15.5" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-rna-concentration-and-richness"><i class="fa fa-check"></i><b>15.5</b> Visualize RNA Concentration and Richness</a></li>
+<li class="chapter" data-level="15.6" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#identify-best-samples-1"><i class="fa fa-check"></i><b>15.6</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="15.7" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-selected-samples-1"><i class="fa fa-check"></i><b>15.7</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="15.8" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#export-selected-samples-2"><i class="fa fa-check"></i><b>15.8</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="15.9" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#save-data-1"><i class="fa fa-check"></i><b>15.9</b> Save Data</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">3D’omics | Adenovirus: Conventional metagenomics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="diversity-partitioning-analysis" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">12</span> Diversity Partitioning Analysis<a href="diversity-partitioning-analysis.html#diversity-partitioning-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="overview-4" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> Overview<a href="diversity-partitioning-analysis.html#overview-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This chapter performs hierarchical additive partitioning of alpha diversity to quantify how diversity is distributed across different hierarchical levels (within and among animals, treatments, and breeds).</p>
+<p><strong>Note:</strong> This analysis requires specific functions for hierarchical partitioning that are defined within this chapter.</p>
+</div>
+<div id="load-data-and-plotting-utilities-6" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> Load Data and Plotting Utilities<a href="diversity-partitioning-analysis.html#load-data-and-plotting-utilities-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb254-1"><a href="diversity-partitioning-analysis.html#cb254-1" tabindex="-1"></a><span class="co"># Load processed plotting data and color schemes</span></span>
+<span id="cb254-2"><a href="diversity-partitioning-analysis.html#cb254-2" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/macro/plot_data.Rdata&quot;</span>)</span>
+<span id="cb254-3"><a href="diversity-partitioning-analysis.html#cb254-3" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/data_colors.Rdata&quot;</span>)</span></code></pre></div>
+</div>
+<div id="hierarchical-diversity-partitioning-functions" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Hierarchical Diversity Partitioning Functions<a href="diversity-partitioning-analysis.html#hierarchical-diversity-partitioning-functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>These functions are used to calculate and visualize hierarchical additive partitioning of diversity.</p>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb255-1"><a href="diversity-partitioning-analysis.html#cb255-1" tabindex="-1"></a><span class="co"># Function to calculate hierarchical additive partitioning</span></span>
+<span id="cb255-2"><a href="diversity-partitioning-analysis.html#cb255-2" tabindex="-1"></a></span>
+<span id="cb255-3"><a href="diversity-partitioning-analysis.html#cb255-3" tabindex="-1"></a><span class="co"># Function to calculate hierarchical additive partitioning</span></span>
+<span id="cb255-4"><a href="diversity-partitioning-analysis.html#cb255-4" tabindex="-1"></a>hier_adipart <span class="ot">&lt;-</span> <span class="cf">function</span>(comm, hier, <span class="at">nsim =</span> <span class="dv">999</span>) {</span>
+<span id="cb255-5"><a href="diversity-partitioning-analysis.html#cb255-5" tabindex="-1"></a>  comm_bin <span class="ot">&lt;-</span> (<span class="fu">as.matrix</span>(comm) <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">*</span> <span class="dv">1</span></span>
+<span id="cb255-6"><a href="diversity-partitioning-analysis.html#cb255-6" tabindex="-1"></a>  alpha_obs <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">rowSums</span>(comm_bin))</span>
+<span id="cb255-7"><a href="diversity-partitioning-analysis.html#cb255-7" tabindex="-1"></a></span>
+<span id="cb255-8"><a href="diversity-partitioning-analysis.html#cb255-8" tabindex="-1"></a>  get_level_richness <span class="ot">&lt;-</span> <span class="cf">function</span>(fac) {</span>
+<span id="cb255-9"><a href="diversity-partitioning-analysis.html#cb255-9" tabindex="-1"></a>    <span class="fu">tapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(comm_bin)), fac, <span class="cf">function</span>(idx) {</span>
+<span id="cb255-10"><a href="diversity-partitioning-analysis.html#cb255-10" tabindex="-1"></a>      <span class="fu">sum</span>(<span class="fu">colSums</span>(comm_bin[idx, , <span class="at">drop =</span> <span class="cn">FALSE</span>]) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb255-11"><a href="diversity-partitioning-analysis.html#cb255-11" tabindex="-1"></a>    }) <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span>
+<span id="cb255-12"><a href="diversity-partitioning-analysis.html#cb255-12" tabindex="-1"></a>  }</span>
+<span id="cb255-13"><a href="diversity-partitioning-analysis.html#cb255-13" tabindex="-1"></a></span>
+<span id="cb255-14"><a href="diversity-partitioning-analysis.html#cb255-14" tabindex="-1"></a>  level_names <span class="ot">&lt;-</span> <span class="fu">names</span>(hier)</span>
+<span id="cb255-15"><a href="diversity-partitioning-analysis.html#cb255-15" tabindex="-1"></a>  level_rich  <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hier, get_level_richness)</span>
+<span id="cb255-16"><a href="diversity-partitioning-analysis.html#cb255-16" tabindex="-1"></a>  gamma_obs   <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">colSums</span>(comm_bin) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb255-17"><a href="diversity-partitioning-analysis.html#cb255-17" tabindex="-1"></a></span>
+<span id="cb255-18"><a href="diversity-partitioning-analysis.html#cb255-18" tabindex="-1"></a>  <span class="co"># exactly L betas</span></span>
+<span id="cb255-19"><a href="diversity-partitioning-analysis.html#cb255-19" tabindex="-1"></a>  betas <span class="ot">&lt;-</span> <span class="fu">c</span>(level_rich[<span class="dv">1</span>] <span class="sc">-</span> alpha_obs, <span class="fu">diff</span>(level_rich))</span>
+<span id="cb255-20"><a href="diversity-partitioning-analysis.html#cb255-20" tabindex="-1"></a>  <span class="fu">names</span>(betas) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;beta (&quot;</span>, level_names, <span class="st">&quot;)&quot;</span>)</span>
+<span id="cb255-21"><a href="diversity-partitioning-analysis.html#cb255-21" tabindex="-1"></a>  observed <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">alpha =</span> alpha_obs, betas, <span class="at">gamma =</span> gamma_obs)</span>
+<span id="cb255-22"><a href="diversity-partitioning-analysis.html#cb255-22" tabindex="-1"></a></span>
+<span id="cb255-23"><a href="diversity-partitioning-analysis.html#cb255-23" tabindex="-1"></a>  stat_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb255-24"><a href="diversity-partitioning-analysis.html#cb255-24" tabindex="-1"></a>    x <span class="ot">&lt;-</span> (x <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">*</span> <span class="dv">1</span></span>
+<span id="cb255-25"><a href="diversity-partitioning-analysis.html#cb255-25" tabindex="-1"></a>    alpha <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">rowSums</span>(x))</span>
+<span id="cb255-26"><a href="diversity-partitioning-analysis.html#cb255-26" tabindex="-1"></a>    lvl <span class="ot">&lt;-</span> <span class="fu">sapply</span>(hier, <span class="cf">function</span>(fac) {</span>
+<span id="cb255-27"><a href="diversity-partitioning-analysis.html#cb255-27" tabindex="-1"></a>      <span class="fu">tapply</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(x)), fac, <span class="cf">function</span>(idx)</span>
+<span id="cb255-28"><a href="diversity-partitioning-analysis.html#cb255-28" tabindex="-1"></a>        <span class="fu">sum</span>(<span class="fu">colSums</span>(x[idx, , <span class="at">drop =</span> <span class="cn">FALSE</span>]) <span class="sc">&gt;</span> <span class="dv">0</span>)) <span class="sc">|&gt;</span> <span class="fu">mean</span>()</span>
+<span id="cb255-29"><a href="diversity-partitioning-analysis.html#cb255-29" tabindex="-1"></a>    })</span>
+<span id="cb255-30"><a href="diversity-partitioning-analysis.html#cb255-30" tabindex="-1"></a>    gamma <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">colSums</span>(x) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb255-31"><a href="diversity-partitioning-analysis.html#cb255-31" tabindex="-1"></a>    betas <span class="ot">&lt;-</span> <span class="fu">c</span>(lvl[<span class="dv">1</span>] <span class="sc">-</span> alpha, <span class="fu">diff</span>(lvl))     <span class="co"># ✅ no gamma - last_level</span></span>
+<span id="cb255-32"><a href="diversity-partitioning-analysis.html#cb255-32" tabindex="-1"></a>    <span class="fu">names</span>(betas) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;beta (&quot;</span>, level_names, <span class="st">&quot;)&quot;</span>)</span>
+<span id="cb255-33"><a href="diversity-partitioning-analysis.html#cb255-33" tabindex="-1"></a>    <span class="fu">c</span>(<span class="at">alpha =</span> alpha, betas, <span class="at">gamma =</span> gamma)</span>
+<span id="cb255-34"><a href="diversity-partitioning-analysis.html#cb255-34" tabindex="-1"></a>  }</span>
+<span id="cb255-35"><a href="diversity-partitioning-analysis.html#cb255-35" tabindex="-1"></a></span>
+<span id="cb255-36"><a href="diversity-partitioning-analysis.html#cb255-36" tabindex="-1"></a>  sim <span class="ot">&lt;-</span> <span class="fu">oecosimu</span>(comm_bin, stat_fun, <span class="at">method =</span> <span class="st">&quot;r2dtable&quot;</span>, <span class="at">nsimul =</span> nsim)</span>
+<span id="cb255-37"><a href="diversity-partitioning-analysis.html#cb255-37" tabindex="-1"></a></span>
+<span id="cb255-38"><a href="diversity-partitioning-analysis.html#cb255-38" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb255-39"><a href="diversity-partitioning-analysis.html#cb255-39" tabindex="-1"></a>    <span class="at">component =</span> <span class="fu">names</span>(observed),</span>
+<span id="cb255-40"><a href="diversity-partitioning-analysis.html#cb255-40" tabindex="-1"></a>    <span class="at">observed  =</span> <span class="fu">as.numeric</span>(observed),</span>
+<span id="cb255-41"><a href="diversity-partitioning-analysis.html#cb255-41" tabindex="-1"></a>    <span class="at">expected  =</span> <span class="fu">as.numeric</span>(sim<span class="sc">$</span>oecosimu<span class="sc">$</span>mean),</span>
+<span id="cb255-42"><a href="diversity-partitioning-analysis.html#cb255-42" tabindex="-1"></a>    <span class="at">pval      =</span> <span class="fu">as.numeric</span>(sim<span class="sc">$</span>oecosimu<span class="sc">$</span>pval)</span>
+<span id="cb255-43"><a href="diversity-partitioning-analysis.html#cb255-43" tabindex="-1"></a>  )</span>
+<span id="cb255-44"><a href="diversity-partitioning-analysis.html#cb255-44" tabindex="-1"></a>}</span>
+<span id="cb255-45"><a href="diversity-partitioning-analysis.html#cb255-45" tabindex="-1"></a></span>
+<span id="cb255-46"><a href="diversity-partitioning-analysis.html#cb255-46" tabindex="-1"></a></span>
+<span id="cb255-47"><a href="diversity-partitioning-analysis.html#cb255-47" tabindex="-1"></a></span>
+<span id="cb255-48"><a href="diversity-partitioning-analysis.html#cb255-48" tabindex="-1"></a></span>
+<span id="cb255-49"><a href="diversity-partitioning-analysis.html#cb255-49" tabindex="-1"></a>plot_hier_adipart <span class="ot">&lt;-</span> <span class="cf">function</span>(res, <span class="at">title =</span> <span class="cn">NULL</span>) {</span>
+<span id="cb255-50"><a href="diversity-partitioning-analysis.html#cb255-50" tabindex="-1"></a>  p_to_stars <span class="ot">&lt;-</span> <span class="cf">function</span>(p) <span class="fu">case_when</span>(</span>
+<span id="cb255-51"><a href="diversity-partitioning-analysis.html#cb255-51" tabindex="-1"></a>    p <span class="sc">&lt;=</span> <span class="fl">0.001</span> <span class="sc">~</span> <span class="st">&quot;***&quot;</span>,</span>
+<span id="cb255-52"><a href="diversity-partitioning-analysis.html#cb255-52" tabindex="-1"></a>    p <span class="sc">&lt;=</span> <span class="fl">0.01</span>  <span class="sc">~</span> <span class="st">&quot;**&quot;</span>,</span>
+<span id="cb255-53"><a href="diversity-partitioning-analysis.html#cb255-53" tabindex="-1"></a>    p <span class="sc">&lt;=</span> <span class="fl">0.05</span>  <span class="sc">~</span> <span class="st">&quot;*&quot;</span>,</span>
+<span id="cb255-54"><a href="diversity-partitioning-analysis.html#cb255-54" tabindex="-1"></a>    <span class="cn">TRUE</span>      <span class="sc">~</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb255-55"><a href="diversity-partitioning-analysis.html#cb255-55" tabindex="-1"></a>  )</span>
+<span id="cb255-56"><a href="diversity-partitioning-analysis.html#cb255-56" tabindex="-1"></a>  </span>
+<span id="cb255-57"><a href="diversity-partitioning-analysis.html#cb255-57" tabindex="-1"></a>  res_long <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span></span>
+<span id="cb255-58"><a href="diversity-partitioning-analysis.html#cb255-58" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(observed, expected), <span class="at">names_to =</span> <span class="st">&quot;type&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;value&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb255-59"><a href="diversity-partitioning-analysis.html#cb255-59" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb255-60"><a href="diversity-partitioning-analysis.html#cb255-60" tabindex="-1"></a>    <span class="at">component =</span> <span class="fu">factor</span>(</span>
+<span id="cb255-61"><a href="diversity-partitioning-analysis.html#cb255-61" tabindex="-1"></a>      component,</span>
+<span id="cb255-62"><a href="diversity-partitioning-analysis.html#cb255-62" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>,</span>
+<span id="cb255-63"><a href="diversity-partitioning-analysis.html#cb255-63" tabindex="-1"></a>                 <span class="st">&quot;beta (animal)&quot;</span>,</span>
+<span id="cb255-64"><a href="diversity-partitioning-analysis.html#cb255-64" tabindex="-1"></a>                 <span class="st">&quot;beta (treatment)&quot;</span>,</span>
+<span id="cb255-65"><a href="diversity-partitioning-analysis.html#cb255-65" tabindex="-1"></a>                 <span class="st">&quot;beta (animal_breed)&quot;</span>,</span>
+<span id="cb255-66"><a href="diversity-partitioning-analysis.html#cb255-66" tabindex="-1"></a>                 <span class="st">&quot;gamma&quot;</span>)</span>
+<span id="cb255-67"><a href="diversity-partitioning-analysis.html#cb255-67" tabindex="-1"></a>    )</span>
+<span id="cb255-68"><a href="diversity-partitioning-analysis.html#cb255-68" tabindex="-1"></a>  )</span>
+<span id="cb255-69"><a href="diversity-partitioning-analysis.html#cb255-69" tabindex="-1"></a>  </span>
+<span id="cb255-70"><a href="diversity-partitioning-analysis.html#cb255-70" tabindex="-1"></a>  <span class="fu">ggplot</span>(res_long, <span class="fu">aes</span>(<span class="at">x =</span> component, <span class="at">y =</span> value, <span class="at">fill =</span> type)) <span class="sc">+</span></span>
+<span id="cb255-71"><a href="diversity-partitioning-analysis.html#cb255-71" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.7</span>), <span class="at">width =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
+<span id="cb255-72"><a href="diversity-partitioning-analysis.html#cb255-72" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> res, <span class="fu">aes</span>(<span class="at">x =</span> component,</span>
+<span id="cb255-73"><a href="diversity-partitioning-analysis.html#cb255-73" tabindex="-1"></a>                              <span class="at">y =</span> <span class="fu">pmax</span>(observed, expected) <span class="sc">*</span> <span class="fl">1.05</span>,</span>
+<span id="cb255-74"><a href="diversity-partitioning-analysis.html#cb255-74" tabindex="-1"></a>                              <span class="at">label =</span> <span class="fu">p_to_stars</span>(pval)),</span>
+<span id="cb255-75"><a href="diversity-partitioning-analysis.html#cb255-75" tabindex="-1"></a>              <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>, <span class="at">vjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb255-76"><a href="diversity-partitioning-analysis.html#cb255-76" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">&quot;Richness&quot;</span>, <span class="at">fill =</span> <span class="cn">NULL</span>, <span class="at">title =</span> title) <span class="sc">+</span></span>
+<span id="cb255-77"><a href="diversity-partitioning-analysis.html#cb255-77" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb255-78"><a href="diversity-partitioning-analysis.html#cb255-78" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">15</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb255-79"><a href="diversity-partitioning-analysis.html#cb255-79" tabindex="-1"></a>          <span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span>
+<span id="cb255-80"><a href="diversity-partitioning-analysis.html#cb255-80" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="prepare-data-for-diversity-partitioning" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> Prepare Data for Diversity Partitioning<a href="diversity-partitioning-analysis.html#prepare-data-for-diversity-partitioning" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section prepares the community matrix and hierarchical metadata structure required for diversity partitioning analysis.</p>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb256-1"><a href="diversity-partitioning-analysis.html#cb256-1" tabindex="-1"></a><span class="co"># Filter metadata for positive samples retained after filtering</span></span>
+<span id="cb256-2"><a href="diversity-partitioning-analysis.html#cb256-2" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> plot_data_stats_macro <span class="sc">%&gt;%</span></span>
+<span id="cb256-3"><a href="diversity-partitioning-analysis.html#cb256-3" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb256-4"><a href="diversity-partitioning-analysis.html#cb256-4" tabindex="-1"></a>    type_simple <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;P&quot;</span>),</span>
+<span id="cb256-5"><a href="diversity-partitioning-analysis.html#cb256-5" tabindex="-1"></a>    filter_status <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;Retained by filtering&quot;</span>))</span>
+<span id="cb256-6"><a href="diversity-partitioning-analysis.html#cb256-6" tabindex="-1"></a>    </span>
+<span id="cb256-7"><a href="diversity-partitioning-analysis.html#cb256-7" tabindex="-1"></a>comm_data <span class="ot">&lt;-</span> genome_counts_macro_filt_30_zerosrem <span class="sc">%&gt;%</span></span>
+<span id="cb256-8"><a href="diversity-partitioning-analysis.html#cb256-8" tabindex="-1"></a>  <span class="fu">select</span>(genome, metadata<span class="sc">$</span>microsample) <span class="sc">%&gt;%</span></span>
+<span id="cb256-9"><a href="diversity-partitioning-analysis.html#cb256-9" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb256-10"><a href="diversity-partitioning-analysis.html#cb256-10" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb256-11"><a href="diversity-partitioning-analysis.html#cb256-11" tabindex="-1"></a>  <span class="fu">row_to_names</span>(<span class="at">row_number =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb256-12"><a href="diversity-partitioning-analysis.html#cb256-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric))</span>
+<span id="cb256-13"><a href="diversity-partitioning-analysis.html#cb256-13" tabindex="-1"></a></span>
+<span id="cb256-14"><a href="diversity-partitioning-analysis.html#cb256-14" tabindex="-1"></a><span class="co"># table(rowSums(comm_data) &gt; 0)</span></span>
+<span id="cb256-15"><a href="diversity-partitioning-analysis.html#cb256-15" tabindex="-1"></a><span class="co"># all(metadata$microsample == rownames(comm_data))</span></span>
+<span id="cb256-16"><a href="diversity-partitioning-analysis.html#cb256-16" tabindex="-1"></a><span class="co"># table(is.na(comm_data))</span></span>
+<span id="cb256-17"><a href="diversity-partitioning-analysis.html#cb256-17" tabindex="-1"></a><span class="co"># table(metadata$section, metadata$cryosection)</span></span>
+<span id="cb256-18"><a href="diversity-partitioning-analysis.html#cb256-18" tabindex="-1"></a></span>
+<span id="cb256-19"><a href="diversity-partitioning-analysis.html#cb256-19" tabindex="-1"></a>comm_ca <span class="ot">&lt;-</span> comm_data[, <span class="fu">colSums</span>(comm_data) <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb256-20"><a href="diversity-partitioning-analysis.html#cb256-20" tabindex="-1"></a></span>
+<span id="cb256-21"><a href="diversity-partitioning-analysis.html#cb256-21" tabindex="-1"></a>metadata_ca <span class="ot">&lt;-</span> metadata</span>
+<span id="cb256-22"><a href="diversity-partitioning-analysis.html#cb256-22" tabindex="-1"></a><span class="co"># table(metadata$animal, metadata$age)</span></span>
+<span id="cb256-23"><a href="diversity-partitioning-analysis.html#cb256-23" tabindex="-1"></a><span class="co"># table(metadata$treatment, metadata$animal_breed)</span></span>
+<span id="cb256-24"><a href="diversity-partitioning-analysis.html#cb256-24" tabindex="-1"></a></span>
+<span id="cb256-25"><a href="diversity-partitioning-analysis.html#cb256-25" tabindex="-1"></a><span class="co"># Ensure hierarchy variables are factors, in order: cryosection (lowest), animal, treatment (highest)</span></span>
+<span id="cb256-26"><a href="diversity-partitioning-analysis.html#cb256-26" tabindex="-1"></a>hier_ca <span class="ot">&lt;-</span> metadata_ca <span class="sc">%&gt;%</span></span>
+<span id="cb256-27"><a href="diversity-partitioning-analysis.html#cb256-27" tabindex="-1"></a>  <span class="fu">transmute</span>(</span>
+<span id="cb256-28"><a href="diversity-partitioning-analysis.html#cb256-28" tabindex="-1"></a>    <span class="at">animal =</span> <span class="fu">factor</span>(animal),</span>
+<span id="cb256-29"><a href="diversity-partitioning-analysis.html#cb256-29" tabindex="-1"></a>    <span class="at">treatment   =</span> <span class="fu">factor</span>(treatment),</span>
+<span id="cb256-30"><a href="diversity-partitioning-analysis.html#cb256-30" tabindex="-1"></a>    <span class="at">animal_breed   =</span> <span class="fu">factor</span>(animal_breed)</span>
+<span id="cb256-31"><a href="diversity-partitioning-analysis.html#cb256-31" tabindex="-1"></a>  )</span></code></pre></div>
+</div>
+<div id="diversity-partitioning-analysis-1" class="section level2 hasAnchor" number="12.5">
+<h2><span class="header-section-number">12.5</span> Diversity Partitioning Analysis<a href="diversity-partitioning-analysis.html#diversity-partitioning-analysis-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section performs the hierarchical additive partitioning analysis and visualizes the results.</p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb257-1"><a href="diversity-partitioning-analysis.html#cb257-1" tabindex="-1"></a><span class="co"># Perform hierarchical additive partitioning</span></span>
+<span id="cb257-2"><a href="diversity-partitioning-analysis.html#cb257-2" tabindex="-1"></a><span class="co"># comm_ca is the samples x genomes matrix</span></span>
+<span id="cb257-3"><a href="diversity-partitioning-analysis.html#cb257-3" tabindex="-1"></a><span class="co"># and hier_ca is your data frame with animal, treatment, animal_breed (in order lowest → highest)</span></span>
+<span id="cb257-4"><a href="diversity-partitioning-analysis.html#cb257-4" tabindex="-1"></a>res_ca <span class="ot">&lt;-</span> <span class="fu">hier_adipart</span>(comm_ca, hier_ca, <span class="at">nsim =</span> <span class="dv">999</span>)</span>
+<span id="cb257-5"><a href="diversity-partitioning-analysis.html#cb257-5" tabindex="-1"></a></span>
+<span id="cb257-6"><a href="diversity-partitioning-analysis.html#cb257-6" tabindex="-1"></a><span class="co"># Display diversity partitioning results as formatted table</span></span>
+<span id="cb257-7"><a href="diversity-partitioning-analysis.html#cb257-7" tabindex="-1"></a><span class="co"># The hier_adipart function returns a tibble with columns: component, observed, expected, pval</span></span>
+<span id="cb257-8"><a href="diversity-partitioning-analysis.html#cb257-8" tabindex="-1"></a><span class="co"># Component structure: alpha, beta(animal), beta(treatment), beta(animal_breed), gamma</span></span>
+<span id="cb257-9"><a href="diversity-partitioning-analysis.html#cb257-9" tabindex="-1"></a><span class="co"># Map component names to more descriptive labels for display</span></span>
+<span id="cb257-10"><a href="diversity-partitioning-analysis.html#cb257-10" tabindex="-1"></a>component_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb257-11"><a href="diversity-partitioning-analysis.html#cb257-11" tabindex="-1"></a>  <span class="st">&quot;alpha&quot;</span> <span class="ot">=</span> <span class="st">&quot;Within animals (alpha diversity)&quot;</span>,</span>
+<span id="cb257-12"><a href="diversity-partitioning-analysis.html#cb257-12" tabindex="-1"></a>  <span class="st">&quot;beta (animal)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Among animals, within treatments&quot;</span>,</span>
+<span id="cb257-13"><a href="diversity-partitioning-analysis.html#cb257-13" tabindex="-1"></a>  <span class="st">&quot;beta (treatment)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Among treatments, within breeds&quot;</span>,</span>
+<span id="cb257-14"><a href="diversity-partitioning-analysis.html#cb257-14" tabindex="-1"></a>  <span class="st">&quot;beta (animal_breed)&quot;</span> <span class="ot">=</span> <span class="st">&quot;Among breeds&quot;</span>,</span>
+<span id="cb257-15"><a href="diversity-partitioning-analysis.html#cb257-15" tabindex="-1"></a>  <span class="st">&quot;gamma&quot;</span> <span class="ot">=</span> <span class="st">&quot;Total diversity (gamma)&quot;</span></span>
+<span id="cb257-16"><a href="diversity-partitioning-analysis.html#cb257-16" tabindex="-1"></a>)</span>
+<span id="cb257-17"><a href="diversity-partitioning-analysis.html#cb257-17" tabindex="-1"></a></span>
+<span id="cb257-18"><a href="diversity-partitioning-analysis.html#cb257-18" tabindex="-1"></a><span class="co"># Create formatted data frame for display</span></span>
+<span id="cb257-19"><a href="diversity-partitioning-analysis.html#cb257-19" tabindex="-1"></a><span class="co"># Define the desired order first</span></span>
+<span id="cb257-20"><a href="diversity-partitioning-analysis.html#cb257-20" tabindex="-1"></a>component_order <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;alpha&quot;</span>, <span class="st">&quot;beta (animal)&quot;</span>, <span class="st">&quot;beta (treatment)&quot;</span>, <span class="st">&quot;beta (animal_breed)&quot;</span>, <span class="st">&quot;gamma&quot;</span>)</span>
+<span id="cb257-21"><a href="diversity-partitioning-analysis.html#cb257-21" tabindex="-1"></a></span>
+<span id="cb257-22"><a href="diversity-partitioning-analysis.html#cb257-22" tabindex="-1"></a>res_ca_df <span class="ot">&lt;-</span> res_ca <span class="sc">%&gt;%</span></span>
+<span id="cb257-23"><a href="diversity-partitioning-analysis.html#cb257-23" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb257-24"><a href="diversity-partitioning-analysis.html#cb257-24" tabindex="-1"></a>    <span class="at">Component =</span> component_labels[component],  <span class="co"># Map to descriptive labels</span></span>
+<span id="cb257-25"><a href="diversity-partitioning-analysis.html#cb257-25" tabindex="-1"></a>    <span class="at">Diversity =</span> observed,</span>
+<span id="cb257-26"><a href="diversity-partitioning-analysis.html#cb257-26" tabindex="-1"></a>    <span class="at">Expected =</span> expected,</span>
+<span id="cb257-27"><a href="diversity-partitioning-analysis.html#cb257-27" tabindex="-1"></a>    <span class="at">P_value =</span> pval,</span>
+<span id="cb257-28"><a href="diversity-partitioning-analysis.html#cb257-28" tabindex="-1"></a>    <span class="at">order =</span> <span class="fu">match</span>(component, component_order)  <span class="co"># Add ordering column</span></span>
+<span id="cb257-29"><a href="diversity-partitioning-analysis.html#cb257-29" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb257-30"><a href="diversity-partitioning-analysis.html#cb257-30" tabindex="-1"></a>  <span class="fu">arrange</span>(order) <span class="sc">%&gt;%</span>  <span class="co"># Arrange before selecting</span></span>
+<span id="cb257-31"><a href="diversity-partitioning-analysis.html#cb257-31" tabindex="-1"></a>  <span class="fu">select</span>(Component, Diversity, Expected, P_value)  <span class="co"># Select final columns</span></span>
+<span id="cb257-32"><a href="diversity-partitioning-analysis.html#cb257-32" tabindex="-1"></a></span>
+<span id="cb257-33"><a href="diversity-partitioning-analysis.html#cb257-33" tabindex="-1"></a><span class="co"># Display as formatted table</span></span>
+<span id="cb257-34"><a href="diversity-partitioning-analysis.html#cb257-34" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(res_ca_df, <span class="at">digits =</span> <span class="dv">4</span>, <span class="at">caption =</span> <span class="st">&quot;Diversity partitioning results (additive partitioning of alpha diversity)&quot;</span>)</span></code></pre></div>
+<table>
+<caption>(#tab:diversity_partitioning_analysis_04G)Diversity partitioning results (additive partitioning of alpha diversity)</caption>
+<thead>
+<tr class="header">
+<th align="left">Component</th>
+<th align="right">Diversity</th>
+<th align="right">Expected</th>
+<th align="right">P_value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Within animals (alpha diversity)</td>
+<td align="right">79.2778</td>
+<td align="right">59.8871</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">Among animals, within treatments</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">1.000</td>
+</tr>
+<tr class="odd">
+<td align="left">Among treatments, within breeds</td>
+<td align="right">125.3889</td>
+<td align="right">181.5914</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">Among breeds</td>
+<td align="right">1.3333</td>
+<td align="right">4.2813</td>
+<td align="right">0.067</td>
+</tr>
+<tr class="odd">
+<td align="left">Total diversity (gamma)</td>
+<td align="right">251.0000</td>
+<td align="right">251.0000</td>
+<td align="right">1.000</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb258-1"><a href="diversity-partitioning-analysis.html#cb258-1" tabindex="-1"></a><span class="co"># Create visualization of diversity partitioning results</span></span>
+<span id="cb258-2"><a href="diversity-partitioning-analysis.html#cb258-2" tabindex="-1"></a><span class="fu">plot_hier_adipart</span>(res_ca, <span class="at">title =</span> <span class="st">&quot;Caecum&quot;</span>) <span class="sc">+</span></span>
+<span id="cb258-3"><a href="diversity-partitioning-analysis.html#cb258-3" tabindex="-1"></a>  custom_ggplot_theme</span></code></pre></div>
+<p><img src="_main_files/figure-html/diversity_partitioning_plot_04G-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="beta-diversity-analysis---within-breeds.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="pacbio-selection-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

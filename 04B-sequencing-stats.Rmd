@@ -1,0 +1,255 @@
+# Sequencing Statistics
+
+## Load Data and Plotting Utilities
+
+```{r load_data_04B, warning=FALSE, message=FALSE}
+# Load processed plotting data and color schemes
+load("data/macro/plot_data.Rdata")
+load("data/data_colors.Rdata")
+```
+
+## Number of Bases and Reads
+
+This section visualizes sequencing output metrics including total bases and read counts before and after trimming.
+
+### Total Bases Before Trimming
+
+```{r bases_before_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics for total bases before trimming
+var <- "total_bases_before_trim"
+summary_stats_bases <- plot_data_stats_macro %>%
+  group_by(type_simple, batch) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = paste0("", format(median, scientific = TRUE, digits = 2)))
+
+# Display summary statistics table with proper formatting
+knitr::kable(summary_stats_bases, digits = 2, caption = "Summary statistics (median and IQR) for total bases before trimming by sample type and batch")
+```
+
+```{r bases_before_plot, warning=FALSE, message=FALSE, fig.height=6, fig.width=10}
+# Create boxplot showing total bases before trimming
+# Color indicates bacteria percentage, shape indicates filtering status
+barplot_bases <- plot_data_stats_macro %>%
+  ggplot(aes(x = type_simple, y = total_bases_before_trim, 
+             color = bacteria_percentage, shape = filter_status)) +
+  labs(x = "Sample type", y = "Number of bases before trimming") +
+  scale_color_gradient(low = "#c90076", high = "#3598bf", name = "Bacteria %") +
+  scale_shape_manual(values = c("Retained by filtering" = 16, "Excluded from filtering" = 17),
+                     name = "Filter Status") +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.2, alpha = 0.6, size = 3) +
+  facet_nested(. ~ batch, scales = "free", space = "free") +
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  # Add median values as text labels
+  geom_text(
+    data = summary_stats_bases,
+    aes(x = type_simple, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -7,
+    size = 4, alpha = 1, color = "black"
+  )
+
+# Display the plot (commented out - used in combined plot below)
+# barplot_bases
+```
+
+### Total Reads After Trimming
+
+```{r reads_after_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics for total sequences after trimming
+var <- "total_sequences_after_trim"
+summary_stats_reads <- plot_data_stats_macro %>%
+  group_by(type_simple, batch) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = paste0("", format(median, scientific = TRUE, digits = 2)))
+
+# Display summary statistics table with proper formatting
+knitr::kable(summary_stats_reads, digits = 2, caption = "Summary statistics (median and IQR) for total sequences after trimming by sample type and batch")
+```
+
+```{r reads_after_plot, warning=FALSE, message=FALSE, fig.height=6, fig.width=10}
+# Create boxplot showing total sequences after trimming
+barplot_reads_after <- plot_data_stats_macro %>%
+  ggplot(aes(x = type_simple, y = total_sequences_after_trim, 
+             color = bacteria_percentage, shape = filter_status)) +
+  labs(x = "Sample type", y = "Number of reads after trimming") +
+  scale_color_gradient(low = "#c90076", high = "#3598bf", name = "Bacteria %") +
+  scale_shape_manual(values = c("Retained by filtering" = 16, "Excluded from filtering" = 17),
+                     name = "Filter Status") +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.2, alpha = 0.6, size = 3) +
+  facet_nested(. ~ batch, scales = "free", space = "free") +
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  # Add median values as text labels
+  geom_text(
+    data = summary_stats_reads,
+    aes(x = type_simple, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -7,
+    size = 4, alpha = 1, color = "black"
+  )
+
+# Display the plot (commented out - used in combined plot below)
+# barplot_reads_after
+```
+
+### Combined Visualization
+
+```{r bases_reads_combined, warning=FALSE, message=FALSE, fig.height=12, fig.width=10}
+# Combine both plots for side-by-side comparison
+barplot_bases + barplot_reads_after +
+  plot_annotation(tag_levels = 'a') +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom", legend.box = "vertical")
+```
+
+### Low Data Samples
+
+```{r low_data_samples, warning=FALSE, message=FALSE, comment=""}
+# Identify samples that produced low data but were retained by 30% coverage filtering
+# Four samples did not produce a lot of data, but were retained by the 30% coverage filtering.
+low_data_samples <- plot_data_stats_macro %>%
+  filter(microsample %in% c("D300995", "D301068", "D300970", "D300968", "D300989", "D300994")) %>%
+  select(microsample, type_simple, filter_status,
+         total_bases_before_trim, total_sequences_after_trim, 
+         animal_breed, animal, treatment_expl, age)
+
+# Display sample information
+print(low_data_samples)
+```
+
+## Percentage of Reads: Mapped, Trimmed, and Unmapped
+
+This section shows the distribution of reads across different categories: mapped to bacteria, mapped to chicken (host), unmapped, and removed by trimming.
+
+```{r read_percentage_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics for read percentage categories
+var <- "counts"
+summary_stats_percentage <- tidy_plot_data_stats_counts_prc_macro %>%
+  filter(mapping_status %in% c("bacteria_percentage", "chicken_percentage", 
+                               "unmapped_percentage", "trimmed_reads_percentage")) %>%
+  group_by(type_simple, batch, label) %>%
+  summarise(
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    median = median(.data[[var]], na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    label_txt = paste0(
+      "", round(median, 1), "%",
+      " [", round(Q1, 1), "–", round(Q3, 1), "]"
+    )
+  )
+
+# Display summary statistics table with proper formatting
+knitr::kable(summary_stats_percentage, digits = 2, caption = "Summary statistics (median and IQR) for read percentage by sample type and batch")
+```
+
+```{r read_percentage_plot, warning=FALSE, message=FALSE, fig.height=6, fig.width=8}
+# Create boxplot showing percentage distribution of different read categories
+boxplot_reads_prc_1 <- tidy_plot_data_stats_counts_prc_macro %>%
+  filter(mapping_status %in% c("bacteria_percentage", "chicken_percentage", 
+                               "unmapped_percentage", "trimmed_reads_percentage")) %>%
+  ggplot(aes(x = batch, y = counts, color = label)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.05, alpha = 0.5) +
+  scale_color_manual(values = color_palette_tidy_plot_data_stats_counts) +
+  facet_nested(type_simple ~ label, scales = "fixed", space = "fixed", switch = "y") +
+  labs(x = NULL, y = "Reads %") +
+  guides(color = "none") +  # Remove legend
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(panel.spacing = unit(0.3, "lines"),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) + 
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+  # Add median and IQR text labels
+  geom_text(
+    data = summary_stats_percentage,
+    aes(x = batch, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -1.5,
+    size = 3, alpha = 1, color = "black"
+  )
+
+# Display the plot (commented out - used in combined plot)
+# boxplot_reads_prc_1
+```
+
+
+
+## Composition of Reads vs. References
+
+This section shows the relative and absolute composition of reads mapping to different references (bacteria, chicken/host, etc.) for each sample.
+
+### Relative Composition (Proportions)
+
+```{r read_composition_relative, warning=FALSE, message=FALSE, fig.height=6, fig.width=10}
+# Create stacked barplot showing relative proportions of read types per sample
+barplot_1 <- tidy_plot_data_stats_counts_macro %>%
+  ggplot(aes(x = counts, y = microsample, fill = label)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1, position = "fill") +
+  scale_fill_manual(values = color_palette_tidy_plot_data_stats_counts, name = "Read type") +
+  labs(x = "Proportion", y = "Samples", fill = "Read type") +
+  facet_nested(type_simple + batch ~ ., scales = "free", space = "free", switch = "y") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_blank(),
+        legend.position = "bottom") +
+  ggtitle("Relative composition of reads")
+
+# Display the plot (commented out - used in combined plot)
+# barplot_1
+```
+
+### Absolute Composition (Counts)
+
+```{r read_composition_absolute, warning=FALSE, message=FALSE, fig.height=6, fig.width=10}
+# Create stacked barplot showing absolute counts of read types per sample
+barplot_2 <- tidy_plot_data_stats_counts_macro %>%
+  ggplot(aes(x = counts, y = microsample, fill = label)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  scale_fill_manual(values = color_palette_tidy_plot_data_stats_counts, name = "Read type") +
+  labs(x = "Counts", y = "Samples", fill = "Read type") +
+  facet_nested(type_simple + batch ~ ., scales = "free", space = "free", switch = "y") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_blank(),
+        legend.position = "bottom",
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle("Absolute composition of reads")
+
+# Display the plot (commented out - used in combined plot)
+# barplot_2
+```
+
+### Combined Visualization
+
+```{r read_composition_combined, warning=FALSE, message=FALSE, fig.height=13, fig.width=10}
+# Combine percentage boxplot with absolute composition barplot
+boxplot_reads_prc_1 / barplot_2 + 
+  plot_annotation(tag_levels = 'a')
+```
+
+
+
+
+

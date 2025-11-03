@@ -1,0 +1,477 @@
+# Data Preparation for Plotting
+
+## Overview
+
+This chapter transforms the processed metadata and sequencing statistics into tidy data frames optimized for plotting. All code chunks are set to `eval=FALSE` so they do not execute during bookdown compilation. The processed plotting data is saved to `.Rdata` files which are then loaded in subsequent analysis chapters.
+
+## Load the Data
+
+Load the data objects prepared in previous chapters (MAG catalogue, sample metadata, sequencing statistics, and color schemes).
+
+```{r load_data_02, eval=FALSE}
+load("data/MAG_catalogue/data.Rdata")
+# load("data/micro/data.Rdata")
+load("data/macro/data.Rdata")
+load("data/data_colors.Rdata")
+```
+
+## Sequencing Statistics Data Frames
+
+This section combines sequencing statistics with sample metadata to create data frames ready for plotting.
+
+### Micro-samples
+
+**WARNING: Micro-scale data not produced for Adenovirus yet. Ignore all code chunks for micro-scale data.**
+
+```{r plot_data_stats_micro_02, warning=FALSE, message=FALSE, eval=FALSE}
+# Combine sequencing stats with sample metadata for micro-samples
+# NOTE: This is not used for Adenovirus project (micro-scale data not available)
+# # Combine sequencing stats with sample metadata
+# plot_data_stats <- final_combined_stats %>%
+#   left_join(sample_metadata, by = join_by(microsample == microsample))
+```
+
+### Macro-samples
+
+```{r plot_data_stats_macro_02, warning=FALSE, message=FALSE, eval=FALSE}
+# Combine sequencing statistics with sample metadata for macro-samples
+plot_data_stats_macro <- final_combined_stats_macro %>%
+  left_join(sample_metadata_macro, by = join_by(microsample == sample)) 
+
+# Set factor levels for proper ordering in plots
+plot_data_stats_macro <- plot_data_stats_macro %>%
+  mutate(age = factor(age, levels = c(0, 3, 5, 7, 14))) %>%
+  mutate(treatment_expl = factor(treatment_expl, levels = c("Control", "Disruption&Pathogen", "Pathogen"))) 
+```
+
+## Tidy Tables for Plotting
+
+Convert wide-format data into long (tidy) format for easier plotting with ggplot2. Tidy format has one observation per row, making it ideal for faceting and grouping in visualizations.
+
+### Before-After Trimming Comparison
+
+### Before-after
+#### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r tidy_plot_data_stats_before_after_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# tidy_plot_data_stats_before_after <- plot_data_stats %>%
+#   pivot_longer(
+#     cols = c(
+#     total_sequences_before_trim, total_sequences_after_trim,
+#     percent_gc_before_trim, percent_gc_after_trim,
+#     total_bases_before_trim, total_bases_after_trim),
+#     names_to = c("Metric", "Condition"), # Split column names
+#     names_pattern = "(.*)_(before|after)_trim") %>%
+#   pivot_wider(names_from = Metric, values_from = value) %>%
+#   mutate(Condition = factor(Condition, levels = c("before", "after")))
+```
+
+#### Macro-samples
+```{r tidy_plot_data_stats_before_after_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+tidy_plot_data_stats_before_after_macro <- plot_data_stats_macro %>%
+  pivot_longer(
+    cols = c(
+    total_sequences_before_trim, total_sequences_after_trim,
+    percent_gc_before_trim, percent_gc_after_trim,
+    total_bases_before_trim, total_bases_after_trim),
+    names_to = c("Metric", "Condition"), # Split column names
+    names_pattern = "(.*)_(before|after)_trim") %>%
+  pivot_wider(names_from = Metric, values_from = value) %>%
+  mutate(Condition = factor(Condition, levels = c("before", "after")))
+```
+
+
+
+### Samtools mapping to different references
+Make tidy table for counts
+
+#### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r tidy_plot_data_stats_counts_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# category_counts <- tibble::tibble(
+#   category = c(
+#     "bacteria_total_mapped", "chicken_total_mapped",  
+#     "human_total_mapped", "swine_total_mapped",
+#     "unmapped", "removed_sequences_after_trim"),
+#   label = c("Bacteria", "Chicken", "Human",  "Swine",  "Unmapped", "Removed"),   
+#   color = c( "#B92D65", "#E8BD50", "#1092b4", "#3baf6f", "#8d98ae", "#2b2d42"))  
+# 
+# tidy_plot_data_stats_counts <- plot_data_stats %>%
+#   pivot_longer(
+#     cols = c(
+#       chicken_total_mapped, human_total_mapped,
+#       swine_total_mapped, bacteria_total_mapped,
+#       unmapped, removed_sequences_after_trim),
+#     names_to = "mapping_status", values_to = "counts") %>%
+#   left_join(category_counts, by = c("mapping_status" = "category")) %>%
+#   # order the groups in desired order
+#   mutate(label = factor(label,
+#          levels = c("Bacteria", "Chicken", "Human", "Swine", "Unmapped", "Removed")))
+# 
+# # set labels & colours as colour palette
+# color_palette_tidy_plot_data_stats_counts <- setNames(category_counts$color, category_counts$label)
+```
+
+#### Macro-samples
+```{r tidy_plot_data_stats_counts_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+category_counts <- tibble::tibble(
+  category = c(
+    "bacteria_total_mapped", "adenovirus_total_mapped", "turkey_total_mapped", "chicken_total_mapped",  
+    "human_total_mapped", "swine_total_mapped", 
+    "unmapped", "removed_sequences_after_trim"),
+  label = c("Bacteria", "Adenovirus", "Turkey","Chicken", "Human",  "Swine",  "Unmapped", "Removed"),   
+  color = c( "#B92D65", "#8b4e2e", "#6390fb", "#E8BD50", "#1092b4", "#3baf6f", "#8d98ae", "#2b2d42"))  
+
+tidy_plot_data_stats_counts_macro <- plot_data_stats_macro %>%
+  pivot_longer(
+    cols = c(
+      chicken_total_mapped, human_total_mapped,
+      swine_total_mapped, bacteria_total_mapped, turkey_total_mapped, adenovirus_total_mapped,
+      unmapped, removed_sequences_after_trim),
+    names_to = "mapping_status", values_to = "counts") %>%
+  left_join(category_counts, by = c("mapping_status" = "category")) %>%
+  # order the groups in desired order
+  mutate(label = factor(label,
+         levels = c("Bacteria", "Adenovirus", "Turkey", "Chicken", "Human", "Swine", "Unmapped", "Removed")))
+
+# set labels & colours as colour palette
+color_palette_tidy_plot_data_stats_counts <- setNames(category_counts$color, category_counts$label)
+```
+
+
+### Percentages of different references
+
+#### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r tidy_plot_data_stats_counts_prc_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# category_prc <- tibble::tibble(
+#   category = c(
+#     "bacteria_percentage", "chicken_percentage",  
+#     "human_percentage", "swine_percentage",
+#     "unmapped_percentage", "trimmed_reads_percentage"),
+#   label = c("Bacteria", "Chicken", "Human",  "Swine",  "Unmapped", "Removed"),   
+#   color = c( "#B92D65", "#E8BD50", "#1092b4", "#3baf6f", "#8d98ae", "#2b2d42"))  
+# 
+# 
+# tidy_plot_data_stats_counts_prc <- plot_data_stats_combined %>%
+#   pivot_longer(
+#     cols = c(
+#       chicken_percentage, human_percentage,
+#       swine_percentage, bacteria_percentage,
+#       unmapped_percentage, trimmed_reads_percentage),
+#     names_to = "mapping_status", values_to = "counts") %>%
+#   left_join(category_prc, by = c("mapping_status" = "category")) %>%
+#   # order the groups in desired order
+#   mutate(label = factor(label,
+#          levels = c("Removed", "Swine", "Human", "Chicken", "Bacteria", "Unmapped")))
+# 
+# 
+# # set labels & colours as colour palette
+# color_palette_tidy_plot_data_stats_counts <- setNames(category_counts$color, category_counts$label)
+```
+
+##### Macro-samples
+```{r tidy_plot_data_stats_counts_prc_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+category_prc <- tibble::tibble(
+  category = c(
+    "bacteria_percentage", "adenovirus_percentage", "turkey_percentage", "chicken_percentage",  
+    "human_percentage", "swine_percentage", 
+    "unmapped_percentage", "trimmed_reads_percentage"),
+  label = c("Bacteria", "Adenovirus", "Turkey","Chicken", "Human",  "Swine",  "Unmapped", "Removed"),   
+  color = c( "#B92D65", "#8b4e2e", "#6390fb", "#E8BD50", "#1092b4", "#3baf6f", "#8d98ae", "#2b2d42"))  
+
+
+tidy_plot_data_stats_counts_prc_macro <- plot_data_stats_macro %>%
+  pivot_longer(
+    cols = c(
+      chicken_percentage, human_percentage,
+      swine_percentage, bacteria_percentage, turkey_percentage, adenovirus_percentage,
+      unmapped_percentage, trimmed_reads_percentage),
+    names_to = "mapping_status", values_to = "counts") %>%
+  left_join(category_prc, by = c("mapping_status" = "category")) %>%
+  # order the groups in desired order
+  mutate(label = factor(label,
+         levels = c("Bacteria", "Adenovirus", "Turkey", "Chicken", "Human", "Swine", "Unmapped", "Removed")))
+
+
+# set labels & colours as colour palette
+color_palette_tidy_plot_data_stats_counts <- setNames(category_counts$color, category_counts$label)
+```
+
+
+
+## Tidy genome counts
+
+### Micro-samples
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+Make tidy tables for genome counts
+```{r tidy_plot_genome_counts_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# tidy_plot_genome_counts <-  genome_counts %>%
+#     mutate_at(vars(-genome), ~ . / sum(.)) %>% # scale each sample to 1
+#     pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+#     left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+#     left_join(sample_metadata, by = join_by(microsample == microsample)) %>% 
+#     left_join(final_combined_stats, by = join_by(microsample == microsample)) %>%
+#     # Flatten section if it's a list
+#     mutate(section = unlist(section)) %>% 
+#     # Filter out rows with count <= 0 
+#     # (that are redundant after pivot_longer, but important for b div)
+#     filter(count > 0) %>%
+#     mutate(phylum = factor(phylum, levels = phylum_level_vector),
+#            order = factor(order, levels = order_level_vector))
+```
+
+```{r tidy_plot_genome_counts_filt_30_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# tidy_plot_genome_counts_filt_30 <-  genome_counts_filt_30 %>%
+#     pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+#     left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+#     left_join(sample_metadata, by = join_by(microsample == microsample)) %>% 
+#     left_join(final_combined_stats, by = join_by(microsample == microsample)) %>%
+#     mutate(section = unlist(section)) %>% 
+#     filter(count > 0) %>%
+#     mutate(phylum = factor(phylum, levels = phylum_level_vector),
+#            order = factor(order, levels = order_level_vector))
+```
+
+```{r tidy_plot_genome_counts_filt_30_closed_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# tidy_plot_genome_counts_filt_30_closed <-  genome_counts_filt_30 %>%
+#     mutate_at(vars(-genome), ~ . / sum(.)) %>% 
+#     pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+#     left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+#     left_join(sample_metadata, by = join_by(microsample == microsample)) %>% 
+#     left_join(final_combined_stats, by = join_by(microsample == microsample)) %>%
+#     mutate(section = unlist(section)) %>% 
+#     filter(count > 0) %>%
+#     mutate(phylum = factor(phylum, levels = phylum_level_vector),
+#            order = factor(order, levels = order_level_vector))
+```
+
+### Macro-samples
+
+```{r tidy_plot_genome_counts_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+tidy_plot_genome_counts_macro <-  genome_counts_macro %>%
+    mutate_at(vars(-genome), ~ . / sum(.)) %>% # scale each sample to 1
+    pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+    left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+    left_join(sample_metadata_macro, by = join_by(microsample == sample)) %>% 
+    filter(count > 0) %>%
+    mutate(phylum = factor(phylum, levels = phylum_level_vector),
+           order = factor(order, levels = order_level_vector))
+```
+
+```{r tidy_plot_genome_counts_filt_30_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+tidy_plot_genome_counts_filt_30_macro <-  genome_counts_macro_filt_30 %>%
+    pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+    left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+    left_join(sample_metadata_macro, by = join_by(microsample == sample)) %>% # I have changed to the correct metadata
+    filter(count > 0) %>%
+    mutate(phylum = factor(phylum, levels = phylum_level_vector),
+           order = factor(order, levels = order_level_vector))
+```
+
+```{r tidy_plot_genome_counts_filt_30_macro_closed_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+tidy_plot_genome_counts_filt_30_macro_closed <-  genome_counts_macro_filt_30 %>%
+    mutate_at(vars(-genome), ~ . / sum(.)) %>% 
+    pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+    left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+    left_join(sample_metadata_macro, by = join_by(microsample == sample)) %>% # I have changed to the correct metadata
+    filter(count > 0) %>%
+    mutate(phylum = factor(phylum, levels = phylum_level_vector),
+           order = factor(order, levels = order_level_vector))
+```
+
+
+
+## Read count tables (length corrected) dataframes
+
+### Macro-data
+Make tidy tables for read counts (length corrected)
+```{r tidy_plot_read_counts, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# unfiltered data
+tidy_plot_c_read_counts_macro <-  c_read_counts_macro %>%
+    pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+    left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+    left_join(sample_metadata_macro, by = join_by(microsample == sample)) %>% 
+    left_join(final_combined_stats_macro, by = join_by(microsample == microsample)) %>%
+    # Filter out rows with count <= 0 
+    # (that are redundant after pivot_longer, but important for b div)
+    filter(count > 0) %>%
+    mutate(phylum = factor(phylum, levels = phylum_level_vector),
+           order = factor(order, levels = order_level_vector))
+
+# filtered data
+tidy_plot_c_read_counts_macro_filt_30 <-  c_read_counts_macro_filt_30 %>%
+    pivot_longer(-genome, names_to = "microsample", values_to = "count") %>% 
+    left_join(genome_metadata, by = join_by(genome == genome)) %>% 
+    left_join(sample_metadata_macro, by = join_by(microsample == sample)) %>% 
+    left_join(final_combined_stats_macro, by = join_by(microsample == microsample)) %>%
+    # Filter out rows with count <= 0 
+    # (that are redundant after pivot_longer, but important for b div)
+    filter(count > 0) %>%
+    mutate(phylum = factor(phylum, levels = phylum_level_vector),
+           order = factor(order, levels = order_level_vector))
+```
+
+
+## Alpha diversity dataframes
+
+Define function to estimate the genomes' alpha diversity measurements from genome counts.
+```{r calculate_alpha_diversity_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+calculate_alpha_diversity <- function(input_data, dataset_name) {
+  # Step 1: Transform the input data (remove rownames if needed)
+  input_data_matrix <- input_data %>%
+    column_to_rownames(var = "genome")
+
+  # Step 2: Calculate richness (q = 0)
+  richness <- hilldiv(input_data_matrix, q = 0) %>%
+    t() %>%
+    as.data.frame() %>%
+    rename(richness = 1) %>%
+    rownames_to_column(var = "microsample")
+
+  # Step 3: Calculate neutral diversity (q = 1)
+  neutral <- hilldiv(input_data_matrix, q = 1) %>%
+    t() %>%
+    as.data.frame() %>%
+    rename(neutral = 1) %>%
+    rownames_to_column(var = "microsample")
+
+  # Step 4: Calculate phylogenetic diversity (q = 1, with genome tree)
+  phylogenetic <- hilldiv(input_data_matrix, q = 1, tree = genome_tree) %>%
+    t() %>%
+    as.data.frame() %>%
+    rename(phylogenetic = 1) %>%
+    rownames_to_column(var = "microsample")
+
+  # Step 5: Merge all diversity metrics
+  alpha_diversity <- richness %>%
+    full_join(neutral, by = "microsample") %>%
+    full_join(phylogenetic, by = "microsample") # %>%
+    # left_join(sample_metadata, by = "microsample") %>%
+    # left_join(final_combined_stats, by = "microsample") %>%
+
+  # Return the alpha_diversity data frame
+  return(alpha_diversity)
+}
+```
+
+Estimate the alpha diversity on the unfiltered and the coverage-filtered counts
+
+### Micro-data
+WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+
+```{r alpha_diversities_filtered_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# alpha_div_unfiltered <- calculate_alpha_diversity(
+#   input_data = genome_counts,
+#   dataset_name = "unfiltered") %>%
+#   mutate(filter_level = "unfiltered")
+# 
+# alpha_div_filtered_30 <- calculate_alpha_diversity(
+#   input_data = genome_counts_filt_30,
+#   dataset_name = "filtered")  %>% 
+#   mutate(filter_level = "filtered_30")
+``` 
+
+
+### Macro-data
+
+```{r alpha_diversities_filtered_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+alpha_div_macro_unfiltered <- calculate_alpha_diversity(
+  input_data = genome_counts_macro,
+  dataset_name = "unfiltered") %>%
+  mutate(filter_level = "unfiltered")
+
+alpha_div_macro_filtered_30 <- calculate_alpha_diversity(
+  input_data = genome_counts_macro_filt_30,
+  dataset_name = "filtered")  %>% 
+  mutate(filter_level = "filtered_30")
+```
+
+### Micro-data
+
+```{r alpha_diversity_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# alpha_diversity <- bind_rows(alpha_div_unfiltered, alpha_div_filtered_30) %>%
+#   left_join(sample_metadata, by = "microsample") %>%
+#   left_join(final_combined_stats, by = "microsample") %>%
+#   mutate(filter_level = factor(filter_level, 
+#                                levels = c("unfiltered","filtered_30")))
+```
+
+Make tidy a-diversity
+```{r tidy_plot_alpha_diversity_genomes_micro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+# tidy_plot_alpha_diversity_genomes <- alpha_diversity %>%
+#   pivot_longer(
+#     cols = c(richness, neutral, phylogenetic), 
+#     names_to = "metric",                      
+#     values_to = "value"                       
+#   ) %>%
+#       mutate(metric = factor(metric, levels = c("richness", "neutral", "phylogenetic")))
+```
+
+
+### Macro-data
+
+```{r alpha_diversity_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+alpha_diversity_macro <- bind_rows(
+  alpha_div_macro_unfiltered,
+  alpha_div_macro_filtered_30) %>%
+  left_join(sample_metadata_macro, by = join_by(microsample == sample)) %>%
+  left_join(final_combined_stats_macro, by = "microsample") %>%
+  mutate(filter_level = factor(filter_level, levels = c("unfiltered", 
+                                                        "filtered_30")))
+```
+
+```{r tidy_plot_alpha_diversity_genomes_macro_02, warning=FALSE, comments="", message=FALSE, eval=FALSE}
+tidy_plot_alpha_diversity_genomes_macro <- alpha_diversity_macro %>%
+  pivot_longer(
+    cols = c(richness, neutral, phylogenetic), 
+    names_to = "metric",                      
+    values_to = "value"                       
+  ) %>%
+      mutate(metric = factor(metric, levels = c("richness", "neutral", "phylogenetic")))
+```
+
+
+## Wrap working objects
+In the last step, the objects that are needed for downstream analyses are stored in an R object.
+```{r wrap_objects_plot_02, eval=FALSE}
+## WARNING: MICRO-SCALE DATA NOT PRODUCED FOR ADENOVIRUS YET, IGNORE ALL CODE CHUNKS FOR MICRO-SCALE DATA
+# save(
+#   plot_data_stats, plot_data_stats_macro, plot_data_stats_combined,
+#   tidy_plot_data_stats_before_after, tidy_plot_data_stats_counts, color_palette_tidy_plot_data_stats_counts,
+#   # tidy_total_reads,
+#   tidy_plot_genome_counts,
+#   tidy_plot_genome_counts_filt_30,
+#   tidy_plot_genome_counts_filt_30_closed,
+#   tidy_plot_alpha_diversity_genomes,
+#   file = "data/micro/plot_data.Rdata"
+# )
+
+# Save only plot data objects needed for generating visualizations
+# These are the processed/tidy data frames used directly in plotting chapters
+save(
+  sample_metadata_macro,
+  plot_data_stats_macro,
+  tidy_plot_data_stats_counts_macro,
+  tidy_plot_data_stats_counts_prc_macro,
+  color_palette_tidy_plot_data_stats_counts,
+  tidy_plot_genome_counts_macro,
+  tidy_plot_genome_counts_filt_30_macro,
+  tidy_plot_genome_counts_filt_30_macro_closed,
+  alpha_div_macro_unfiltered,
+  alpha_div_macro_filtered_30,
+  alpha_diversity_macro,
+  tidy_plot_alpha_diversity_genomes_macro,
+  tidy_plot_c_read_counts_macro,
+  tidy_plot_c_read_counts_macro_filt_30,
+  file = "data/macro/plot_data.Rdata"
+)
+
+```
+
+
+

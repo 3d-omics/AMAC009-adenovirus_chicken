@@ -1,0 +1,190 @@
+# Diversity Partitioning Analysis
+
+## Overview
+
+This chapter performs hierarchical additive partitioning of alpha diversity to quantify how diversity is distributed across different hierarchical levels (within and among animals, treatments, and breeds).
+
+**Note:** This analysis requires specific functions for hierarchical partitioning that are defined within this chapter.
+
+## Load Data and Plotting Utilities
+
+```{r load_data_04G, warning=FALSE, message=FALSE}
+# Load processed plotting data and color schemes
+load("data/macro/plot_data.Rdata")
+load("data/data_colors.Rdata")
+```
+
+## Hierarchical Diversity Partitioning Functions
+
+These functions are used to calculate and visualize hierarchical additive partitioning of diversity.
+
+```{r diversity_partitioning_functions_04G, warning=FALSE, message=FALSE, comment=""}
+# Function to calculate hierarchical additive partitioning
+
+# Function to calculate hierarchical additive partitioning
+hier_adipart <- function(comm, hier, nsim = 999) {
+  comm_bin <- (as.matrix(comm) > 0) * 1
+  alpha_obs <- mean(rowSums(comm_bin))
+
+  get_level_richness <- function(fac) {
+    tapply(seq_len(nrow(comm_bin)), fac, function(idx) {
+      sum(colSums(comm_bin[idx, , drop = FALSE]) > 0)
+    }) |> mean()
+  }
+
+  level_names <- names(hier)
+  level_rich  <- sapply(hier, get_level_richness)
+  gamma_obs   <- sum(colSums(comm_bin) > 0)
+
+  # exactly L betas
+  betas <- c(level_rich[1] - alpha_obs, diff(level_rich))
+  names(betas) <- paste0("beta (", level_names, ")")
+  observed <- c(alpha = alpha_obs, betas, gamma = gamma_obs)
+
+  stat_fun <- function(x) {
+    x <- (x > 0) * 1
+    alpha <- mean(rowSums(x))
+    lvl <- sapply(hier, function(fac) {
+      tapply(seq_len(nrow(x)), fac, function(idx)
+        sum(colSums(x[idx, , drop = FALSE]) > 0)) |> mean()
+    })
+    gamma <- sum(colSums(x) > 0)
+    betas <- c(lvl[1] - alpha, diff(lvl))     # ✅ no gamma - last_level
+    names(betas) <- paste0("beta (", level_names, ")")
+    c(alpha = alpha, betas, gamma = gamma)
+  }
+
+  sim <- oecosimu(comm_bin, stat_fun, method = "r2dtable", nsimul = nsim)
+
+  tibble::tibble(
+    component = names(observed),
+    observed  = as.numeric(observed),
+    expected  = as.numeric(sim$oecosimu$mean),
+    pval      = as.numeric(sim$oecosimu$pval)
+  )
+}
+
+
+
+
+plot_hier_adipart <- function(res, title = NULL) {
+  p_to_stars <- function(p) case_when(
+    p <= 0.001 ~ "***",
+    p <= 0.01  ~ "**",
+    p <= 0.05  ~ "*",
+    TRUE      ~ ""
+  )
+  
+  res_long <- res %>%
+    pivot_longer(c(observed, expected), names_to = "type", values_to = "value") %>%
+    mutate(
+    component = factor(
+      component,
+      levels = c("alpha",
+                 "beta (animal)",
+                 "beta (treatment)",
+                 "beta (animal_breed)",
+                 "gamma")
+    )
+  )
+  
+  ggplot(res_long, aes(x = component, y = value, fill = type)) +
+    geom_col(position = position_dodge(width = 0.7), width = 0.6, color = "black") +
+    geom_text(data = res, aes(x = component,
+                              y = pmax(observed, expected) * 1.05,
+                              label = p_to_stars(pval)),
+              inherit.aes = FALSE, vjust = 0) +
+    labs(x = NULL, y = "Richness", fill = NULL, title = title) +
+    theme_minimal(base_size = 11) +
+    theme(axis.text.x = element_text(angle = 15, hjust = 1),
+          legend.position = "top")
+}
+
+```
+
+
+## Prepare Data for Diversity Partitioning
+
+This section prepares the community matrix and hierarchical metadata structure required for diversity partitioning analysis.
+
+```{r diversity_partitioning_data_prep_04G, warning = FALSE, message = FALSE, comment=""}
+# Filter metadata for positive samples retained after filtering
+metadata <- plot_data_stats_macro %>%
+  filter(
+    type_simple %in% c("P"),
+    filter_status %in% c("Retained by filtering"))
+    
+comm_data <- genome_counts_macro_filt_30_zerosrem %>%
+  select(genome, metadata$microsample) %>%
+  t() %>%
+  data.frame() %>%
+  row_to_names(row_number = 1) %>%
+  mutate(across(everything(), as.numeric))
+
+# table(rowSums(comm_data) > 0)
+# all(metadata$microsample == rownames(comm_data))
+# table(is.na(comm_data))
+# table(metadata$section, metadata$cryosection)
+
+comm_ca <- comm_data[, colSums(comm_data) > 0]
+
+metadata_ca <- metadata
+# table(metadata$animal, metadata$age)
+# table(metadata$treatment, metadata$animal_breed)
+
+# Ensure hierarchy variables are factors, in order: cryosection (lowest), animal, treatment (highest)
+hier_ca <- metadata_ca %>%
+  transmute(
+    animal = factor(animal),
+    treatment   = factor(treatment),
+    animal_breed   = factor(animal_breed)
+  )
+```
+
+
+## Diversity Partitioning Analysis
+
+This section performs the hierarchical additive partitioning analysis and visualizes the results.
+
+```{r diversity_partitioning_analysis_04G, warning=FALSE, message=FALSE, comment=""}
+# Perform hierarchical additive partitioning
+# comm_ca is the samples x genomes matrix
+# and hier_ca is your data frame with animal, treatment, animal_breed (in order lowest → highest)
+res_ca <- hier_adipart(comm_ca, hier_ca, nsim = 999)
+
+# Display diversity partitioning results as formatted table
+# The hier_adipart function returns a tibble with columns: component, observed, expected, pval
+# Component structure: alpha, beta(animal), beta(treatment), beta(animal_breed), gamma
+# Map component names to more descriptive labels for display
+component_labels <- c(
+  "alpha" = "Within animals (alpha diversity)",
+  "beta (animal)" = "Among animals, within treatments",
+  "beta (treatment)" = "Among treatments, within breeds",
+  "beta (animal_breed)" = "Among breeds",
+  "gamma" = "Total diversity (gamma)"
+)
+
+# Create formatted data frame for display
+# Define the desired order first
+component_order <- c("alpha", "beta (animal)", "beta (treatment)", "beta (animal_breed)", "gamma")
+
+res_ca_df <- res_ca %>%
+  mutate(
+    Component = component_labels[component],  # Map to descriptive labels
+    Diversity = observed,
+    Expected = expected,
+    P_value = pval,
+    order = match(component, component_order)  # Add ordering column
+  ) %>%
+  arrange(order) %>%  # Arrange before selecting
+  select(Component, Diversity, Expected, P_value)  # Select final columns
+
+# Display as formatted table
+knitr::kable(res_ca_df, digits = 4, caption = "Diversity partitioning results (additive partitioning of alpha diversity)")
+```
+
+```{r diversity_partitioning_plot_04G, warning=FALSE, message=FALSE, fig.height=6, fig.width=7}
+# Create visualization of diversity partitioning results
+plot_hier_adipart(res_ca, title = "Caecum") +
+  custom_ggplot_theme
+```

@@ -1,0 +1,186 @@
+# Adenovirus Presence Analysis
+
+## Load Data and Plotting Utilities
+
+```{r load_data_04A, warning=FALSE, message=FALSE}
+# Load processed plotting data and color schemes
+load("data/macro/plot_data.Rdata")
+load("data/data_colors.Rdata")
+```
+
+## Adenovirus Percentage Over Time
+
+This section visualizes the percentage of sequencing reads mapping to adenovirus genomes across different time points (days post infection) for both broiler and layer breeds.
+
+### Broilers - Adenovirus Percentage
+
+```{r adenovirus_percentage_broiler_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics (median, IQR) for adenovirus percentage by treatment and age
+var <- "adenovirus_percentage"
+summary_stats_broiler <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%  # Exclude negative controls
+  filter(animal_breed == "broiler") %>%
+  group_by(treatment_expl, age) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = formatC(median, format = "f", digits = 5))
+
+# Display summary statistics table with proper formatting
+knitr::kable(summary_stats_broiler, digits = 5, caption = "Summary statistics (median and IQR) for adenovirus percentage in broilers by treatment and age")
+```
+
+```{r adenovirus_percentage_broiler_plot, warning=FALSE, message=FALSE, fig.height=5, fig.width=10}
+# Create boxplot with jittered points showing adenovirus percentage over time for broilers
+boxplot_reads_prc_1_broiler <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "broiler") %>%
+  ggplot(aes(x = age, y = adenovirus_percentage, color = treatment)) +
+  geom_boxplot(outlier.shape = NA, color = "black") +  # Boxplot without outliers (shown as jitter)
+  geom_jitter(width = 0.05, alpha = 0.5, size = 2) +  # Individual data points
+  scale_color_manual(values = treatment_colours_bright) +
+  facet_nested(. ~ treatment_expl, scales = "fixed", space = "fixed", switch = "y") +
+  labs(x = "Days post infection", y = "% reads mapping to Adenovirus") +
+  guides(color = "none") +  # Remove legend
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(panel.spacing = unit(0.3, "lines"),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) + 
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+  # Add median values as text labels above boxes
+  geom_text(
+    data = summary_stats_broiler,
+    aes(x = age, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -3.0,
+    size = 3, alpha = 1, color = "black"
+  ) +
+  ggtitle("Broilers")
+
+# Display the plot (commented out - used in combined plot)
+# boxplot_reads_prc_1_broiler
+```
+
+### Layers - Adenovirus Percentage
+
+```{r adenovirus_percentage_layer_stats, warning=FALSE, message=FALSE, comment=""}
+# Calculate summary statistics (median, IQR) for adenovirus percentage by treatment and age
+var <- "adenovirus_percentage"
+summary_stats_layer <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%  # Exclude negative controls
+  filter(animal_breed == "layer") %>%
+  group_by(treatment_expl, age) %>%
+  summarise(
+    median = median(.data[[var]], na.rm = TRUE),
+    IQR    = IQR(.data[[var]], na.rm = TRUE),
+    Q1     = quantile(.data[[var]], 0.25, na.rm = TRUE),
+    Q3     = quantile(.data[[var]], 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(label_txt = formatC(median, format = "f", digits = 5))
+
+# Display summary statistics table with proper formatting
+knitr::kable(summary_stats_layer, digits = 5, caption = "Summary statistics (median and IQR) for adenovirus percentage in layers by treatment and age")
+```
+```{r adenovirus_percentage_layer_plot, warning=FALSE, message=FALSE, fig.height=5, fig.width=10}
+# Create boxplot with jittered points showing adenovirus percentage over time for layers
+boxplot_reads_prc_1_layer <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "layer") %>%
+  ggplot(aes(x = age, y = adenovirus_percentage, color = treatment)) +
+  geom_boxplot(outlier.shape = NA, color = "black") +  # Boxplot without outliers (shown as jitter)
+  geom_jitter(width = 0.05, alpha = 0.8, size = 2) +  # Individual data points
+  scale_color_manual(values = treatment_colours_bright) +
+  facet_nested(. ~ treatment_expl, scales = "fixed", space = "fixed", switch = "y") +
+  labs(x = "Days post infection", y = "% reads mapping to Adenovirus") +
+  guides(color = "none") +  # Remove legend
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(panel.spacing = unit(0.3, "lines"),
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) + 
+  scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+  # Add median values as text labels above boxes
+  geom_text(
+    data = summary_stats_layer,
+    aes(x = age, y = median, label = label_txt),
+    inherit.aes = FALSE,
+    vjust = -3.0,
+    size = 3, alpha = 1, color = "black"
+  ) +
+  ggtitle("Layers")
+
+# Display the plot (commented out - used in combined plot)
+# boxplot_reads_prc_1_layer
+```
+
+## Adenovirus Read Counts by Sample
+
+This section shows absolute read counts mapping to adenovirus genomes for each individual sample, grouped by breed and treatment.
+
+### Layers - Adenovirus Read Counts
+
+```{r adenovirus_reads_layer_plot, warning=FALSE, message=FALSE, fig.height=5, fig.width=10}
+# Create barplot showing absolute adenovirus read counts per sample for layers
+barplot_layer <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "layer") %>%
+  ggplot(aes(x = microsample, y = adenovirus_total_mapped, fill = treatment)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  scale_fill_manual(values = treatment_colours_bright) +
+  labs(x = "Samples", y = "Adenovirus reads", fill = "Treatment") +
+  facet_nested(. ~ treatment_expl + age, scales = "free", space = "free") +
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_blank(),  # Hide sample IDs for clarity
+        axis.text.y = element_text(),
+        legend.position = "bottom",
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle("Layers")
+
+# Display the plot (commented out - used in combined plot)
+# barplot_layer
+```
+
+### Broilers - Adenovirus Read Counts
+
+```{r adenovirus_reads_broiler_plot, warning=FALSE, message=FALSE, fig.height=5, fig.width=10}
+# Create barplot showing absolute adenovirus read counts per sample for broilers
+barplot_broiler <- plot_data_stats_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "broiler") %>%
+  ggplot(aes(x = microsample, y = adenovirus_total_mapped, fill = treatment)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  scale_fill_manual(values = treatment_colours_bright) +
+  labs(x = "Samples", y = "Adenovirus reads", fill = "Treatment") +
+  facet_nested(. ~ treatment_expl + age, scales = "free", space = "free") +
+  theme_minimal() +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_blank(),  # Hide sample IDs for clarity
+        axis.text.y = element_text(),
+        legend.position = "bottom",
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle("Broilers")
+
+# Display the plot (commented out - used in combined plot)
+# barplot_broiler
+```
+
+### Combined Visualization
+
+```{r adenovirus_combined_plot, warning=FALSE, message=FALSE, fig.height=12, fig.width=10}
+# Combine all four plots (percentage and read counts for both breeds) in a single figure
+# Using patchwork to arrange plots vertically with appropriate heights
+(boxplot_reads_prc_1_layer + barplot_layer + 
+ boxplot_reads_prc_1_broiler + barplot_broiler) +
+  plot_layout(
+    ncol = 1,        # Single column layout
+    heights = c(2, 1, 2, 1),   # Relative heights: percentage plots taller than barplots
+    guides = "collect"  # Collect legends into one
+  ) + 
+  plot_annotation(tag_levels = 'a') &  # Add panel labels (a, b, c, d)
+  theme(legend.position = "bottom", legend.box = "vertical")
+```

@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>9 Alpha Diversity Analysis | 3D’omics | Adenovirus: Conventional metagenomics</title>
+  <meta name="description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="9 Alpha Diversity Analysis | 3D’omics | Adenovirus: Conventional metagenomics" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="github-repo" content="3d-omics/XXX" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="9 Alpha Diversity Analysis | 3D’omics | Adenovirus: Conventional metagenomics" />
+  
+  <meta name="twitter:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  
+
+<meta name="author" content="Amalia Bogri" />
+<meta name="author" content="Antton Alberdi" />
+<meta name="author" content="Jorge Langa" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="antimicrobial-effect-analysis.html"/>
+<link rel="next" href="beta-diversity-analysis---between-breeds.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prepare-the-r-environment"><i class="fa fa-check"></i><b>1.1</b> Prepare the R environment</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#environment"><i class="fa fa-check"></i><b>1.1.1</b> Environment</a></li>
+<li class="chapter" data-level="1.1.2" data-path="index.html"><a href="index.html#libraries"><i class="fa fa-check"></i><b>1.1.2</b> Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-essential-functions"><i class="fa fa-check"></i><b>1.2</b> Load Essential Functions</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notes"><i class="fa fa-check"></i><b>1.3</b> Notes</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#installation-of-modules"><i class="fa fa-check"></i><b>1.3.1</b> Installation of modules</a></li>
+<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#airtable-access"><i class="fa fa-check"></i><b>1.3.2</b> Airtable access:</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html"><i class="fa fa-check"></i><b>2</b> Data Import - MAG Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-catalogue"><i class="fa fa-check"></i><b>2.2</b> Genome (MAGs) Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#dereplicated-genomes"><i class="fa fa-check"></i><b>2.2.1</b> Dereplicated Genomes</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-taxonomy"><i class="fa fa-check"></i><b>2.2.2</b> Genome (MAGs) Taxonomy</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-quality"><i class="fa fa-check"></i><b>2.2.3</b> Genome (MAGs) Quality</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-phylogenetic-tree"><i class="fa fa-check"></i><b>2.2.4</b> Genome (MAGs) Phylogenetic Tree</a></li>
+<li class="chapter" data-level="2.2.5" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#merged-genome-mags-taxonomy-quality"><i class="fa fa-check"></i><b>2.2.5</b> Merged Genome (MAGs) taxonomy &amp; quality</a></li>
+<li class="chapter" data-level="2.2.6" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-functional-annotations"><i class="fa fa-check"></i><b>2.2.6</b> Genome (MAGs) functional annotations</a></li>
+<li class="chapter" data-level="2.2.7" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#distil-functional-annotations"><i class="fa fa-check"></i><b>2.2.7</b> Distil functional annotations</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#bacterial-phyla-order-color-scheme-data"><i class="fa fa-check"></i><b>2.3</b> Bacterial phyla &amp; order color scheme data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-working-objects"><i class="fa fa-check"></i><b>2.4</b> Save Working Objects</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-core-mag-catalogue-data-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.1</b> Save Core MAG Catalogue Data (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-color-schemes-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.2</b> Save Color Schemes (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-complete-preparation-data-for-colleagues-analyses"><i class="fa fa-check"></i><b>2.4.3</b> Save Complete Preparation Data (for colleagues’ analyses)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html"><i class="fa fa-check"></i><b>3</b> Data Import - Metadata and Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#overview-1"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#define-plotting-settings"><i class="fa fa-check"></i><b>3.2</b> Define Plotting Settings</a></li>
+<li class="chapter" data-level="3.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sample-metadata"><i class="fa fa-check"></i><b>3.3</b> Sample metadata</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples"><i class="fa fa-check"></i><b>3.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples"><i class="fa fa-check"></i><b>3.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-reads-counts"><i class="fa fa-check"></i><b>3.4</b> Bacterial reads (counts)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-1"><i class="fa fa-check"></i><b>3.4.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.4.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-1"><i class="fa fa-check"></i><b>3.4.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#genome-covered-bases"><i class="fa fa-check"></i><b>3.5</b> Genome covered bases</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-2"><i class="fa fa-check"></i><b>3.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.5.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-2"><i class="fa fa-check"></i><b>3.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sequencing-statistics"><i class="fa fa-check"></i><b>3.6</b> Sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-3"><i class="fa fa-check"></i><b>3.6.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.6.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-3"><i class="fa fa-check"></i><b>3.6.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#non-bacterial-mapped-reads-human-chicken-swine"><i class="fa fa-check"></i><b>3.7</b> Non-bacterial mapped reads: human, chicken, swine</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro"><i class="fa fa-check"></i><b>3.7.1</b> Micro</a></li>
+<li class="chapter" data-level="3.7.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-4"><i class="fa fa-check"></i><b>3.7.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-mapped-reads."><i class="fa fa-check"></i><b>3.8</b> Bacterial mapped reads.</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-4"><i class="fa fa-check"></i><b>3.8.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.8.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-5"><i class="fa fa-check"></i><b>3.8.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#alternative-way-to-estimate-bacterial-read-counts-from-count-table"><i class="fa fa-check"></i><b>3.9</b> Alternative way to estimate bacterial read counts (from count table):</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-5"><i class="fa fa-check"></i><b>3.9.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.9.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-6"><i class="fa fa-check"></i><b>3.9.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sanity-checks"><i class="fa fa-check"></i><b>3.10</b> Sanity checks</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-6"><i class="fa fa-check"></i><b>3.10.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.10.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-7"><i class="fa fa-check"></i><b>3.10.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#combine-relevant-sequencing-statistics"><i class="fa fa-check"></i><b>3.11</b> Combine relevant sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.11.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-7"><i class="fa fa-check"></i><b>3.11.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.11.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-8"><i class="fa fa-check"></i><b>3.11.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.12" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#filter-and-normalise-data"><i class="fa fa-check"></i><b>3.12</b> Filter and normalise data</a>
+<ul>
+<li class="chapter" data-level="3.12.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-coverage-table"><i class="fa fa-check"></i><b>3.12.1</b> Generate coverage table</a></li>
+<li class="chapter" data-level="3.12.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#coverage-filtering"><i class="fa fa-check"></i><b>3.12.2</b> Coverage filtering</a></li>
+<li class="chapter" data-level="3.12.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-genome-count-table"><i class="fa fa-check"></i><b>3.12.3</b> Generate genome count table</a></li>
+<li class="chapter" data-level="3.12.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-length-corrected-read-count-tables"><i class="fa fa-check"></i><b>3.12.4</b> Generate length-corrected read count tables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.13" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#wrap-working-objects"><i class="fa fa-check"></i><b>3.13</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html"><i class="fa fa-check"></i><b>4</b> Data Preparation for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#overview-2"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#load-the-data"><i class="fa fa-check"></i><b>4.2</b> Load the Data</a></li>
+<li class="chapter" data-level="4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#sequencing-statistics-data-frames"><i class="fa fa-check"></i><b>4.3</b> Sequencing Statistics Data Frames</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-11"><i class="fa fa-check"></i><b>4.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.3.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-13"><i class="fa fa-check"></i><b>4.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-tables-for-plotting"><i class="fa fa-check"></i><b>4.4</b> Tidy Tables for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after-trimming-comparison"><i class="fa fa-check"></i><b>4.4.1</b> Before-After Trimming Comparison</a></li>
+<li class="chapter" data-level="4.4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after"><i class="fa fa-check"></i><b>4.4.2</b> Before-after</a></li>
+<li class="chapter" data-level="4.4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#samtools-mapping-to-different-references"><i class="fa fa-check"></i><b>4.4.3</b> Samtools mapping to different references</a></li>
+<li class="chapter" data-level="4.4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#percentages-of-different-references"><i class="fa fa-check"></i><b>4.4.4</b> Percentages of different references</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-genome-counts"><i class="fa fa-check"></i><b>4.5</b> Tidy genome counts</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-15"><i class="fa fa-check"></i><b>4.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.5.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-17"><i class="fa fa-check"></i><b>4.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#read-count-tables-length-corrected-dataframes"><i class="fa fa-check"></i><b>4.6</b> Read count tables (length corrected) dataframes</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data"><i class="fa fa-check"></i><b>4.6.1</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#alpha-diversity-dataframes"><i class="fa fa-check"></i><b>4.7</b> Alpha diversity dataframes</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data"><i class="fa fa-check"></i><b>4.7.1</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-1"><i class="fa fa-check"></i><b>4.7.2</b> Macro-data</a></li>
+<li class="chapter" data-level="4.7.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data-1"><i class="fa fa-check"></i><b>4.7.3</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-2"><i class="fa fa-check"></i><b>4.7.4</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#wrap-working-objects-1"><i class="fa fa-check"></i><b>4.8</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html"><i class="fa fa-check"></i><b>5</b> MAG Catalogue Overview</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#overview-3"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#load-data"><i class="fa fa-check"></i><b>5.2</b> Load Data</a></li>
+<li class="chapter" data-level="5.3" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-summary"><i class="fa fa-check"></i><b>5.3</b> Genome Quality Summary</a></li>
+<li class="chapter" data-level="5.4" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-circularity-and-taxonomic-distribution"><i class="fa fa-check"></i><b>5.4</b> Genome Circularity and Taxonomic Distribution</a></li>
+<li class="chapter" data-level="5.5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-visualization"><i class="fa fa-check"></i><b>5.5</b> Genome Quality Visualization</a></li>
+<li class="chapter" data-level="5.6" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours"><i class="fa fa-check"></i><b>5.6</b> MAG catalogue phyla and order colours</a></li>
+<li class="chapter" data-level="5.7" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours-and-genera-number"><i class="fa fa-check"></i><b>5.7</b> MAG catalogue phyla and order colours, and genera number</a></li>
+<li class="chapter" data-level="5.8" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot"><i class="fa fa-check"></i><b>5.8</b> Genome phylogeny plot</a></li>
+<li class="chapter" data-level="5.9" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot-without-legend"><i class="fa fa-check"></i><b>5.9</b> Genome phylogeny plot without legend</a></li>
+<li class="chapter" data-level="5.10" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-overview"><i class="fa fa-check"></i><b>5.10</b> Functional overview</a></li>
+<li class="chapter" data-level="5.11" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-distances"><i class="fa fa-check"></i><b>5.11</b> Functional distances</a></li>
+<li class="chapter" data-level="5.12" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-ordination"><i class="fa fa-check"></i><b>5.12</b> Functional ordination</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html"><i class="fa fa-check"></i><b>6</b> Adenovirus Presence Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#load-data-and-plotting-utilities"><i class="fa fa-check"></i><b>6.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="6.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-percentage-over-time"><i class="fa fa-check"></i><b>6.2</b> Adenovirus Percentage Over Time</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.1</b> Broilers - Adenovirus Percentage</a></li>
+<li class="chapter" data-level="6.2.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.2</b> Layers - Adenovirus Percentage</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-read-counts-by-sample"><i class="fa fa-check"></i><b>6.3</b> Adenovirus Read Counts by Sample</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.1</b> Layers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.2</b> Broilers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#combined-visualization"><i class="fa fa-check"></i><b>6.3.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html"><i class="fa fa-check"></i><b>7</b> Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#load-data-and-plotting-utilities-1"><i class="fa fa-check"></i><b>7.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="7.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#number-of-bases-and-reads"><i class="fa fa-check"></i><b>7.2</b> Number of Bases and Reads</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-bases-before-trimming"><i class="fa fa-check"></i><b>7.2.1</b> Total Bases Before Trimming</a></li>
+<li class="chapter" data-level="7.2.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-reads-after-trimming"><i class="fa fa-check"></i><b>7.2.2</b> Total Reads After Trimming</a></li>
+<li class="chapter" data-level="7.2.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-1"><i class="fa fa-check"></i><b>7.2.3</b> Combined Visualization</a></li>
+<li class="chapter" data-level="7.2.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#low-data-samples"><i class="fa fa-check"></i><b>7.2.4</b> Low Data Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#percentage-of-reads-mapped-trimmed-and-unmapped"><i class="fa fa-check"></i><b>7.3</b> Percentage of Reads: Mapped, Trimmed, and Unmapped</a></li>
+<li class="chapter" data-level="7.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#composition-of-reads-vs.-references"><i class="fa fa-check"></i><b>7.4</b> Composition of Reads vs. References</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#relative-composition-proportions"><i class="fa fa-check"></i><b>7.4.1</b> Relative Composition (Proportions)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#absolute-composition-counts"><i class="fa fa-check"></i><b>7.4.2</b> Absolute Composition (Counts)</a></li>
+<li class="chapter" data-level="7.4.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-2"><i class="fa fa-check"></i><b>7.4.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html"><i class="fa fa-check"></i><b>8</b> Antimicrobial Effect Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#load-data-and-plotting-utilities-2"><i class="fa fa-check"></i><b>8.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="8.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#bacteria-to-host-read-ratio"><i class="fa fa-check"></i><b>8.2</b> Bacteria-to-Host Read Ratio</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#layers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.1</b> Layers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#broilers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.2</b> Broilers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.3" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#combined-visualization-3"><i class="fa fa-check"></i><b>8.2.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity Analysis</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#load-data-and-plotting-utilities-3"><i class="fa fa-check"></i><b>9.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="9.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#alpha-diversity-by-breed"><i class="fa fa-check"></i><b>9.2</b> Alpha Diversity by Breed</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#layers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.1</b> Layers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#broilers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.2</b> Broilers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#combined-visualization-4"><i class="fa fa-check"></i><b>9.2.3</b> Combined Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#detailed-alpha-diversity---layers-with-animal-labels"><i class="fa fa-check"></i><b>9.3</b> Detailed Alpha Diversity - Layers with Animal Labels</a></li>
+<li class="chapter" data-level="9.4" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#relationship-between-genome-length-and-alpha-diversity"><i class="fa fa-check"></i><b>9.4</b> Relationship Between Genome Length and Alpha Diversity</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#prepare-data-calculate-median-genome-length"><i class="fa fa-check"></i><b>9.4.1</b> Prepare Data: Calculate Median Genome Length</a></li>
+<li class="chapter" data-level="9.4.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#visualize-relationship-linear-model"><i class="fa fa-check"></i><b>9.4.2</b> Visualize Relationship: Linear Model</a></li>
+<li class="chapter" data-level="9.4.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#statistical-modeling-negative-binomial-regression"><i class="fa fa-check"></i><b>9.4.3</b> Statistical Modeling: Negative Binomial Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html"><i class="fa fa-check"></i><b>10</b> Beta Diversity Analysis - Between Breeds</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#load-data-and-plotting-utilities-4"><i class="fa fa-check"></i><b>10.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="10.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#composition-barplots"><i class="fa fa-check"></i><b>10.2</b> Composition Barplots</a></li>
+<li class="chapter" data-level="10.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#layer-vs-broiler-composition"><i class="fa fa-check"></i><b>10.3</b> Layer vs Broiler Composition</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#pca"><i class="fa fa-check"></i><b>10.3.1</b> PCA</a></li>
+<li class="chapter" data-level="10.3.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#genomes-overlap-between-breeds"><i class="fa fa-check"></i><b>10.3.2</b> Genomes Overlap Between Breeds</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.4</b> ALDEx2 Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-aldex2"><i class="fa fa-check"></i><b>10.4.1</b> Prepare Data for ALDEx2</a></li>
+<li class="chapter" data-level="10.4.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#run-aldex2-analysis"><i class="fa fa-check"></i><b>10.4.2</b> Run ALDEx2 Analysis</a></li>
+<li class="chapter" data-level="10.4.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-diagnostic-plots"><i class="fa fa-check"></i><b>10.4.3</b> ALDEx2 Diagnostic Plots</a></li>
+<li class="chapter" data-level="10.4.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-significant-taxa-visualization"><i class="fa fa-check"></i><b>10.4.4</b> ALDEx2 Significant Taxa Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#ancom-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.5</b> ANCOM Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-ancom"><i class="fa fa-check"></i><b>10.5.1</b> Prepare Data for ANCOM</a></li>
+<li class="chapter" data-level="10.5.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-diagram-control-treatment-tf3-only"><i class="fa fa-check"></i><b>10.5.2</b> Venn Diagram: Control Treatment (TF3) Only</a></li>
+<li class="chapter" data-level="10.5.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-of-all-groups-separately"><i class="fa fa-check"></i><b>10.5.3</b> Venn of all groups separately</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html"><i class="fa fa-check"></i><b>11</b> Beta Diversity Analysis - Within Breeds</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#load-data-and-plotting-utilities-5"><i class="fa fa-check"></i><b>11.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="11.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#beta-diversity-within-breeds"><i class="fa fa-check"></i><b>11.2</b> Beta Diversity Within Breeds</a></li>
+<li class="chapter" data-level="11.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---composition-barplots"><i class="fa fa-check"></i><b>11.3</b> Broilers - Composition Barplots</a></li>
+<li class="chapter" data-level="11.4" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---pca-analysis"><i class="fa fa-check"></i><b>11.4</b> Broilers - PCA Analysis</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova"><i class="fa fa-check"></i><b>11.4.1</b> PERMANOVA</a></li>
+<li class="chapter" data-level="11.4.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#layers"><i class="fa fa-check"></i><b>11.4.2</b> Layers</a></li>
+<li class="chapter" data-level="11.4.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova-1"><i class="fa fa-check"></i><b>11.4.3</b> PERMANOVA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html"><i class="fa fa-check"></i><b>12</b> Diversity Partitioning Analysis</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#overview-4"><i class="fa fa-check"></i><b>12.1</b> Overview</a></li>
+<li class="chapter" data-level="12.2" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#load-data-and-plotting-utilities-6"><i class="fa fa-check"></i><b>12.2</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="12.3" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#hierarchical-diversity-partitioning-functions"><i class="fa fa-check"></i><b>12.3</b> Hierarchical Diversity Partitioning Functions</a></li>
+<li class="chapter" data-level="12.4" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#prepare-data-for-diversity-partitioning"><i class="fa fa-check"></i><b>12.4</b> Prepare Data for Diversity Partitioning</a></li>
+<li class="chapter" data-level="12.5" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#diversity-partitioning-analysis-1"><i class="fa fa-check"></i><b>12.5</b> Diversity Partitioning Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html"><i class="fa fa-check"></i><b>13</b> PacBio Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#overview-5"><i class="fa fa-check"></i><b>13.1</b> Overview</a></li>
+<li class="chapter" data-level="13.2" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#selection-criteria"><i class="fa fa-check"></i><b>13.2</b> Selection Criteria</a></li>
+<li class="chapter" data-level="13.3" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#load-data-1"><i class="fa fa-check"></i><b>13.3</b> Load Data</a></li>
+<li class="chapter" data-level="13.4" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#prepare-extract-metadata"><i class="fa fa-check"></i><b>13.4</b> Prepare Extract Metadata</a></li>
+<li class="chapter" data-level="13.5" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#merge-metadata-with-sample-information"><i class="fa fa-check"></i><b>13.5</b> Merge Metadata with Sample Information</a></li>
+<li class="chapter" data-level="13.6" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-dna-concentration-and-richness"><i class="fa fa-check"></i><b>13.6</b> Visualize DNA Concentration and Richness</a></li>
+<li class="chapter" data-level="13.7" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#identify-best-samples"><i class="fa fa-check"></i><b>13.7</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="13.8" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#visualize-selected-samples"><i class="fa fa-check"></i><b>13.8</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="13.9" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#calculate-pooling-requirements"><i class="fa fa-check"></i><b>13.9</b> Calculate Pooling Requirements</a></li>
+<li class="chapter" data-level="13.10" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#export-selected-samples"><i class="fa fa-check"></i><b>13.10</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="13.11" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#save-data"><i class="fa fa-check"></i><b>13.11</b> Save Data</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html"><i class="fa fa-check"></i><b>14</b> LMD Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#overview-6"><i class="fa fa-check"></i><b>14.1</b> Overview</a></li>
+<li class="chapter" data-level="14.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#load-data-2"><i class="fa fa-check"></i><b>14.2</b> Load Data</a></li>
+<li class="chapter" data-level="14.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#identify-best-lmd-samples"><i class="fa fa-check"></i><b>14.3</b> Identify Best LMD Samples</a></li>
+<li class="chapter" data-level="14.4" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#broiler-sample-selection"><i class="fa fa-check"></i><b>14.4</b> Broiler Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-broiler-samples"><i class="fa fa-check"></i><b>14.4.1</b> Visualize Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-broiler-samples"><i class="fa fa-check"></i><b>14.4.2</b> Mark Selected Broiler Samples</a></li>
+<li class="chapter" data-level="14.4.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-broilers"><i class="fa fa-check"></i><b>14.4.3</b> PCA Analysis for Broilers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#layer-sample-selection"><i class="fa fa-check"></i><b>14.5</b> Layer Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.5.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#visualize-layer-samples"><i class="fa fa-check"></i><b>14.5.1</b> Visualize Layer Samples</a></li>
+<li class="chapter" data-level="14.5.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#mark-selected-layer-samples"><i class="fa fa-check"></i><b>14.5.2</b> Mark Selected Layer Samples</a></li>
+<li class="chapter" data-level="14.5.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#pca-analysis-for-layers"><i class="fa fa-check"></i><b>14.5.3</b> PCA Analysis for Layers</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#export-selected-samples-1"><i class="fa fa-check"></i><b>14.6</b> Export Selected Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html"><i class="fa fa-check"></i><b>15</b> Metatranscriptomics Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#overview-7"><i class="fa fa-check"></i><b>15.1</b> Overview</a></li>
+<li class="chapter" data-level="15.2" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#load-data-3"><i class="fa fa-check"></i><b>15.2</b> Load Data</a></li>
+<li class="chapter" data-level="15.3" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#prepare-rna-extract-metadata"><i class="fa fa-check"></i><b>15.3</b> Prepare RNA Extract Metadata</a></li>
+<li class="chapter" data-level="15.4" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#merge-rna-metadata-with-sample-information"><i class="fa fa-check"></i><b>15.4</b> Merge RNA Metadata with Sample Information</a></li>
+<li class="chapter" data-level="15.5" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-rna-concentration-and-richness"><i class="fa fa-check"></i><b>15.5</b> Visualize RNA Concentration and Richness</a></li>
+<li class="chapter" data-level="15.6" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#identify-best-samples-1"><i class="fa fa-check"></i><b>15.6</b> Identify Best Samples</a></li>
+<li class="chapter" data-level="15.7" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#visualize-selected-samples-1"><i class="fa fa-check"></i><b>15.7</b> Visualize Selected Samples</a></li>
+<li class="chapter" data-level="15.8" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#export-selected-samples-2"><i class="fa fa-check"></i><b>15.8</b> Export Selected Samples</a></li>
+<li class="chapter" data-level="15.9" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#save-data-1"><i class="fa fa-check"></i><b>15.9</b> Save Data</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">3D’omics | Adenovirus: Conventional metagenomics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="alpha-diversity-analysis" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">9</span> Alpha Diversity Analysis<a href="alpha-diversity-analysis.html#alpha-diversity-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="load-data-and-plotting-utilities-3" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Load Data and Plotting Utilities<a href="alpha-diversity-analysis.html#load-data-and-plotting-utilities-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb147-1"><a href="alpha-diversity-analysis.html#cb147-1" tabindex="-1"></a><span class="co"># Load processed plotting data and color schemes</span></span>
+<span id="cb147-2"><a href="alpha-diversity-analysis.html#cb147-2" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/macro/plot_data.Rdata&quot;</span>)</span>
+<span id="cb147-3"><a href="alpha-diversity-analysis.html#cb147-3" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/data_colors.Rdata&quot;</span>)</span></code></pre></div>
+</div>
+<div id="alpha-diversity-by-breed" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Alpha Diversity by Breed<a href="alpha-diversity-analysis.html#alpha-diversity-by-breed" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Alpha diversity measures within-sample microbial community diversity. This section compares richness and Shannon diversity metrics between breeds and treatments over time.</p>
+<div id="layers---alpha-diversity" class="section level3 hasAnchor" number="9.2.1">
+<h3><span class="header-section-number">9.2.1</span> Layers - Alpha Diversity<a href="alpha-diversity-analysis.html#layers---alpha-diversity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb148-1"><a href="alpha-diversity-analysis.html#cb148-1" tabindex="-1"></a><span class="co"># Calculate summary statistics for alpha diversity metrics by treatment, age, and metric</span></span>
+<span id="cb148-2"><a href="alpha-diversity-analysis.html#cb148-2" tabindex="-1"></a>var <span class="ot">&lt;-</span> <span class="st">&quot;value&quot;</span></span>
+<span id="cb148-3"><a href="alpha-diversity-analysis.html#cb148-3" tabindex="-1"></a>summary_stats_layer <span class="ot">&lt;-</span> tidy_plot_alpha_diversity_genomes_macro <span class="sc">%&gt;%</span></span>
+<span id="cb148-4"><a href="alpha-diversity-analysis.html#cb148-4" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb148-5"><a href="alpha-diversity-analysis.html#cb148-5" tabindex="-1"></a>  <span class="fu">filter</span>(filter_level <span class="sc">==</span> <span class="st">&#39;filtered_30&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb148-6"><a href="alpha-diversity-analysis.html#cb148-6" tabindex="-1"></a>  <span class="fu">filter</span>(filter_status <span class="sc">==</span> <span class="st">&quot;Retained by filtering&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># Remove empty samples</span></span>
+<span id="cb148-7"><a href="alpha-diversity-analysis.html#cb148-7" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment_expl, age, metric) <span class="sc">%&gt;%</span></span>
+<span id="cb148-8"><a href="alpha-diversity-analysis.html#cb148-8" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb148-9"><a href="alpha-diversity-analysis.html#cb148-9" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">median</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb148-10"><a href="alpha-diversity-analysis.html#cb148-10" tabindex="-1"></a>    <span class="at">IQR    =</span> <span class="fu">IQR</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb148-11"><a href="alpha-diversity-analysis.html#cb148-11" tabindex="-1"></a>    <span class="at">Q1     =</span> <span class="fu">quantile</span>(.data[[var]], <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb148-12"><a href="alpha-diversity-analysis.html#cb148-12" tabindex="-1"></a>    <span class="at">Q3     =</span> <span class="fu">quantile</span>(.data[[var]], <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb148-13"><a href="alpha-diversity-analysis.html#cb148-13" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
+<span id="cb148-14"><a href="alpha-diversity-analysis.html#cb148-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb148-15"><a href="alpha-diversity-analysis.html#cb148-15" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label_txt =</span> <span class="fu">formatC</span>(median, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>))</span>
+<span id="cb148-16"><a href="alpha-diversity-analysis.html#cb148-16" tabindex="-1"></a></span>
+<span id="cb148-17"><a href="alpha-diversity-analysis.html#cb148-17" tabindex="-1"></a><span class="co"># Display summary statistics table</span></span>
+<span id="cb148-18"><a href="alpha-diversity-analysis.html#cb148-18" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(summary_stats_layer, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">&quot;Summary statistics (median and IQR) for alpha diversity metrics in layers&quot;</span>)</span></code></pre></div>
+<table style="width:100%;">
+<caption>(#tab:alpha_diversity_layer_stats)Summary statistics (median and IQR) for alpha diversity metrics in layers</caption>
+<colgroup>
+<col width="26%" />
+<col width="5%" />
+<col width="17%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+<col width="10%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">treatment_expl</th>
+<th align="left">age</th>
+<th align="left">metric</th>
+<th align="right">median</th>
+<th align="right">IQR</th>
+<th align="right">Q1</th>
+<th align="right">Q3</th>
+<th align="left">label_txt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">0</td>
+<td align="left">richness</td>
+<td align="right">55.000</td>
+<td align="right">7.000</td>
+<td align="right">53.000</td>
+<td align="right">60.000</td>
+<td align="left">55.0</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">0</td>
+<td align="left">neutral</td>
+<td align="right">20.117</td>
+<td align="right">8.108</td>
+<td align="right">17.003</td>
+<td align="right">25.111</td>
+<td align="left">20.1</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">0</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.197</td>
+<td align="right">0.749</td>
+<td align="right">2.177</td>
+<td align="right">2.925</td>
+<td align="left">2.2</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">3</td>
+<td align="left">richness</td>
+<td align="right">65.000</td>
+<td align="right">28.000</td>
+<td align="right">57.000</td>
+<td align="right">85.000</td>
+<td align="left">65.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">3</td>
+<td align="left">neutral</td>
+<td align="right">26.291</td>
+<td align="right">3.371</td>
+<td align="right">23.326</td>
+<td align="right">26.697</td>
+<td align="left">26.3</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">3</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.659</td>
+<td align="right">0.742</td>
+<td align="right">2.417</td>
+<td align="right">3.160</td>
+<td align="left">2.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">5</td>
+<td align="left">richness</td>
+<td align="right">69.000</td>
+<td align="right">32.000</td>
+<td align="right">57.000</td>
+<td align="right">89.000</td>
+<td align="left">69.0</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">5</td>
+<td align="left">neutral</td>
+<td align="right">28.939</td>
+<td align="right">17.529</td>
+<td align="right">24.959</td>
+<td align="right">42.488</td>
+<td align="left">28.9</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">5</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.185</td>
+<td align="right">1.418</td>
+<td align="right">2.392</td>
+<td align="right">3.810</td>
+<td align="left">3.2</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">7</td>
+<td align="left">richness</td>
+<td align="right">62.000</td>
+<td align="right">25.000</td>
+<td align="right">62.000</td>
+<td align="right">87.000</td>
+<td align="left">62.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">7</td>
+<td align="left">neutral</td>
+<td align="right">40.623</td>
+<td align="right">6.863</td>
+<td align="right">34.419</td>
+<td align="right">41.283</td>
+<td align="left">40.6</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">7</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.226</td>
+<td align="right">0.363</td>
+<td align="right">3.073</td>
+<td align="right">3.435</td>
+<td align="left">3.2</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">14</td>
+<td align="left">richness</td>
+<td align="right">43.000</td>
+<td align="right">33.000</td>
+<td align="right">34.000</td>
+<td align="right">67.000</td>
+<td align="left">43.0</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">14</td>
+<td align="left">neutral</td>
+<td align="right">19.843</td>
+<td align="right">6.275</td>
+<td align="right">18.136</td>
+<td align="right">24.411</td>
+<td align="left">19.8</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">14</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.677</td>
+<td align="right">0.367</td>
+<td align="right">2.651</td>
+<td align="right">3.018</td>
+<td align="left">2.7</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">0</td>
+<td align="left">richness</td>
+<td align="right">43.000</td>
+<td align="right">4.000</td>
+<td align="right">42.000</td>
+<td align="right">46.000</td>
+<td align="left">43.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">0</td>
+<td align="left">neutral</td>
+<td align="right">14.707</td>
+<td align="right">6.645</td>
+<td align="right">11.629</td>
+<td align="right">18.274</td>
+<td align="left">14.7</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">0</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.332</td>
+<td align="right">0.551</td>
+<td align="right">2.145</td>
+<td align="right">2.696</td>
+<td align="left">2.3</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">3</td>
+<td align="left">richness</td>
+<td align="right">46.000</td>
+<td align="right">9.000</td>
+<td align="right">42.000</td>
+<td align="right">51.000</td>
+<td align="left">46.0</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">3</td>
+<td align="left">neutral</td>
+<td align="right">15.087</td>
+<td align="right">5.442</td>
+<td align="right">14.474</td>
+<td align="right">19.915</td>
+<td align="left">15.1</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">3</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.464</td>
+<td align="right">0.330</td>
+<td align="right">2.328</td>
+<td align="right">2.658</td>
+<td align="left">2.5</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">5</td>
+<td align="left">richness</td>
+<td align="right">65.000</td>
+<td align="right">7.000</td>
+<td align="right">59.000</td>
+<td align="right">66.000</td>
+<td align="left">65.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">5</td>
+<td align="left">neutral</td>
+<td align="right">25.555</td>
+<td align="right">15.154</td>
+<td align="right">15.829</td>
+<td align="right">30.983</td>
+<td align="left">25.6</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">5</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.899</td>
+<td align="right">0.371</td>
+<td align="right">2.839</td>
+<td align="right">3.209</td>
+<td align="left">2.9</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">7</td>
+<td align="left">richness</td>
+<td align="right">75.000</td>
+<td align="right">3.000</td>
+<td align="right">73.000</td>
+<td align="right">76.000</td>
+<td align="left">75.0</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">7</td>
+<td align="left">neutral</td>
+<td align="right">31.333</td>
+<td align="right">16.407</td>
+<td align="right">22.160</td>
+<td align="right">38.567</td>
+<td align="left">31.3</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">7</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.215</td>
+<td align="right">0.353</td>
+<td align="right">2.936</td>
+<td align="right">3.289</td>
+<td align="left">3.2</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">14</td>
+<td align="left">richness</td>
+<td align="right">94.000</td>
+<td align="right">1.000</td>
+<td align="right">93.500</td>
+<td align="right">94.500</td>
+<td align="left">94.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">14</td>
+<td align="left">neutral</td>
+<td align="right">43.767</td>
+<td align="right">4.434</td>
+<td align="right">42.667</td>
+<td align="right">47.101</td>
+<td align="left">43.8</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">14</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.418</td>
+<td align="right">0.136</td>
+<td align="right">3.416</td>
+<td align="right">3.552</td>
+<td align="left">3.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">0</td>
+<td align="left">richness</td>
+<td align="right">48.000</td>
+<td align="right">9.000</td>
+<td align="right">47.000</td>
+<td align="right">56.000</td>
+<td align="left">48.0</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">0</td>
+<td align="left">neutral</td>
+<td align="right">21.117</td>
+<td align="right">1.799</td>
+<td align="right">19.734</td>
+<td align="right">21.533</td>
+<td align="left">21.1</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">0</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.827</td>
+<td align="right">0.085</td>
+<td align="right">2.813</td>
+<td align="right">2.898</td>
+<td align="left">2.8</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">3</td>
+<td align="left">richness</td>
+<td align="right">59.000</td>
+<td align="right">19.000</td>
+<td align="right">49.000</td>
+<td align="right">68.000</td>
+<td align="left">59.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">3</td>
+<td align="left">neutral</td>
+<td align="right">23.447</td>
+<td align="right">7.133</td>
+<td align="right">19.679</td>
+<td align="right">26.812</td>
+<td align="left">23.4</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">3</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.657</td>
+<td align="right">0.444</td>
+<td align="right">2.506</td>
+<td align="right">2.950</td>
+<td align="left">2.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">5</td>
+<td align="left">richness</td>
+<td align="right">74.000</td>
+<td align="right">4.000</td>
+<td align="right">71.000</td>
+<td align="right">75.000</td>
+<td align="left">74.0</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">5</td>
+<td align="left">neutral</td>
+<td align="right">35.187</td>
+<td align="right">4.296</td>
+<td align="right">30.926</td>
+<td align="right">35.223</td>
+<td align="left">35.2</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">5</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.234</td>
+<td align="right">0.045</td>
+<td align="right">3.223</td>
+<td align="right">3.268</td>
+<td align="left">3.2</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">7</td>
+<td align="left">richness</td>
+<td align="right">32.000</td>
+<td align="right">15.000</td>
+<td align="right">18.000</td>
+<td align="right">33.000</td>
+<td align="left">32.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">7</td>
+<td align="left">neutral</td>
+<td align="right">12.785</td>
+<td align="right">3.696</td>
+<td align="right">9.948</td>
+<td align="right">13.645</td>
+<td align="left">12.8</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">7</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.407</td>
+<td align="right">0.341</td>
+<td align="right">2.188</td>
+<td align="right">2.529</td>
+<td align="left">2.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">14</td>
+<td align="left">richness</td>
+<td align="right">94.000</td>
+<td align="right">27.500</td>
+<td align="right">73.500</td>
+<td align="right">101.000</td>
+<td align="left">94.0</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">14</td>
+<td align="left">neutral</td>
+<td align="right">32.205</td>
+<td align="right">9.059</td>
+<td align="right">26.888</td>
+<td align="right">35.948</td>
+<td align="left">32.2</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">14</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.358</td>
+<td align="right">0.186</td>
+<td align="right">3.186</td>
+<td align="right">3.372</td>
+<td align="left">3.4</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb149-1"><a href="alpha-diversity-analysis.html#cb149-1" tabindex="-1"></a><span class="co"># Create boxplot showing alpha diversity metrics over time for layers</span></span>
+<span id="cb149-2"><a href="alpha-diversity-analysis.html#cb149-2" tabindex="-1"></a>plot_alpha_div_layer <span class="ot">&lt;-</span> tidy_plot_alpha_diversity_genomes_macro <span class="sc">%&gt;%</span></span>
+<span id="cb149-3"><a href="alpha-diversity-analysis.html#cb149-3" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb149-4"><a href="alpha-diversity-analysis.html#cb149-4" tabindex="-1"></a>  <span class="fu">filter</span>(filter_level <span class="sc">==</span> <span class="st">&#39;filtered_30&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb149-5"><a href="alpha-diversity-analysis.html#cb149-5" tabindex="-1"></a>  <span class="fu">filter</span>(filter_status <span class="sc">==</span> <span class="st">&quot;Retained by filtering&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># Remove empty samples</span></span>
+<span id="cb149-6"><a href="alpha-diversity-analysis.html#cb149-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> value, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb149-7"><a href="alpha-diversity-analysis.html#cb149-7" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb149-8"><a href="alpha-diversity-analysis.html#cb149-8" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb149-9"><a href="alpha-diversity-analysis.html#cb149-9" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Treatment&quot;</span>,</span>
+<span id="cb149-10"><a href="alpha-diversity-analysis.html#cb149-10" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">names</span>(treatment_colours_bright),</span>
+<span id="cb149-11"><a href="alpha-diversity-analysis.html#cb149-11" tabindex="-1"></a>    <span class="at">values =</span> treatment_colours_bright</span>
+<span id="cb149-12"><a href="alpha-diversity-analysis.html#cb149-12" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb149-13"><a href="alpha-diversity-analysis.html#cb149-13" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb149-14"><a href="alpha-diversity-analysis.html#cb149-14" tabindex="-1"></a>  <span class="fu">facet_nested</span>(metric <span class="sc">~</span> treatment_expl, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;fixed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb149-15"><a href="alpha-diversity-analysis.html#cb149-15" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Days Post Infection&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Alpha diversity value&quot;</span>) <span class="sc">+</span></span>
+<span id="cb149-16"><a href="alpha-diversity-analysis.html#cb149-16" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.15</span>))) <span class="sc">+</span></span>
+<span id="cb149-17"><a href="alpha-diversity-analysis.html#cb149-17" tabindex="-1"></a>  <span class="co"># Add median values as text labels</span></span>
+<span id="cb149-18"><a href="alpha-diversity-analysis.html#cb149-18" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb149-19"><a href="alpha-diversity-analysis.html#cb149-19" tabindex="-1"></a>    <span class="at">data =</span> summary_stats_layer,</span>
+<span id="cb149-20"><a href="alpha-diversity-analysis.html#cb149-20" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> median, <span class="at">label =</span> label_txt),</span>
+<span id="cb149-21"><a href="alpha-diversity-analysis.html#cb149-21" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb149-22"><a href="alpha-diversity-analysis.html#cb149-22" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">3.0</span>,</span>
+<span id="cb149-23"><a href="alpha-diversity-analysis.html#cb149-23" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb149-24"><a href="alpha-diversity-analysis.html#cb149-24" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb149-25"><a href="alpha-diversity-analysis.html#cb149-25" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">y =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb149-26"><a href="alpha-diversity-analysis.html#cb149-26" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb149-27"><a href="alpha-diversity-analysis.html#cb149-27" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb149-28"><a href="alpha-diversity-analysis.html#cb149-28" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb149-29"><a href="alpha-diversity-analysis.html#cb149-29" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb149-30"><a href="alpha-diversity-analysis.html#cb149-30" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Layers: Alpha diversity - 30% coverage filter&quot;</span>)</span>
+<span id="cb149-31"><a href="alpha-diversity-analysis.html#cb149-31" tabindex="-1"></a></span>
+<span id="cb149-32"><a href="alpha-diversity-analysis.html#cb149-32" tabindex="-1"></a><span class="co"># Display the plot (commented out - used in combined plot)</span></span>
+<span id="cb149-33"><a href="alpha-diversity-analysis.html#cb149-33" tabindex="-1"></a><span class="co"># plot_alpha_div_layer</span></span></code></pre></div>
+</div>
+<div id="broilers---alpha-diversity" class="section level3 hasAnchor" number="9.2.2">
+<h3><span class="header-section-number">9.2.2</span> Broilers - Alpha Diversity<a href="alpha-diversity-analysis.html#broilers---alpha-diversity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb150-1"><a href="alpha-diversity-analysis.html#cb150-1" tabindex="-1"></a><span class="co"># Calculate summary statistics for alpha diversity metrics by treatment, age, and metric</span></span>
+<span id="cb150-2"><a href="alpha-diversity-analysis.html#cb150-2" tabindex="-1"></a>var <span class="ot">&lt;-</span> <span class="st">&quot;value&quot;</span></span>
+<span id="cb150-3"><a href="alpha-diversity-analysis.html#cb150-3" tabindex="-1"></a>summary_stats_broiler <span class="ot">&lt;-</span> tidy_plot_alpha_diversity_genomes_macro <span class="sc">%&gt;%</span></span>
+<span id="cb150-4"><a href="alpha-diversity-analysis.html#cb150-4" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb150-5"><a href="alpha-diversity-analysis.html#cb150-5" tabindex="-1"></a>  <span class="fu">filter</span>(filter_level <span class="sc">==</span> <span class="st">&#39;filtered_30&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb150-6"><a href="alpha-diversity-analysis.html#cb150-6" tabindex="-1"></a>  <span class="fu">filter</span>(filter_status <span class="sc">==</span> <span class="st">&quot;Retained by filtering&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># Remove empty samples</span></span>
+<span id="cb150-7"><a href="alpha-diversity-analysis.html#cb150-7" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment_expl, age, metric) <span class="sc">%&gt;%</span></span>
+<span id="cb150-8"><a href="alpha-diversity-analysis.html#cb150-8" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb150-9"><a href="alpha-diversity-analysis.html#cb150-9" tabindex="-1"></a>    <span class="at">median =</span> <span class="fu">median</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb150-10"><a href="alpha-diversity-analysis.html#cb150-10" tabindex="-1"></a>    <span class="at">IQR    =</span> <span class="fu">IQR</span>(.data[[var]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb150-11"><a href="alpha-diversity-analysis.html#cb150-11" tabindex="-1"></a>    <span class="at">Q1     =</span> <span class="fu">quantile</span>(.data[[var]], <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb150-12"><a href="alpha-diversity-analysis.html#cb150-12" tabindex="-1"></a>    <span class="at">Q3     =</span> <span class="fu">quantile</span>(.data[[var]], <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb150-13"><a href="alpha-diversity-analysis.html#cb150-13" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
+<span id="cb150-14"><a href="alpha-diversity-analysis.html#cb150-14" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb150-15"><a href="alpha-diversity-analysis.html#cb150-15" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label_txt =</span> <span class="fu">formatC</span>(median, <span class="at">format =</span> <span class="st">&quot;f&quot;</span>, <span class="at">digits =</span> <span class="dv">1</span>))</span>
+<span id="cb150-16"><a href="alpha-diversity-analysis.html#cb150-16" tabindex="-1"></a></span>
+<span id="cb150-17"><a href="alpha-diversity-analysis.html#cb150-17" tabindex="-1"></a><span class="co"># Display summary statistics table</span></span>
+<span id="cb150-18"><a href="alpha-diversity-analysis.html#cb150-18" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(summary_stats_broiler, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">caption =</span> <span class="st">&quot;Summary statistics (median and IQR) for alpha diversity metrics in broilers&quot;</span>)</span></code></pre></div>
+<table style="width:100%;">
+<caption>(#tab:alpha_diversity_broiler_stats)Summary statistics (median and IQR) for alpha diversity metrics in broilers</caption>
+<colgroup>
+<col width="25%" />
+<col width="5%" />
+<col width="16%" />
+<col width="10%" />
+<col width="8%" />
+<col width="10%" />
+<col width="10%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">treatment_expl</th>
+<th align="left">age</th>
+<th align="left">metric</th>
+<th align="right">median</th>
+<th align="right">IQR</th>
+<th align="right">Q1</th>
+<th align="right">Q3</th>
+<th align="left">label_txt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">0</td>
+<td align="left">richness</td>
+<td align="right">67.000</td>
+<td align="right">9.000</td>
+<td align="right">64.000</td>
+<td align="right">73.000</td>
+<td align="left">67.0</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">0</td>
+<td align="left">neutral</td>
+<td align="right">32.740</td>
+<td align="right">6.619</td>
+<td align="right">28.204</td>
+<td align="right">34.822</td>
+<td align="left">32.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">0</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.806</td>
+<td align="right">0.229</td>
+<td align="right">2.665</td>
+<td align="right">2.894</td>
+<td align="left">2.8</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">3</td>
+<td align="left">richness</td>
+<td align="right">87.000</td>
+<td align="right">14.000</td>
+<td align="right">77.000</td>
+<td align="right">91.000</td>
+<td align="left">87.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">3</td>
+<td align="left">neutral</td>
+<td align="right">41.261</td>
+<td align="right">13.024</td>
+<td align="right">33.612</td>
+<td align="right">46.636</td>
+<td align="left">41.3</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">3</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.952</td>
+<td align="right">0.285</td>
+<td align="right">2.778</td>
+<td align="right">3.063</td>
+<td align="left">3.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">5</td>
+<td align="left">richness</td>
+<td align="right">89.000</td>
+<td align="right">9.000</td>
+<td align="right">87.000</td>
+<td align="right">96.000</td>
+<td align="left">89.0</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">5</td>
+<td align="left">neutral</td>
+<td align="right">37.313</td>
+<td align="right">1.745</td>
+<td align="right">35.925</td>
+<td align="right">37.669</td>
+<td align="left">37.3</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">5</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.953</td>
+<td align="right">0.100</td>
+<td align="right">2.925</td>
+<td align="right">3.025</td>
+<td align="left">3.0</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">7</td>
+<td align="left">richness</td>
+<td align="right">92.000</td>
+<td align="right">22.000</td>
+<td align="right">77.000</td>
+<td align="right">99.000</td>
+<td align="left">92.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">7</td>
+<td align="left">neutral</td>
+<td align="right">37.648</td>
+<td align="right">12.233</td>
+<td align="right">36.310</td>
+<td align="right">48.543</td>
+<td align="left">37.6</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">7</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.868</td>
+<td align="right">0.081</td>
+<td align="right">2.815</td>
+<td align="right">2.896</td>
+<td align="left">2.9</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">14</td>
+<td align="left">richness</td>
+<td align="right">103.000</td>
+<td align="right">6.000</td>
+<td align="right">101.000</td>
+<td align="right">107.000</td>
+<td align="left">103.0</td>
+</tr>
+<tr class="even">
+<td align="left">Control</td>
+<td align="left">14</td>
+<td align="left">neutral</td>
+<td align="right">41.396</td>
+<td align="right">7.419</td>
+<td align="right">37.936</td>
+<td align="right">45.355</td>
+<td align="left">41.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Control</td>
+<td align="left">14</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.251</td>
+<td align="right">0.141</td>
+<td align="right">3.126</td>
+<td align="right">3.267</td>
+<td align="left">3.3</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">0</td>
+<td align="left">richness</td>
+<td align="right">87.000</td>
+<td align="right">6.000</td>
+<td align="right">82.000</td>
+<td align="right">88.000</td>
+<td align="left">87.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">0</td>
+<td align="left">neutral</td>
+<td align="right">34.151</td>
+<td align="right">5.778</td>
+<td align="right">33.950</td>
+<td align="right">39.728</td>
+<td align="left">34.2</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">0</td>
+<td align="left">phylogenetic</td>
+<td align="right">2.833</td>
+<td align="right">0.230</td>
+<td align="right">2.680</td>
+<td align="right">2.910</td>
+<td align="left">2.8</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">3</td>
+<td align="left">richness</td>
+<td align="right">87.000</td>
+<td align="right">5.000</td>
+<td align="right">86.000</td>
+<td align="right">91.000</td>
+<td align="left">87.0</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">3</td>
+<td align="left">neutral</td>
+<td align="right">39.705</td>
+<td align="right">2.764</td>
+<td align="right">38.561</td>
+<td align="right">41.325</td>
+<td align="left">39.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">3</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.242</td>
+<td align="right">0.176</td>
+<td align="right">3.099</td>
+<td align="right">3.274</td>
+<td align="left">3.2</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">5</td>
+<td align="left">richness</td>
+<td align="right">106.000</td>
+<td align="right">7.000</td>
+<td align="right">101.000</td>
+<td align="right">108.000</td>
+<td align="left">106.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">5</td>
+<td align="left">neutral</td>
+<td align="right">46.319</td>
+<td align="right">8.434</td>
+<td align="right">40.774</td>
+<td align="right">49.208</td>
+<td align="left">46.3</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">5</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.358</td>
+<td align="right">0.096</td>
+<td align="right">3.298</td>
+<td align="right">3.393</td>
+<td align="left">3.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">7</td>
+<td align="left">richness</td>
+<td align="right">111.000</td>
+<td align="right">14.000</td>
+<td align="right">106.000</td>
+<td align="right">120.000</td>
+<td align="left">111.0</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">7</td>
+<td align="left">neutral</td>
+<td align="right">44.249</td>
+<td align="right">6.717</td>
+<td align="right">39.427</td>
+<td align="right">46.144</td>
+<td align="left">44.2</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">7</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.492</td>
+<td align="right">0.135</td>
+<td align="right">3.404</td>
+<td align="right">3.539</td>
+<td align="left">3.5</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">14</td>
+<td align="left">richness</td>
+<td align="right">108.000</td>
+<td align="right">15.000</td>
+<td align="right">106.000</td>
+<td align="right">121.000</td>
+<td align="left">108.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">14</td>
+<td align="left">neutral</td>
+<td align="right">26.992</td>
+<td align="right">11.555</td>
+<td align="right">25.777</td>
+<td align="right">37.332</td>
+<td align="left">27.0</td>
+</tr>
+<tr class="even">
+<td align="left">Disruption&amp;Pathogen</td>
+<td align="left">14</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.510</td>
+<td align="right">0.146</td>
+<td align="right">3.388</td>
+<td align="right">3.534</td>
+<td align="left">3.5</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">0</td>
+<td align="left">richness</td>
+<td align="right">94.000</td>
+<td align="right">15.000</td>
+<td align="right">94.000</td>
+<td align="right">109.000</td>
+<td align="left">94.0</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">0</td>
+<td align="left">neutral</td>
+<td align="right">36.391</td>
+<td align="right">7.752</td>
+<td align="right">32.702</td>
+<td align="right">40.454</td>
+<td align="left">36.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">0</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.286</td>
+<td align="right">0.165</td>
+<td align="right">3.147</td>
+<td align="right">3.311</td>
+<td align="left">3.3</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">3</td>
+<td align="left">richness</td>
+<td align="right">99.000</td>
+<td align="right">18.000</td>
+<td align="right">89.000</td>
+<td align="right">107.000</td>
+<td align="left">99.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">3</td>
+<td align="left">neutral</td>
+<td align="right">35.836</td>
+<td align="right">7.711</td>
+<td align="right">29.498</td>
+<td align="right">37.208</td>
+<td align="left">35.8</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">3</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.431</td>
+<td align="right">0.503</td>
+<td align="right">2.992</td>
+<td align="right">3.495</td>
+<td align="left">3.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">5</td>
+<td align="left">richness</td>
+<td align="right">106.000</td>
+<td align="right">12.000</td>
+<td align="right">100.000</td>
+<td align="right">112.000</td>
+<td align="left">106.0</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">5</td>
+<td align="left">neutral</td>
+<td align="right">46.431</td>
+<td align="right">0.719</td>
+<td align="right">45.809</td>
+<td align="right">46.528</td>
+<td align="left">46.4</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">5</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.703</td>
+<td align="right">0.271</td>
+<td align="right">3.450</td>
+<td align="right">3.722</td>
+<td align="left">3.7</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">7</td>
+<td align="left">richness</td>
+<td align="right">111.000</td>
+<td align="right">10.000</td>
+<td align="right">109.000</td>
+<td align="right">119.000</td>
+<td align="left">111.0</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">7</td>
+<td align="left">neutral</td>
+<td align="right">46.888</td>
+<td align="right">3.873</td>
+<td align="right">44.072</td>
+<td align="right">47.946</td>
+<td align="left">46.9</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">7</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.569</td>
+<td align="right">0.177</td>
+<td align="right">3.534</td>
+<td align="right">3.711</td>
+<td align="left">3.6</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">14</td>
+<td align="left">richness</td>
+<td align="right">114.000</td>
+<td align="right">14.000</td>
+<td align="right">113.000</td>
+<td align="right">127.000</td>
+<td align="left">114.0</td>
+</tr>
+<tr class="even">
+<td align="left">Pathogen</td>
+<td align="left">14</td>
+<td align="left">neutral</td>
+<td align="right">46.740</td>
+<td align="right">18.788</td>
+<td align="right">36.132</td>
+<td align="right">54.920</td>
+<td align="left">46.7</td>
+</tr>
+<tr class="odd">
+<td align="left">Pathogen</td>
+<td align="left">14</td>
+<td align="left">phylogenetic</td>
+<td align="right">3.504</td>
+<td align="right">0.284</td>
+<td align="right">3.311</td>
+<td align="right">3.595</td>
+<td align="left">3.5</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb151-1"><a href="alpha-diversity-analysis.html#cb151-1" tabindex="-1"></a><span class="co"># Create boxplot showing alpha diversity metrics over time for broilers</span></span>
+<span id="cb151-2"><a href="alpha-diversity-analysis.html#cb151-2" tabindex="-1"></a>plot_alpha_div_broiler <span class="ot">&lt;-</span> tidy_plot_alpha_diversity_genomes_macro <span class="sc">%&gt;%</span></span>
+<span id="cb151-3"><a href="alpha-diversity-analysis.html#cb151-3" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;broiler&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb151-4"><a href="alpha-diversity-analysis.html#cb151-4" tabindex="-1"></a>  <span class="fu">filter</span>(filter_level <span class="sc">==</span> <span class="st">&#39;filtered_30&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb151-5"><a href="alpha-diversity-analysis.html#cb151-5" tabindex="-1"></a>  <span class="fu">filter</span>(filter_status <span class="sc">==</span> <span class="st">&quot;Retained by filtering&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># Remove empty samples</span></span>
+<span id="cb151-6"><a href="alpha-diversity-analysis.html#cb151-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> value, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb151-7"><a href="alpha-diversity-analysis.html#cb151-7" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb151-8"><a href="alpha-diversity-analysis.html#cb151-8" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb151-9"><a href="alpha-diversity-analysis.html#cb151-9" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Treatment&quot;</span>,</span>
+<span id="cb151-10"><a href="alpha-diversity-analysis.html#cb151-10" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">names</span>(treatment_colours_bright),</span>
+<span id="cb151-11"><a href="alpha-diversity-analysis.html#cb151-11" tabindex="-1"></a>    <span class="at">values =</span> treatment_colours_bright</span>
+<span id="cb151-12"><a href="alpha-diversity-analysis.html#cb151-12" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb151-13"><a href="alpha-diversity-analysis.html#cb151-13" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb151-14"><a href="alpha-diversity-analysis.html#cb151-14" tabindex="-1"></a>  <span class="fu">facet_nested</span>(metric <span class="sc">~</span> treatment_expl, <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;fixed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb151-15"><a href="alpha-diversity-analysis.html#cb151-15" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Days Post Infection&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Alpha diversity value&quot;</span>) <span class="sc">+</span></span>
+<span id="cb151-16"><a href="alpha-diversity-analysis.html#cb151-16" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.15</span>))) <span class="sc">+</span></span>
+<span id="cb151-17"><a href="alpha-diversity-analysis.html#cb151-17" tabindex="-1"></a>  <span class="co"># Add median values as text labels</span></span>
+<span id="cb151-18"><a href="alpha-diversity-analysis.html#cb151-18" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb151-19"><a href="alpha-diversity-analysis.html#cb151-19" tabindex="-1"></a>    <span class="at">data =</span> summary_stats_broiler,</span>
+<span id="cb151-20"><a href="alpha-diversity-analysis.html#cb151-20" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> median, <span class="at">label =</span> label_txt),</span>
+<span id="cb151-21"><a href="alpha-diversity-analysis.html#cb151-21" tabindex="-1"></a>    <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb151-22"><a href="alpha-diversity-analysis.html#cb151-22" tabindex="-1"></a>    <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">3.0</span>,</span>
+<span id="cb151-23"><a href="alpha-diversity-analysis.html#cb151-23" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span></span>
+<span id="cb151-24"><a href="alpha-diversity-analysis.html#cb151-24" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb151-25"><a href="alpha-diversity-analysis.html#cb151-25" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">y =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb151-26"><a href="alpha-diversity-analysis.html#cb151-26" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb151-27"><a href="alpha-diversity-analysis.html#cb151-27" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb151-28"><a href="alpha-diversity-analysis.html#cb151-28" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb151-29"><a href="alpha-diversity-analysis.html#cb151-29" tabindex="-1"></a>        <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb151-30"><a href="alpha-diversity-analysis.html#cb151-30" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Broilers: Alpha diversity - 30% coverage filter&quot;</span>)</span>
+<span id="cb151-31"><a href="alpha-diversity-analysis.html#cb151-31" tabindex="-1"></a></span>
+<span id="cb151-32"><a href="alpha-diversity-analysis.html#cb151-32" tabindex="-1"></a><span class="co"># Display the plot (commented out - used in combined plot)</span></span>
+<span id="cb151-33"><a href="alpha-diversity-analysis.html#cb151-33" tabindex="-1"></a><span class="co"># plot_alpha_div_broiler</span></span></code></pre></div>
+</div>
+<div id="combined-visualization-4" class="section level3 hasAnchor" number="9.2.3">
+<h3><span class="header-section-number">9.2.3</span> Combined Visualization<a href="alpha-diversity-analysis.html#combined-visualization-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb152-1"><a href="alpha-diversity-analysis.html#cb152-1" tabindex="-1"></a><span class="co"># Adjust theme for side-by-side display (remove duplicate y-axis labels)</span></span>
+<span id="cb152-2"><a href="alpha-diversity-analysis.html#cb152-2" tabindex="-1"></a>plot_alpha_div_layer <span class="ot">&lt;-</span> plot_alpha_div_layer <span class="sc">+</span></span>
+<span id="cb152-3"><a href="alpha-diversity-analysis.html#cb152-3" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb152-4"><a href="alpha-diversity-analysis.html#cb152-4" tabindex="-1"></a>    <span class="at">strip.background.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb152-5"><a href="alpha-diversity-analysis.html#cb152-5" tabindex="-1"></a>    <span class="at">strip.text.y.right =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb152-6"><a href="alpha-diversity-analysis.html#cb152-6" tabindex="-1"></a>  )</span>
+<span id="cb152-7"><a href="alpha-diversity-analysis.html#cb152-7" tabindex="-1"></a></span>
+<span id="cb152-8"><a href="alpha-diversity-analysis.html#cb152-8" tabindex="-1"></a><span class="co"># Combine both plots side-by-side</span></span>
+<span id="cb152-9"><a href="alpha-diversity-analysis.html#cb152-9" tabindex="-1"></a>(plot_alpha_div_layer <span class="sc">|</span> plot_alpha_div_broiler) <span class="sc">+</span> </span>
+<span id="cb152-10"><a href="alpha-diversity-analysis.html#cb152-10" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">&#39;a&#39;</span>) <span class="sc">&amp;</span></span>
+<span id="cb152-11"><a href="alpha-diversity-analysis.html#cb152-11" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>, <span class="at">legend.box =</span> <span class="st">&quot;vertical&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/alpha_diversity_combined-1.png" width="1152" /></p>
+</div>
+</div>
+<div id="detailed-alpha-diversity---layers-with-animal-labels" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> Detailed Alpha Diversity - Layers with Animal Labels<a href="alpha-diversity-analysis.html#detailed-alpha-diversity---layers-with-animal-labels" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb153-1"><a href="alpha-diversity-analysis.html#cb153-1" tabindex="-1"></a><span class="co"># Create detailed plot showing individual animals labeled for layers</span></span>
+<span id="cb153-2"><a href="alpha-diversity-analysis.html#cb153-2" tabindex="-1"></a><span class="co"># This plot uses the neutral (Shannon) diversity metric</span></span>
+<span id="cb153-3"><a href="alpha-diversity-analysis.html#cb153-3" tabindex="-1"></a>tidy_plot_alpha_diversity_genomes_macro <span class="sc">%&gt;%</span></span>
+<span id="cb153-4"><a href="alpha-diversity-analysis.html#cb153-4" tabindex="-1"></a>  <span class="fu">filter</span>(animal_breed <span class="sc">==</span> <span class="st">&quot;layer&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb153-5"><a href="alpha-diversity-analysis.html#cb153-5" tabindex="-1"></a>  <span class="fu">filter</span>(filter_level <span class="sc">==</span> <span class="st">&#39;filtered_30&#39;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb153-6"><a href="alpha-diversity-analysis.html#cb153-6" tabindex="-1"></a>  <span class="fu">filter</span>(filter_status <span class="sc">==</span> <span class="st">&quot;Retained by filtering&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># Remove empty samples</span></span>
+<span id="cb153-7"><a href="alpha-diversity-analysis.html#cb153-7" tabindex="-1"></a>  <span class="fu">filter</span>(metric <span class="sc">==</span> <span class="st">&quot;neutral&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb153-8"><a href="alpha-diversity-analysis.html#cb153-8" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> value, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
+<span id="cb153-9"><a href="alpha-diversity-analysis.html#cb153-9" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb153-10"><a href="alpha-diversity-analysis.html#cb153-10" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb153-11"><a href="alpha-diversity-analysis.html#cb153-11" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;Treatment&quot;</span>,</span>
+<span id="cb153-12"><a href="alpha-diversity-analysis.html#cb153-12" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">names</span>(treatment_colours_bright),</span>
+<span id="cb153-13"><a href="alpha-diversity-analysis.html#cb153-13" tabindex="-1"></a>    <span class="at">values =</span> treatment_colours_bright</span>
+<span id="cb153-14"><a href="alpha-diversity-analysis.html#cb153-14" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb153-15"><a href="alpha-diversity-analysis.html#cb153-15" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.3</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb153-16"><a href="alpha-diversity-analysis.html#cb153-16" tabindex="-1"></a>  <span class="fu">facet_nested</span>(treatment_expl <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">&quot;free&quot;</span>, <span class="at">space =</span> <span class="st">&quot;fixed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb153-17"><a href="alpha-diversity-analysis.html#cb153-17" tabindex="-1"></a>  <span class="co"># Add animal labels to individual points</span></span>
+<span id="cb153-18"><a href="alpha-diversity-analysis.html#cb153-18" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb153-19"><a href="alpha-diversity-analysis.html#cb153-19" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> animal), </span>
+<span id="cb153-20"><a href="alpha-diversity-analysis.html#cb153-20" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">height =</span> <span class="dv">0</span>), </span>
+<span id="cb153-21"><a href="alpha-diversity-analysis.html#cb153-21" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">check_overlap =</span> <span class="cn">FALSE</span></span>
+<span id="cb153-22"><a href="alpha-diversity-analysis.html#cb153-22" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb153-23"><a href="alpha-diversity-analysis.html#cb153-23" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">y =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb153-24"><a href="alpha-diversity-analysis.html#cb153-24" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb153-25"><a href="alpha-diversity-analysis.html#cb153-25" tabindex="-1"></a>  custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb153-26"><a href="alpha-diversity-analysis.html#cb153-26" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb153-27"><a href="alpha-diversity-analysis.html#cb153-27" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Alpha diversity - neutral - 30% coverage filtering level - LAYERS&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/alpha_diversity_layer_detailed-1.png" width="960" /></p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb154-1"><a href="alpha-diversity-analysis.html#cb154-1" tabindex="-1"></a><span class="co"># Display the plot</span></span></code></pre></div>
+</div>
+<div id="relationship-between-genome-length-and-alpha-diversity" class="section level2 hasAnchor" number="9.4">
+<h2><span class="header-section-number">9.4</span> Relationship Between Genome Length and Alpha Diversity<a href="alpha-diversity-analysis.html#relationship-between-genome-length-and-alpha-diversity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This section explores the relationship between median genome length per sample and alpha diversity (richness).</p>
+<div id="prepare-data-calculate-median-genome-length" class="section level3 hasAnchor" number="9.4.1">
+<h3><span class="header-section-number">9.4.1</span> Prepare Data: Calculate Median Genome Length<a href="alpha-diversity-analysis.html#prepare-data-calculate-median-genome-length" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb155-1"><a href="alpha-diversity-analysis.html#cb155-1" tabindex="-1"></a><span class="co"># Calculate median genome length per sample</span></span>
+<span id="cb155-2"><a href="alpha-diversity-analysis.html#cb155-2" tabindex="-1"></a><span class="co"># First, remove zero-count entries to get accurate length calculations</span></span>
+<span id="cb155-3"><a href="alpha-diversity-analysis.html#cb155-3" tabindex="-1"></a>tidy_plot_genome_counts_filt_30_macro_closed_zerosrem <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb155-4"><a href="alpha-diversity-analysis.html#cb155-4" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb155-5"><a href="alpha-diversity-analysis.html#cb155-5" tabindex="-1"></a></span>
+<span id="cb155-6"><a href="alpha-diversity-analysis.html#cb155-6" tabindex="-1"></a><span class="co"># Calculate median genome length for each sample</span></span>
+<span id="cb155-7"><a href="alpha-diversity-analysis.html#cb155-7" tabindex="-1"></a>median_lengths <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed_zerosrem <span class="sc">%&gt;%</span></span>
+<span id="cb155-8"><a href="alpha-diversity-analysis.html#cb155-8" tabindex="-1"></a>  <span class="fu">group_by</span>(microsample) <span class="sc">%&gt;%</span></span>
+<span id="cb155-9"><a href="alpha-diversity-analysis.html#cb155-9" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">median_genome_length =</span> <span class="fu">median</span>(length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
+<span id="cb155-10"><a href="alpha-diversity-analysis.html#cb155-10" tabindex="-1"></a></span>
+<span id="cb155-11"><a href="alpha-diversity-analysis.html#cb155-11" tabindex="-1"></a><span class="co"># Join median lengths with alpha diversity data</span></span>
+<span id="cb155-12"><a href="alpha-diversity-analysis.html#cb155-12" tabindex="-1"></a>alpha_div_macro_filtered_30_gen_length <span class="ot">&lt;-</span> alpha_div_macro_filtered_30 <span class="sc">%&gt;%</span></span>
+<span id="cb155-13"><a href="alpha-diversity-analysis.html#cb155-13" tabindex="-1"></a>  <span class="fu">left_join</span>(median_lengths, <span class="at">by =</span> <span class="fu">join_by</span>(microsample <span class="sc">==</span> microsample)) <span class="sc">%&gt;%</span></span>
+<span id="cb155-14"><a href="alpha-diversity-analysis.html#cb155-14" tabindex="-1"></a>  <span class="fu">left_join</span>(sample_metadata_macro, <span class="at">by =</span> <span class="fu">join_by</span>(microsample <span class="sc">==</span> sample))</span></code></pre></div>
+</div>
+<div id="visualize-relationship-linear-model" class="section level3 hasAnchor" number="9.4.2">
+<h3><span class="header-section-number">9.4.2</span> Visualize Relationship: Linear Model<a href="alpha-diversity-analysis.html#visualize-relationship-linear-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb156-1"><a href="alpha-diversity-analysis.html#cb156-1" tabindex="-1"></a><span class="co"># Create scatter plot showing relationship between median genome length and richness</span></span>
+<span id="cb156-2"><a href="alpha-diversity-analysis.html#cb156-2" tabindex="-1"></a><span class="co"># Points colored by treatment, shaped by days post-infection</span></span>
+<span id="cb156-3"><a href="alpha-diversity-analysis.html#cb156-3" tabindex="-1"></a>alpha_div_macro_filtered_30_gen_length <span class="sc">%&gt;%</span></span>
+<span id="cb156-4"><a href="alpha-diversity-analysis.html#cb156-4" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>) <span class="sc">%&gt;%</span>  <span class="co"># Exclude negative controls</span></span>
+<span id="cb156-5"><a href="alpha-diversity-analysis.html#cb156-5" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> median_genome_length, <span class="at">y =</span> richness, <span class="at">color =</span> treatment, <span class="at">shape =</span> <span class="fu">factor</span>(age))) <span class="sc">+</span></span>
+<span id="cb156-6"><a href="alpha-diversity-analysis.html#cb156-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb156-7"><a href="alpha-diversity-analysis.html#cb156-7" tabindex="-1"></a>  <span class="co"># Add linear regression line with confidence interval</span></span>
+<span id="cb156-8"><a href="alpha-diversity-analysis.html#cb156-8" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>), <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb156-9"><a href="alpha-diversity-analysis.html#cb156-9" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> treatment_colours_bright, <span class="at">name =</span> <span class="st">&quot;Treatment&quot;</span>) <span class="sc">+</span></span>
+<span id="cb156-10"><a href="alpha-diversity-analysis.html#cb156-10" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(</span>
+<span id="cb156-11"><a href="alpha-diversity-analysis.html#cb156-11" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;DPI&quot;</span>,</span>
+<span id="cb156-12"><a href="alpha-diversity-analysis.html#cb156-12" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="dv">16</span>, <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="dv">15</span>, <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="dv">18</span>, <span class="st">&quot;14&quot;</span> <span class="ot">=</span> <span class="dv">4</span>)</span>
+<span id="cb156-13"><a href="alpha-diversity-analysis.html#cb156-13" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb156-14"><a href="alpha-diversity-analysis.html#cb156-14" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Median genome length (bp) per sample&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Richness&quot;</span>) <span class="sc">+</span></span>
+<span id="cb156-15"><a href="alpha-diversity-analysis.html#cb156-15" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">150</span>)) <span class="sc">+</span></span>
+<span id="cb156-16"><a href="alpha-diversity-analysis.html#cb156-16" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb156-17"><a href="alpha-diversity-analysis.html#cb156-17" tabindex="-1"></a>  custom_ggplot_theme</span></code></pre></div>
+<p><img src="_main_files/figure-html/alpha_genome_length_scatter-1.png" width="672" /></p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb157-1"><a href="alpha-diversity-analysis.html#cb157-1" tabindex="-1"></a><span class="co"># Display the plot</span></span></code></pre></div>
+</div>
+<div id="statistical-modeling-negative-binomial-regression" class="section level3 hasAnchor" number="9.4.3">
+<h3><span class="header-section-number">9.4.3</span> Statistical Modeling: Negative Binomial Regression<a href="alpha-diversity-analysis.html#statistical-modeling-negative-binomial-regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb158-1"><a href="alpha-diversity-analysis.html#cb158-1" tabindex="-1"></a><span class="co"># Recalculate median lengths (if needed) and prepare data for modeling</span></span>
+<span id="cb158-2"><a href="alpha-diversity-analysis.html#cb158-2" tabindex="-1"></a>tidy_plot_genome_counts_filt_30_macro_closed_zerosrem <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed <span class="sc">%&gt;%</span></span>
+<span id="cb158-3"><a href="alpha-diversity-analysis.html#cb158-3" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb158-4"><a href="alpha-diversity-analysis.html#cb158-4" tabindex="-1"></a></span>
+<span id="cb158-5"><a href="alpha-diversity-analysis.html#cb158-5" tabindex="-1"></a>median_lengths <span class="ot">&lt;-</span> tidy_plot_genome_counts_filt_30_macro_closed_zerosrem <span class="sc">%&gt;%</span></span>
+<span id="cb158-6"><a href="alpha-diversity-analysis.html#cb158-6" tabindex="-1"></a>  <span class="fu">group_by</span>(microsample) <span class="sc">%&gt;%</span></span>
+<span id="cb158-7"><a href="alpha-diversity-analysis.html#cb158-7" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">median_genome_length =</span> <span class="fu">median</span>(length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span>)</span>
+<span id="cb158-8"><a href="alpha-diversity-analysis.html#cb158-8" tabindex="-1"></a></span>
+<span id="cb158-9"><a href="alpha-diversity-analysis.html#cb158-9" tabindex="-1"></a><span class="co"># Join with alpha diversity and filter out controls</span></span>
+<span id="cb158-10"><a href="alpha-diversity-analysis.html#cb158-10" tabindex="-1"></a>alpha_div_macro_filtered_30_gen_length <span class="ot">&lt;-</span> alpha_div_macro_filtered_30 <span class="sc">%&gt;%</span></span>
+<span id="cb158-11"><a href="alpha-diversity-analysis.html#cb158-11" tabindex="-1"></a>  <span class="fu">left_join</span>(median_lengths, <span class="at">by =</span> <span class="fu">join_by</span>(microsample <span class="sc">==</span> microsample)) <span class="sc">%&gt;%</span></span>
+<span id="cb158-12"><a href="alpha-diversity-analysis.html#cb158-12" tabindex="-1"></a>  <span class="fu">left_join</span>(sample_metadata_macro, <span class="at">by =</span> <span class="fu">join_by</span>(microsample <span class="sc">==</span> sample)) <span class="sc">%&gt;%</span></span>
+<span id="cb158-13"><a href="alpha-diversity-analysis.html#cb158-13" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">!=</span> <span class="st">&quot;TF0&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb159-1"><a href="alpha-diversity-analysis.html#cb159-1" tabindex="-1"></a><span class="co"># Fit negative binomial regression model (appropriate for count data)</span></span>
+<span id="cb159-2"><a href="alpha-diversity-analysis.html#cb159-2" tabindex="-1"></a>model_nb <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(richness <span class="sc">~</span> median_genome_length, </span>
+<span id="cb159-3"><a href="alpha-diversity-analysis.html#cb159-3" tabindex="-1"></a>                   <span class="at">data =</span> alpha_div_macro_filtered_30_gen_length)</span>
+<span id="cb159-4"><a href="alpha-diversity-analysis.html#cb159-4" tabindex="-1"></a></span>
+<span id="cb159-5"><a href="alpha-diversity-analysis.html#cb159-5" tabindex="-1"></a><span class="co"># Fit null model (intercept only) for comparison</span></span>
+<span id="cb159-6"><a href="alpha-diversity-analysis.html#cb159-6" tabindex="-1"></a>model_null <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(richness <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb159-7"><a href="alpha-diversity-analysis.html#cb159-7" tabindex="-1"></a>                     <span class="at">data =</span> alpha_div_macro_filtered_30_gen_length)</span>
+<span id="cb159-8"><a href="alpha-diversity-analysis.html#cb159-8" tabindex="-1"></a></span>
+<span id="cb159-9"><a href="alpha-diversity-analysis.html#cb159-9" tabindex="-1"></a><span class="co"># Calculate McFadden pseudo-R² (model fit metric)</span></span>
+<span id="cb159-10"><a href="alpha-diversity-analysis.html#cb159-10" tabindex="-1"></a>pseudo_r2 <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> (<span class="fu">logLik</span>(model_nb) <span class="sc">/</span> <span class="fu">logLik</span>(model_null))</span>
+<span id="cb159-11"><a href="alpha-diversity-analysis.html#cb159-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;McFadden pseudo-R² =&quot;</span>, <span class="fu">round</span>(pseudo_r2, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre class="script-output"><code>McFadden pseudo-R² = 0.079 </code></pre>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb161-1"><a href="alpha-diversity-analysis.html#cb161-1" tabindex="-1"></a><span class="co"># Calculate Spearman correlation (non-parametric)</span></span>
+<span id="cb161-2"><a href="alpha-diversity-analysis.html#cb161-2" tabindex="-1"></a>cor_test <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(</span>
+<span id="cb161-3"><a href="alpha-diversity-analysis.html#cb161-3" tabindex="-1"></a>  <span class="sc">~</span> richness <span class="sc">+</span> median_genome_length,</span>
+<span id="cb161-4"><a href="alpha-diversity-analysis.html#cb161-4" tabindex="-1"></a>  <span class="at">data =</span> alpha_div_macro_filtered_30_gen_length,</span>
+<span id="cb161-5"><a href="alpha-diversity-analysis.html#cb161-5" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span></span>
+<span id="cb161-6"><a href="alpha-diversity-analysis.html#cb161-6" tabindex="-1"></a>)</span>
+<span id="cb161-7"><a href="alpha-diversity-analysis.html#cb161-7" tabindex="-1"></a></span>
+<span id="cb161-8"><a href="alpha-diversity-analysis.html#cb161-8" tabindex="-1"></a>rho  <span class="ot">&lt;-</span> cor_test<span class="sc">$</span>estimate</span>
+<span id="cb161-9"><a href="alpha-diversity-analysis.html#cb161-9" tabindex="-1"></a>pval <span class="ot">&lt;-</span> cor_test<span class="sc">$</span>p.value</span>
+<span id="cb161-10"><a href="alpha-diversity-analysis.html#cb161-10" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Spearman correlation (ρ) =&quot;</span>, <span class="fu">round</span>(rho, <span class="dv">3</span>), <span class="st">&quot;, p =&quot;</span>, <span class="fu">signif</span>(pval, <span class="dv">3</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre class="script-output"><code>Spearman correlation (ρ) = -0.696 , p = 3.27e-22 </code></pre>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb163-1"><a href="alpha-diversity-analysis.html#cb163-1" tabindex="-1"></a><span class="co"># Create prediction data frame for model visualization</span></span>
+<span id="cb163-2"><a href="alpha-diversity-analysis.html#cb163-2" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb163-3"><a href="alpha-diversity-analysis.html#cb163-3" tabindex="-1"></a>  <span class="at">median_genome_length =</span> <span class="fu">seq</span>(</span>
+<span id="cb163-4"><a href="alpha-diversity-analysis.html#cb163-4" tabindex="-1"></a>    <span class="fu">min</span>(alpha_div_macro_filtered_30_gen_length<span class="sc">$</span>median_genome_length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb163-5"><a href="alpha-diversity-analysis.html#cb163-5" tabindex="-1"></a>    <span class="fu">max</span>(alpha_div_macro_filtered_30_gen_length<span class="sc">$</span>median_genome_length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb163-6"><a href="alpha-diversity-analysis.html#cb163-6" tabindex="-1"></a>    <span class="at">length.out =</span> <span class="dv">200</span></span>
+<span id="cb163-7"><a href="alpha-diversity-analysis.html#cb163-7" tabindex="-1"></a>  )</span>
+<span id="cb163-8"><a href="alpha-diversity-analysis.html#cb163-8" tabindex="-1"></a>)</span>
+<span id="cb163-9"><a href="alpha-diversity-analysis.html#cb163-9" tabindex="-1"></a></span>
+<span id="cb163-10"><a href="alpha-diversity-analysis.html#cb163-10" tabindex="-1"></a><span class="co"># Get predictions and standard errors on link scale</span></span>
+<span id="cb163-11"><a href="alpha-diversity-analysis.html#cb163-11" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_nb, newdata, <span class="at">type =</span> <span class="st">&quot;link&quot;</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb163-12"><a href="alpha-diversity-analysis.html#cb163-12" tabindex="-1"></a></span>
+<span id="cb163-13"><a href="alpha-diversity-analysis.html#cb163-13" tabindex="-1"></a><span class="co"># Back-transform predictions to response scale and calculate 95% confidence intervals</span></span>
+<span id="cb163-14"><a href="alpha-diversity-analysis.html#cb163-14" tabindex="-1"></a>newdata<span class="sc">$</span>fit <span class="ot">&lt;-</span> <span class="fu">exp</span>(pred<span class="sc">$</span>fit)</span>
+<span id="cb163-15"><a href="alpha-diversity-analysis.html#cb163-15" tabindex="-1"></a>newdata<span class="sc">$</span>lwr <span class="ot">&lt;-</span> <span class="fu">exp</span>(pred<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> pred<span class="sc">$</span>se.fit)   <span class="co"># Lower 95% CI</span></span>
+<span id="cb163-16"><a href="alpha-diversity-analysis.html#cb163-16" tabindex="-1"></a>newdata<span class="sc">$</span>upr <span class="ot">&lt;-</span> <span class="fu">exp</span>(pred<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> pred<span class="sc">$</span>se.fit)   <span class="co"># Upper 95% CI</span></span>
+<span id="cb163-17"><a href="alpha-diversity-analysis.html#cb163-17" tabindex="-1"></a></span>
+<span id="cb163-18"><a href="alpha-diversity-analysis.html#cb163-18" tabindex="-1"></a><span class="co"># Position for statistics annotations</span></span>
+<span id="cb163-19"><a href="alpha-diversity-analysis.html#cb163-19" tabindex="-1"></a>x_pos <span class="ot">&lt;-</span> <span class="fu">max</span>(alpha_div_macro_filtered_30_gen_length<span class="sc">$</span>median_genome_length, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="fl">0.98</span></span>
+<span id="cb163-20"><a href="alpha-diversity-analysis.html#cb163-20" tabindex="-1"></a>y_pos <span class="ot">&lt;-</span> <span class="fu">max</span>(alpha_div_macro_filtered_30_gen_length<span class="sc">$</span>richness, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="fl">0.95</span></span>
+<span id="cb163-21"><a href="alpha-diversity-analysis.html#cb163-21" tabindex="-1"></a></span>
+<span id="cb163-22"><a href="alpha-diversity-analysis.html#cb163-22" tabindex="-1"></a><span class="co"># Create plot with fitted negative binomial curve</span></span>
+<span id="cb163-23"><a href="alpha-diversity-analysis.html#cb163-23" tabindex="-1"></a><span class="fu">ggplot</span>(alpha_div_macro_filtered_30_gen_length, </span>
+<span id="cb163-24"><a href="alpha-diversity-analysis.html#cb163-24" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> median_genome_length, <span class="at">y =</span> richness)) <span class="sc">+</span></span>
+<span id="cb163-25"><a href="alpha-diversity-analysis.html#cb163-25" tabindex="-1"></a>  <span class="co"># Confidence interval ribbon</span></span>
+<span id="cb163-26"><a href="alpha-diversity-analysis.html#cb163-26" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> newdata, </span>
+<span id="cb163-27"><a href="alpha-diversity-analysis.html#cb163-27" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> median_genome_length, <span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr),</span>
+<span id="cb163-28"><a href="alpha-diversity-analysis.html#cb163-28" tabindex="-1"></a>              <span class="at">fill =</span> <span class="st">&quot;grey70&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb163-29"><a href="alpha-diversity-analysis.html#cb163-29" tabindex="-1"></a>  <span class="co"># Fitted curve</span></span>
+<span id="cb163-30"><a href="alpha-diversity-analysis.html#cb163-30" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> newdata, </span>
+<span id="cb163-31"><a href="alpha-diversity-analysis.html#cb163-31" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> median_genome_length, <span class="at">y =</span> fit),</span>
+<span id="cb163-32"><a href="alpha-diversity-analysis.html#cb163-32" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb163-33"><a href="alpha-diversity-analysis.html#cb163-33" tabindex="-1"></a>  <span class="co"># Data points</span></span>
+<span id="cb163-34"><a href="alpha-diversity-analysis.html#cb163-34" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> treatment, <span class="at">shape =</span> <span class="fu">factor</span>(age)), </span>
+<span id="cb163-35"><a href="alpha-diversity-analysis.html#cb163-35" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb163-36"><a href="alpha-diversity-analysis.html#cb163-36" tabindex="-1"></a>  <span class="co"># Spearman correlation annotation</span></span>
+<span id="cb163-37"><a href="alpha-diversity-analysis.html#cb163-37" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>,</span>
+<span id="cb163-38"><a href="alpha-diversity-analysis.html#cb163-38" tabindex="-1"></a>           <span class="at">x =</span> x_pos, <span class="at">y =</span> y_pos,</span>
+<span id="cb163-39"><a href="alpha-diversity-analysis.html#cb163-39" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">&quot;Spearman ρ = &quot;</span>, <span class="fu">round</span>(rho, <span class="dv">2</span>),</span>
+<span id="cb163-40"><a href="alpha-diversity-analysis.html#cb163-40" tabindex="-1"></a>                          <span class="st">&quot;</span><span class="sc">\n</span><span class="st">p = &quot;</span>, <span class="fu">signif</span>(pval, <span class="dv">2</span>)),</span>
+<span id="cb163-41"><a href="alpha-diversity-analysis.html#cb163-41" tabindex="-1"></a>           <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb163-42"><a href="alpha-diversity-analysis.html#cb163-42" tabindex="-1"></a>  <span class="co"># Pseudo-R² annotation</span></span>
+<span id="cb163-43"><a href="alpha-diversity-analysis.html#cb163-43" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>,</span>
+<span id="cb163-44"><a href="alpha-diversity-analysis.html#cb163-44" tabindex="-1"></a>           <span class="at">x =</span> x_pos, <span class="at">y =</span> y_pos <span class="sc">*</span> <span class="fl">0.85</span>,</span>
+<span id="cb163-45"><a href="alpha-diversity-analysis.html#cb163-45" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">&quot;Pseudo-R² = &quot;</span>, <span class="fu">round</span>(pseudo_r2, <span class="dv">3</span>)),</span>
+<span id="cb163-46"><a href="alpha-diversity-analysis.html#cb163-46" tabindex="-1"></a>           <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb163-47"><a href="alpha-diversity-analysis.html#cb163-47" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> treatment_colours_bright, <span class="at">name =</span> <span class="st">&quot;Treatment&quot;</span>) <span class="sc">+</span></span>
+<span id="cb163-48"><a href="alpha-diversity-analysis.html#cb163-48" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">name =</span> <span class="st">&quot;DPI&quot;</span>,</span>
+<span id="cb163-49"><a href="alpha-diversity-analysis.html#cb163-49" tabindex="-1"></a>                    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="dv">16</span>, <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="dv">17</span>, <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="dv">15</span>, <span class="st">&quot;7&quot;</span> <span class="ot">=</span> <span class="dv">18</span>, <span class="st">&quot;14&quot;</span> <span class="ot">=</span> <span class="dv">4</span>)) <span class="sc">+</span></span>
+<span id="cb163-50"><a href="alpha-diversity-analysis.html#cb163-50" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Median genome length (bp) per sample&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Richness&quot;</span>) <span class="sc">+</span></span>
+<span id="cb163-51"><a href="alpha-diversity-analysis.html#cb163-51" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb163-52"><a href="alpha-diversity-analysis.html#cb163-52" tabindex="-1"></a>  custom_ggplot_theme</span></code></pre></div>
+<p><img src="_main_files/figure-html/alpha_genome_length_model_plot-1.png" width="672" /></p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb164-1"><a href="alpha-diversity-analysis.html#cb164-1" tabindex="-1"></a><span class="co"># Display the plot</span></span></code></pre></div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="antimicrobial-effect-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="beta-diversity-analysis---between-breeds.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

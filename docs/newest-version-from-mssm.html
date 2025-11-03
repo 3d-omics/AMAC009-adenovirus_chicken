@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>16 newest version from MSSM | 3D’omics | Adenovirus: Conventional metagenomics</title>
+  <meta name="description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="generator" content="bookdown 0.45 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="16 newest version from MSSM | 3D’omics | Adenovirus: Conventional metagenomics" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  <meta name="github-repo" content="3d-omics/XXX" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="16 newest version from MSSM | 3D’omics | Adenovirus: Conventional metagenomics" />
+  
+  <meta name="twitter:description" content="Data analysis code for 3D’omics adenovirus trial using conventional metagenomics" />
+  
+
+<meta name="author" content="Amalia Bogri" />
+<meta name="author" content="Antton Alberdi" />
+<meta name="author" content="Jorge Langa" />
+
+
+<meta name="date" content="2025-11-03" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="metatranscriptomics-selection-analysis.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#prepare-the-r-environment"><i class="fa fa-check"></i><b>1.1</b> Prepare the R environment</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#environment"><i class="fa fa-check"></i><b>1.1.1</b> Environment</a></li>
+<li class="chapter" data-level="1.1.2" data-path="index.html"><a href="index.html#libraries"><i class="fa fa-check"></i><b>1.1.2</b> Libraries</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#load-essential-functions"><i class="fa fa-check"></i><b>1.2</b> Load Essential Functions</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notes"><i class="fa fa-check"></i><b>1.3</b> Notes</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="index.html"><a href="index.html#installation-of-modules"><i class="fa fa-check"></i><b>1.3.1</b> Installation of modules</a></li>
+<li class="chapter" data-level="1.3.2" data-path="index.html"><a href="index.html#airtable-access"><i class="fa fa-check"></i><b>1.3.2</b> Airtable access:</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html"><i class="fa fa-check"></i><b>2</b> Data Import - MAG Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-catalogue"><i class="fa fa-check"></i><b>2.2</b> Genome (MAGs) Catalogue</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#dereplicated-genomes"><i class="fa fa-check"></i><b>2.2.1</b> Dereplicated Genomes</a></li>
+<li class="chapter" data-level="2.2.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-taxonomy"><i class="fa fa-check"></i><b>2.2.2</b> Genome (MAGs) Taxonomy</a></li>
+<li class="chapter" data-level="2.2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-quality"><i class="fa fa-check"></i><b>2.2.3</b> Genome (MAGs) Quality</a></li>
+<li class="chapter" data-level="2.2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-phylogenetic-tree"><i class="fa fa-check"></i><b>2.2.4</b> Genome (MAGs) Phylogenetic Tree</a></li>
+<li class="chapter" data-level="2.2.5" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#merged-genome-mags-taxonomy-quality"><i class="fa fa-check"></i><b>2.2.5</b> Merged Genome (MAGs) taxonomy &amp; quality</a></li>
+<li class="chapter" data-level="2.2.6" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#genome-mags-functional-annotations"><i class="fa fa-check"></i><b>2.2.6</b> Genome (MAGs) functional annotations</a></li>
+<li class="chapter" data-level="2.2.7" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#distil-functional-annotations"><i class="fa fa-check"></i><b>2.2.7</b> Distil functional annotations</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#bacterial-phyla-order-color-scheme-data"><i class="fa fa-check"></i><b>2.3</b> Bacterial phyla &amp; order color scheme data</a></li>
+<li class="chapter" data-level="2.4" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-working-objects"><i class="fa fa-check"></i><b>2.4</b> Save Working Objects</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-core-mag-catalogue-data-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.1</b> Save Core MAG Catalogue Data (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.2" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-color-schemes-for-plotting-chapters"><i class="fa fa-check"></i><b>2.4.2</b> Save Color Schemes (for plotting chapters)</a></li>
+<li class="chapter" data-level="2.4.3" data-path="data-import---mag-catalogue.html"><a href="data-import---mag-catalogue.html#save-complete-preparation-data-for-colleagues-analyses"><i class="fa fa-check"></i><b>2.4.3</b> Save Complete Preparation Data (for colleagues’ analyses)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html"><i class="fa fa-check"></i><b>3</b> Data Import - Metadata and Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#overview-1"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#define-plotting-settings"><i class="fa fa-check"></i><b>3.2</b> Define Plotting Settings</a></li>
+<li class="chapter" data-level="3.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sample-metadata"><i class="fa fa-check"></i><b>3.3</b> Sample metadata</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples"><i class="fa fa-check"></i><b>3.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples"><i class="fa fa-check"></i><b>3.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-reads-counts"><i class="fa fa-check"></i><b>3.4</b> Bacterial reads (counts)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-1"><i class="fa fa-check"></i><b>3.4.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.4.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-1"><i class="fa fa-check"></i><b>3.4.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#genome-covered-bases"><i class="fa fa-check"></i><b>3.5</b> Genome covered bases</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-2"><i class="fa fa-check"></i><b>3.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.5.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-2"><i class="fa fa-check"></i><b>3.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sequencing-statistics"><i class="fa fa-check"></i><b>3.6</b> Sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-3"><i class="fa fa-check"></i><b>3.6.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.6.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-3"><i class="fa fa-check"></i><b>3.6.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#non-bacterial-mapped-reads-human-chicken-swine"><i class="fa fa-check"></i><b>3.7</b> Non-bacterial mapped reads: human, chicken, swine</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro"><i class="fa fa-check"></i><b>3.7.1</b> Micro</a></li>
+<li class="chapter" data-level="3.7.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-4"><i class="fa fa-check"></i><b>3.7.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#bacterial-mapped-reads."><i class="fa fa-check"></i><b>3.8</b> Bacterial mapped reads.</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-4"><i class="fa fa-check"></i><b>3.8.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.8.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-5"><i class="fa fa-check"></i><b>3.8.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#alternative-way-to-estimate-bacterial-read-counts-from-count-table"><i class="fa fa-check"></i><b>3.9</b> Alternative way to estimate bacterial read counts (from count table):</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-5"><i class="fa fa-check"></i><b>3.9.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.9.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-6"><i class="fa fa-check"></i><b>3.9.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.10" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#sanity-checks"><i class="fa fa-check"></i><b>3.10</b> Sanity checks</a>
+<ul>
+<li class="chapter" data-level="3.10.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-6"><i class="fa fa-check"></i><b>3.10.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.10.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-7"><i class="fa fa-check"></i><b>3.10.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.11" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#combine-relevant-sequencing-statistics"><i class="fa fa-check"></i><b>3.11</b> Combine relevant sequencing statistics</a>
+<ul>
+<li class="chapter" data-level="3.11.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#micro-samples-7"><i class="fa fa-check"></i><b>3.11.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="3.11.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#macro-samples-8"><i class="fa fa-check"></i><b>3.11.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.12" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#filter-and-normalise-data"><i class="fa fa-check"></i><b>3.12</b> Filter and normalise data</a>
+<ul>
+<li class="chapter" data-level="3.12.1" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-coverage-table"><i class="fa fa-check"></i><b>3.12.1</b> Generate coverage table</a></li>
+<li class="chapter" data-level="3.12.2" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#coverage-filtering"><i class="fa fa-check"></i><b>3.12.2</b> Coverage filtering</a></li>
+<li class="chapter" data-level="3.12.3" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-genome-count-table"><i class="fa fa-check"></i><b>3.12.3</b> Generate genome count table</a></li>
+<li class="chapter" data-level="3.12.4" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#generate-length-corrected-read-count-tables"><i class="fa fa-check"></i><b>3.12.4</b> Generate length-corrected read count tables</a></li>
+</ul></li>
+<li class="chapter" data-level="3.13" data-path="data-import---metadata-and-sequencing-statistics.html"><a href="data-import---metadata-and-sequencing-statistics.html#wrap-working-objects"><i class="fa fa-check"></i><b>3.13</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html"><i class="fa fa-check"></i><b>4</b> Data Preparation for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#overview-2"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#load-the-data"><i class="fa fa-check"></i><b>4.2</b> Load the Data</a></li>
+<li class="chapter" data-level="4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#sequencing-statistics-data-frames"><i class="fa fa-check"></i><b>4.3</b> Sequencing Statistics Data Frames</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-11"><i class="fa fa-check"></i><b>4.3.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.3.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-13"><i class="fa fa-check"></i><b>4.3.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-tables-for-plotting"><i class="fa fa-check"></i><b>4.4</b> Tidy Tables for Plotting</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after-trimming-comparison"><i class="fa fa-check"></i><b>4.4.1</b> Before-After Trimming Comparison</a></li>
+<li class="chapter" data-level="4.4.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#before-after"><i class="fa fa-check"></i><b>4.4.2</b> Before-after</a></li>
+<li class="chapter" data-level="4.4.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#samtools-mapping-to-different-references"><i class="fa fa-check"></i><b>4.4.3</b> Samtools mapping to different references</a></li>
+<li class="chapter" data-level="4.4.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#percentages-of-different-references"><i class="fa fa-check"></i><b>4.4.4</b> Percentages of different references</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#tidy-genome-counts"><i class="fa fa-check"></i><b>4.5</b> Tidy genome counts</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-samples-15"><i class="fa fa-check"></i><b>4.5.1</b> Micro-samples</a></li>
+<li class="chapter" data-level="4.5.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-samples-17"><i class="fa fa-check"></i><b>4.5.2</b> Macro-samples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#read-count-tables-length-corrected-dataframes"><i class="fa fa-check"></i><b>4.6</b> Read count tables (length corrected) dataframes</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data"><i class="fa fa-check"></i><b>4.6.1</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#alpha-diversity-dataframes"><i class="fa fa-check"></i><b>4.7</b> Alpha diversity dataframes</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data"><i class="fa fa-check"></i><b>4.7.1</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.2" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-1"><i class="fa fa-check"></i><b>4.7.2</b> Macro-data</a></li>
+<li class="chapter" data-level="4.7.3" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#micro-data-1"><i class="fa fa-check"></i><b>4.7.3</b> Micro-data</a></li>
+<li class="chapter" data-level="4.7.4" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#macro-data-2"><i class="fa fa-check"></i><b>4.7.4</b> Macro-data</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="data-preparation-for-plotting.html"><a href="data-preparation-for-plotting.html#wrap-working-objects-1"><i class="fa fa-check"></i><b>4.8</b> Wrap working objects</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html"><i class="fa fa-check"></i><b>5</b> MAG Catalogue Overview</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#overview-3"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#load-data"><i class="fa fa-check"></i><b>5.2</b> Load Data</a></li>
+<li class="chapter" data-level="5.3" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-summary"><i class="fa fa-check"></i><b>5.3</b> Genome Quality Summary</a></li>
+<li class="chapter" data-level="5.4" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-circularity-and-taxonomic-distribution"><i class="fa fa-check"></i><b>5.4</b> Genome Circularity and Taxonomic Distribution</a></li>
+<li class="chapter" data-level="5.5" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-quality-visualization"><i class="fa fa-check"></i><b>5.5</b> Genome Quality Visualization</a></li>
+<li class="chapter" data-level="5.6" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours"><i class="fa fa-check"></i><b>5.6</b> MAG catalogue phyla and order colours</a></li>
+<li class="chapter" data-level="5.7" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#mag-catalogue-phyla-and-order-colours-and-genera-number"><i class="fa fa-check"></i><b>5.7</b> MAG catalogue phyla and order colours, and genera number</a></li>
+<li class="chapter" data-level="5.8" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot"><i class="fa fa-check"></i><b>5.8</b> Genome phylogeny plot</a></li>
+<li class="chapter" data-level="5.9" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#genome-phylogeny-plot-without-legend"><i class="fa fa-check"></i><b>5.9</b> Genome phylogeny plot without legend</a></li>
+<li class="chapter" data-level="5.10" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-overview"><i class="fa fa-check"></i><b>5.10</b> Functional overview</a></li>
+<li class="chapter" data-level="5.11" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-distances"><i class="fa fa-check"></i><b>5.11</b> Functional distances</a></li>
+<li class="chapter" data-level="5.12" data-path="mag-catalogue-overview.html"><a href="mag-catalogue-overview.html#functional-ordination"><i class="fa fa-check"></i><b>5.12</b> Functional ordination</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html"><i class="fa fa-check"></i><b>6</b> Adenovirus Presence Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#load-data-and-plotting-utilities"><i class="fa fa-check"></i><b>6.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="6.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-percentage-over-time"><i class="fa fa-check"></i><b>6.2</b> Adenovirus Percentage Over Time</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.1</b> Broilers - Adenovirus Percentage</a></li>
+<li class="chapter" data-level="6.2.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-percentage"><i class="fa fa-check"></i><b>6.2.2</b> Layers - Adenovirus Percentage</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#adenovirus-read-counts-by-sample"><i class="fa fa-check"></i><b>6.3</b> Adenovirus Read Counts by Sample</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#layers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.1</b> Layers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.2" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#broilers---adenovirus-read-counts"><i class="fa fa-check"></i><b>6.3.2</b> Broilers - Adenovirus Read Counts</a></li>
+<li class="chapter" data-level="6.3.3" data-path="adenovirus-presence-analysis.html"><a href="adenovirus-presence-analysis.html#combined-visualization"><i class="fa fa-check"></i><b>6.3.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html"><i class="fa fa-check"></i><b>7</b> Sequencing Statistics</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#load-data-and-plotting-utilities-1"><i class="fa fa-check"></i><b>7.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="7.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#number-of-bases-and-reads"><i class="fa fa-check"></i><b>7.2</b> Number of Bases and Reads</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-bases-before-trimming"><i class="fa fa-check"></i><b>7.2.1</b> Total Bases Before Trimming</a></li>
+<li class="chapter" data-level="7.2.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#total-reads-after-trimming"><i class="fa fa-check"></i><b>7.2.2</b> Total Reads After Trimming</a></li>
+<li class="chapter" data-level="7.2.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-1"><i class="fa fa-check"></i><b>7.2.3</b> Combined Visualization</a></li>
+<li class="chapter" data-level="7.2.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#low-data-samples"><i class="fa fa-check"></i><b>7.2.4</b> Low Data Samples</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#percentage-of-reads-mapped-trimmed-and-unmapped"><i class="fa fa-check"></i><b>7.3</b> Percentage of Reads: Mapped, Trimmed, and Unmapped</a></li>
+<li class="chapter" data-level="7.4" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#composition-of-reads-vs.-references"><i class="fa fa-check"></i><b>7.4</b> Composition of Reads vs. References</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#relative-composition-proportions"><i class="fa fa-check"></i><b>7.4.1</b> Relative Composition (Proportions)</a></li>
+<li class="chapter" data-level="7.4.2" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#absolute-composition-counts"><i class="fa fa-check"></i><b>7.4.2</b> Absolute Composition (Counts)</a></li>
+<li class="chapter" data-level="7.4.3" data-path="sequencing-statistics-1.html"><a href="sequencing-statistics-1.html#combined-visualization-2"><i class="fa fa-check"></i><b>7.4.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html"><i class="fa fa-check"></i><b>8</b> Antimicrobial Effect Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#load-data-and-plotting-utilities-2"><i class="fa fa-check"></i><b>8.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="8.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#bacteria-to-host-read-ratio"><i class="fa fa-check"></i><b>8.2</b> Bacteria-to-Host Read Ratio</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#layers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.1</b> Layers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.2" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#broilers---bacteria-to-host-ratio"><i class="fa fa-check"></i><b>8.2.2</b> Broilers - Bacteria-to-Host Ratio</a></li>
+<li class="chapter" data-level="8.2.3" data-path="antimicrobial-effect-analysis.html"><a href="antimicrobial-effect-analysis.html#combined-visualization-3"><i class="fa fa-check"></i><b>8.2.3</b> Combined Visualization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html"><i class="fa fa-check"></i><b>9</b> Alpha Diversity Analysis</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#load-data-and-plotting-utilities-3"><i class="fa fa-check"></i><b>9.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="9.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#alpha-diversity-by-breed"><i class="fa fa-check"></i><b>9.2</b> Alpha Diversity by Breed</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#layers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.1</b> Layers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#broilers---alpha-diversity"><i class="fa fa-check"></i><b>9.2.2</b> Broilers - Alpha Diversity</a></li>
+<li class="chapter" data-level="9.2.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#combined-visualization-4"><i class="fa fa-check"></i><b>9.2.3</b> Combined Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#detailed-alpha-diversity---layers-with-animal-labels"><i class="fa fa-check"></i><b>9.3</b> Detailed Alpha Diversity - Layers with Animal Labels</a></li>
+<li class="chapter" data-level="9.4" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#relationship-between-genome-length-and-alpha-diversity"><i class="fa fa-check"></i><b>9.4</b> Relationship Between Genome Length and Alpha Diversity</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#prepare-data-calculate-median-genome-length"><i class="fa fa-check"></i><b>9.4.1</b> Prepare Data: Calculate Median Genome Length</a></li>
+<li class="chapter" data-level="9.4.2" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#visualize-relationship-linear-model"><i class="fa fa-check"></i><b>9.4.2</b> Visualize Relationship: Linear Model</a></li>
+<li class="chapter" data-level="9.4.3" data-path="alpha-diversity-analysis.html"><a href="alpha-diversity-analysis.html#statistical-modeling-negative-binomial-regression"><i class="fa fa-check"></i><b>9.4.3</b> Statistical Modeling: Negative Binomial Regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html"><i class="fa fa-check"></i><b>10</b> Beta Diversity Analysis - Between Breeds</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#load-data-and-plotting-utilities-4"><i class="fa fa-check"></i><b>10.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="10.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#composition-barplots"><i class="fa fa-check"></i><b>10.2</b> Composition Barplots</a></li>
+<li class="chapter" data-level="10.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#layer-vs-broiler-composition"><i class="fa fa-check"></i><b>10.3</b> Layer vs Broiler Composition</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#pca"><i class="fa fa-check"></i><b>10.3.1</b> PCA</a></li>
+<li class="chapter" data-level="10.3.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#genomes-overlap-between-breeds"><i class="fa fa-check"></i><b>10.3.2</b> Genomes Overlap Between Breeds</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.4</b> ALDEx2 Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-aldex2"><i class="fa fa-check"></i><b>10.4.1</b> Prepare Data for ALDEx2</a></li>
+<li class="chapter" data-level="10.4.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#run-aldex2-analysis"><i class="fa fa-check"></i><b>10.4.2</b> Run ALDEx2 Analysis</a></li>
+<li class="chapter" data-level="10.4.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-diagnostic-plots"><i class="fa fa-check"></i><b>10.4.3</b> ALDEx2 Diagnostic Plots</a></li>
+<li class="chapter" data-level="10.4.4" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#aldex2-significant-taxa-visualization"><i class="fa fa-check"></i><b>10.4.4</b> ALDEx2 Significant Taxa Visualization</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#ancom-differential-abundance-analysis"><i class="fa fa-check"></i><b>10.5</b> ANCOM Differential Abundance Analysis</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#prepare-data-for-ancom"><i class="fa fa-check"></i><b>10.5.1</b> Prepare Data for ANCOM</a></li>
+<li class="chapter" data-level="10.5.2" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-diagram-control-treatment-tf3-only"><i class="fa fa-check"></i><b>10.5.2</b> Venn Diagram: Control Treatment (TF3) Only</a></li>
+<li class="chapter" data-level="10.5.3" data-path="beta-diversity-analysis---between-breeds.html"><a href="beta-diversity-analysis---between-breeds.html#venn-of-all-groups-separately"><i class="fa fa-check"></i><b>10.5.3</b> Venn of all groups separately</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html"><i class="fa fa-check"></i><b>11</b> Beta Diversity Analysis - Within Breeds</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#load-data-and-plotting-utilities-5"><i class="fa fa-check"></i><b>11.1</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="11.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#beta-diversity-within-breeds"><i class="fa fa-check"></i><b>11.2</b> Beta Diversity Within Breeds</a></li>
+<li class="chapter" data-level="11.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---composition-barplots"><i class="fa fa-check"></i><b>11.3</b> Broilers - Composition Barplots</a></li>
+<li class="chapter" data-level="11.4" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#broilers---pca-analysis"><i class="fa fa-check"></i><b>11.4</b> Broilers - PCA Analysis</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova"><i class="fa fa-check"></i><b>11.4.1</b> PERMANOVA</a></li>
+<li class="chapter" data-level="11.4.2" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#layers"><i class="fa fa-check"></i><b>11.4.2</b> Layers</a></li>
+<li class="chapter" data-level="11.4.3" data-path="beta-diversity-analysis---within-breeds.html"><a href="beta-diversity-analysis---within-breeds.html#permanova-1"><i class="fa fa-check"></i><b>11.4.3</b> PERMANOVA</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html"><i class="fa fa-check"></i><b>12</b> Diversity Partitioning Analysis</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#overview-4"><i class="fa fa-check"></i><b>12.1</b> Overview</a></li>
+<li class="chapter" data-level="12.2" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#load-data-and-plotting-utilities-6"><i class="fa fa-check"></i><b>12.2</b> Load Data and Plotting Utilities</a></li>
+<li class="chapter" data-level="12.3" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#hierarchical-diversity-partitioning-functions"><i class="fa fa-check"></i><b>12.3</b> Hierarchical Diversity Partitioning Functions</a></li>
+<li class="chapter" data-level="12.4" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#prepare-data-for-diversity-partitioning"><i class="fa fa-check"></i><b>12.4</b> Prepare Data for Diversity Partitioning</a></li>
+<li class="chapter" data-level="12.5" data-path="diversity-partitioning-analysis.html"><a href="diversity-partitioning-analysis.html#diversity-partitioning-analysis-1"><i class="fa fa-check"></i><b>12.5</b> Diversity Partitioning Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html"><i class="fa fa-check"></i><b>13</b> PacBio Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#overview-5"><i class="fa fa-check"></i><b>13.1</b> Overview</a></li>
+<li class="chapter" data-level="13.2" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#selection-criteria"><i class="fa fa-check"></i><b>13.2</b> Selection Criteria</a></li>
+<li class="chapter" data-level="13.3" data-path="pacbio-selection-analysis.html"><a href="pacbio-selection-analysis.html#load-data-1"><i class="fa fa-check"></i><b>13.3</b> Load Data</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html"><i class="fa fa-check"></i><b>14</b> LMD Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#overview-6"><i class="fa fa-check"></i><b>14.1</b> Overview</a></li>
+<li class="chapter" data-level="14.2" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#load-data-2"><i class="fa fa-check"></i><b>14.2</b> Load Data</a></li>
+<li class="chapter" data-level="14.3" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#broiler-sample-selection"><i class="fa fa-check"></i><b>14.3</b> Broiler Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#sample-selection-criteria"><i class="fa fa-check"></i><b>14.3.1</b> Sample Selection Criteria</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#layer-sample-selection"><i class="fa fa-check"></i><b>14.4</b> Layer Sample Selection</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="lmd-selection-analysis.html"><a href="lmd-selection-analysis.html#sample-selection-criteria-1"><i class="fa fa-check"></i><b>14.4.1</b> Sample Selection Criteria</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html"><i class="fa fa-check"></i><b>15</b> Metatranscriptomics Selection Analysis</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#overview-7"><i class="fa fa-check"></i><b>15.1</b> Overview</a></li>
+<li class="chapter" data-level="15.2" data-path="metatranscriptomics-selection-analysis.html"><a href="metatranscriptomics-selection-analysis.html#load-data-3"><i class="fa fa-check"></i><b>15.2</b> Load Data</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="newest-version-from-mssm.html"><a href="newest-version-from-mssm.html"><i class="fa fa-check"></i><b>16</b> newest version from MSSM</a>
+<ul>
+<li class="chapter" data-level="16.0.1" data-path="newest-version-from-mssm.html"><a href="newest-version-from-mssm.html#amalia"><i class="fa fa-check"></i><b>16.0.1</b> Amalia</a></li>
+<li class="chapter" data-level="16.0.2" data-path="newest-version-from-mssm.html"><a href="newest-version-from-mssm.html#amalia-clr_function"><i class="fa fa-check"></i><b>16.0.2</b> Amalia: clr_function</a></li>
+<li class="chapter" data-level="16.0.3" data-path="newest-version-from-mssm.html"><a href="newest-version-from-mssm.html#amalia-perform_pca"><i class="fa fa-check"></i><b>16.0.3</b> Amalia: perform_pca</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">3D’omics | Adenovirus: Conventional metagenomics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="newest-version-from-mssm" class="section level1 hasAnchor" number="16">
+<h1><span class="header-section-number">16</span> newest version from MSSM<a href="newest-version-from-mssm.html#newest-version-from-mssm" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="amalia" class="section level3 hasAnchor" number="16.0.1">
+<h3><span class="header-section-number">16.0.1</span> Amalia<a href="newest-version-from-mssm.html#amalia" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb297-1"><a href="newest-version-from-mssm.html#cb297-1" tabindex="-1"></a><span class="co"># Input: A wide df with samples as rows and taxa as columns</span></span>
+<span id="cb297-2"><a href="newest-version-from-mssm.html#cb297-2" tabindex="-1"></a><span class="co"># Result: Remove taxa that are in too few samples, or samples that have too few taxa</span></span>
+<span id="cb297-3"><a href="newest-version-from-mssm.html#cb297-3" tabindex="-1"></a></span>
+<span id="cb297-4"><a href="newest-version-from-mssm.html#cb297-4" tabindex="-1"></a>remove_samples_or_taxa <span class="ot">&lt;-</span> <span class="cf">function</span>(df, min_samples_per_taxon, min_taxa_per_sample){</span>
+<span id="cb297-5"><a href="newest-version-from-mssm.html#cb297-5" tabindex="-1"></a>  <span class="co"># Store &amp; print original df dimensions</span></span>
+<span id="cb297-6"><a href="newest-version-from-mssm.html#cb297-6" tabindex="-1"></a>  original_rows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df)</span>
+<span id="cb297-7"><a href="newest-version-from-mssm.html#cb297-7" tabindex="-1"></a>  original_cols <span class="ot">&lt;-</span> <span class="fu">ncol</span>(df)</span>
+<span id="cb297-8"><a href="newest-version-from-mssm.html#cb297-8" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Initial df: Rows (samples):&quot;</span>, original_rows, <span class="st">&quot;, Columns (taxa):&quot;</span>, original_cols, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb297-9"><a href="newest-version-from-mssm.html#cb297-9" tabindex="-1"></a></span>
+<span id="cb297-10"><a href="newest-version-from-mssm.html#cb297-10" tabindex="-1"></a>  <span class="co"># Remove taxa that are in less than x samples</span></span>
+<span id="cb297-11"><a href="newest-version-from-mssm.html#cb297-11" tabindex="-1"></a>  df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="fu">sum</span>(. <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">&gt;</span> min_samples_per_taxon))</span>
+<span id="cb297-12"><a href="newest-version-from-mssm.html#cb297-12" tabindex="-1"></a>  </span>
+<span id="cb297-13"><a href="newest-version-from-mssm.html#cb297-13" tabindex="-1"></a>  <span class="co"># Remove samples that contain less than x taxa</span></span>
+<span id="cb297-14"><a href="newest-version-from-mssm.html#cb297-14" tabindex="-1"></a>  df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">rowSums</span>(. <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">&gt;</span> min_taxa_per_sample)</span>
+<span id="cb297-15"><a href="newest-version-from-mssm.html#cb297-15" tabindex="-1"></a>  </span>
+<span id="cb297-16"><a href="newest-version-from-mssm.html#cb297-16" tabindex="-1"></a>  df <span class="sc">&lt;</span> df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(<span class="sc">~</span> <span class="fu">any</span>(. <span class="sc">!=</span> <span class="dv">0</span>)) <span class="sc">|</span> <span class="fu">where</span>(is.character) <span class="sc">|</span> <span class="fu">where</span>(is.factor))  </span>
+<span id="cb297-17"><a href="newest-version-from-mssm.html#cb297-17" tabindex="-1"></a></span>
+<span id="cb297-18"><a href="newest-version-from-mssm.html#cb297-18" tabindex="-1"></a>  removed_rows <span class="ot">&lt;-</span> original_rows <span class="sc">-</span> <span class="fu">nrow</span>(df)</span>
+<span id="cb297-19"><a href="newest-version-from-mssm.html#cb297-19" tabindex="-1"></a>  removed_cols <span class="ot">&lt;-</span> original_cols <span class="sc">-</span> <span class="fu">ncol</span>(df)</span>
+<span id="cb297-20"><a href="newest-version-from-mssm.html#cb297-20" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Removed: Rows (samples):&quot;</span>, removed_rows, <span class="st">&quot;, Columns (taxa):&quot;</span>, removed_cols, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb297-21"><a href="newest-version-from-mssm.html#cb297-21" tabindex="-1"></a></span>
+<span id="cb297-22"><a href="newest-version-from-mssm.html#cb297-22" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Resulting df: Rows (samples):&quot;</span>, <span class="fu">nrow</span>(df), <span class="st">&quot;, Columns (taxa):&quot;</span>, <span class="fu">ncol</span>(df), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb297-23"><a href="newest-version-from-mssm.html#cb297-23" tabindex="-1"></a>  </span>
+<span id="cb297-24"><a href="newest-version-from-mssm.html#cb297-24" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb297-25"><a href="newest-version-from-mssm.html#cb297-25" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="amalia-clr_function" class="section level3 hasAnchor" number="16.0.2">
+<h3><span class="header-section-number">16.0.2</span> Amalia: clr_function<a href="newest-version-from-mssm.html#amalia-clr_function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb298-1"><a href="newest-version-from-mssm.html#cb298-1" tabindex="-1"></a>  clr_transform <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb298-2"><a href="newest-version-from-mssm.html#cb298-2" tabindex="-1"></a>    <span class="fu">log</span>(x) <span class="sc">-</span> <span class="fu">mean</span>(<span class="fu">log</span>(x), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb298-3"><a href="newest-version-from-mssm.html#cb298-3" tabindex="-1"></a>  }</span></code></pre></div>
+</div>
+<div id="amalia-perform_pca" class="section level3 hasAnchor" number="16.0.3">
+<h3><span class="header-section-number">16.0.3</span> Amalia: perform_pca<a href="newest-version-from-mssm.html#amalia-perform_pca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb299-1"><a href="newest-version-from-mssm.html#cb299-1" tabindex="-1"></a>perform_pca <span class="ot">&lt;-</span> <span class="cf">function</span>(df, <span class="at">zero_method =</span> <span class="st">&quot;GBM&quot;</span>, <span class="at">z_delete =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb299-2"><a href="newest-version-from-mssm.html#cb299-2" tabindex="-1"></a>  <span class="co"># Store original dimensions</span></span>
+<span id="cb299-3"><a href="newest-version-from-mssm.html#cb299-3" tabindex="-1"></a>  original_rows <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df)</span>
+<span id="cb299-4"><a href="newest-version-from-mssm.html#cb299-4" tabindex="-1"></a>  original_cols <span class="ot">&lt;-</span> <span class="fu">ncol</span>(df)</span>
+<span id="cb299-5"><a href="newest-version-from-mssm.html#cb299-5" tabindex="-1"></a></span>
+<span id="cb299-6"><a href="newest-version-from-mssm.html#cb299-6" tabindex="-1"></a>  <span class="co"># 1. Zero replacement</span></span>
+<span id="cb299-7"><a href="newest-version-from-mssm.html#cb299-7" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(df <span class="sc">==</span> <span class="dv">0</span>)) { <span class="co"># I think cmultRepl already does that</span></span>
+<span id="cb299-8"><a href="newest-version-from-mssm.html#cb299-8" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">&quot;Zeros found&quot;</span>)</span>
+<span id="cb299-9"><a href="newest-version-from-mssm.html#cb299-9" tabindex="-1"></a>    df <span class="ot">&lt;-</span> <span class="fu">cmultRepl</span>(df,</span>
+<span id="cb299-10"><a href="newest-version-from-mssm.html#cb299-10" tabindex="-1"></a>      <span class="at">method =</span> zero_method, <span class="at">output =</span> <span class="st">&quot;prop&quot;</span>,</span>
+<span id="cb299-11"><a href="newest-version-from-mssm.html#cb299-11" tabindex="-1"></a>      <span class="at">z.warning =</span> <span class="fl">0.8</span>, <span class="at">z.delete =</span> z_delete</span>
+<span id="cb299-12"><a href="newest-version-from-mssm.html#cb299-12" tabindex="-1"></a>    )</span>
+<span id="cb299-13"><a href="newest-version-from-mssm.html#cb299-13" tabindex="-1"></a>    df <span class="ot">&lt;-</span> df <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb299-14"><a href="newest-version-from-mssm.html#cb299-14" tabindex="-1"></a>  }</span>
+<span id="cb299-15"><a href="newest-version-from-mssm.html#cb299-15" tabindex="-1"></a></span>
+<span id="cb299-16"><a href="newest-version-from-mssm.html#cb299-16" tabindex="-1"></a>  <span class="co"># Print removed rows and columns</span></span>
+<span id="cb299-17"><a href="newest-version-from-mssm.html#cb299-17" tabindex="-1"></a>  removed_rows <span class="ot">&lt;-</span> original_rows <span class="sc">-</span> <span class="fu">nrow</span>(df)</span>
+<span id="cb299-18"><a href="newest-version-from-mssm.html#cb299-18" tabindex="-1"></a>  removed_cols <span class="ot">&lt;-</span> original_cols <span class="sc">-</span> <span class="fu">ncol</span>(df)</span>
+<span id="cb299-19"><a href="newest-version-from-mssm.html#cb299-19" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Rows (samples) removed after zero replacement:&quot;</span>, removed_rows, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb299-20"><a href="newest-version-from-mssm.html#cb299-20" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;Columns (taxa) removed after zero replacement:&quot;</span>, removed_cols, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb299-21"><a href="newest-version-from-mssm.html#cb299-21" tabindex="-1"></a></span>
+<span id="cb299-22"><a href="newest-version-from-mssm.html#cb299-22" tabindex="-1"></a>  <span class="co"># Geometric mean function</span></span>
+<span id="cb299-23"><a href="newest-version-from-mssm.html#cb299-23" tabindex="-1"></a>  geometric_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb299-24"><a href="newest-version-from-mssm.html#cb299-24" tabindex="-1"></a>    <span class="co"># Use log to avoid underflow</span></span>
+<span id="cb299-25"><a href="newest-version-from-mssm.html#cb299-25" tabindex="-1"></a>    <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(x), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb299-26"><a href="newest-version-from-mssm.html#cb299-26" tabindex="-1"></a>  }</span>
+<span id="cb299-27"><a href="newest-version-from-mssm.html#cb299-27" tabindex="-1"></a></span>
+<span id="cb299-28"><a href="newest-version-from-mssm.html#cb299-28" tabindex="-1"></a>  <span class="co"># 2. Calculate geometric mean of the parts (taxa) of the data set.</span></span>
+<span id="cb299-29"><a href="newest-version-from-mssm.html#cb299-29" tabindex="-1"></a>  taxa_geometric_means <span class="ot">&lt;-</span> <span class="fu">apply</span>(df, <span class="dv">2</span>, geometric_mean)</span>
+<span id="cb299-30"><a href="newest-version-from-mssm.html#cb299-30" tabindex="-1"></a></span>
+<span id="cb299-31"><a href="newest-version-from-mssm.html#cb299-31" tabindex="-1"></a>  <span class="co"># 3. Center data</span></span>
+<span id="cb299-32"><a href="newest-version-from-mssm.html#cb299-32" tabindex="-1"></a>  df_centered <span class="ot">&lt;-</span> <span class="fu">sweep</span>(df, <span class="dv">2</span>, taxa_geometric_means, <span class="at">FUN =</span> <span class="st">&quot;/&quot;</span>)</span>
+<span id="cb299-33"><a href="newest-version-from-mssm.html#cb299-33" tabindex="-1"></a></span>
+<span id="cb299-34"><a href="newest-version-from-mssm.html#cb299-34" tabindex="-1"></a>  df_centered <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(df_centered)</span>
+<span id="cb299-35"><a href="newest-version-from-mssm.html#cb299-35" tabindex="-1"></a></span>
+<span id="cb299-36"><a href="newest-version-from-mssm.html#cb299-36" tabindex="-1"></a>  <span class="co"># Compute the Variation Matrix</span></span>
+<span id="cb299-37"><a href="newest-version-from-mssm.html#cb299-37" tabindex="-1"></a>  variation_matrix <span class="ot">&lt;-</span> <span class="fu">outer</span>(</span>
+<span id="cb299-38"><a href="newest-version-from-mssm.html#cb299-38" tabindex="-1"></a>    <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(df_centered), <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(df_centered),</span>
+<span id="cb299-39"><a href="newest-version-from-mssm.html#cb299-39" tabindex="-1"></a>    <span class="fu">Vectorize</span>(<span class="cf">function</span>(i, j) <span class="fu">var</span>(<span class="fu">log</span>(df_centered[, i] <span class="sc">/</span> df_centered[, j]), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb299-40"><a href="newest-version-from-mssm.html#cb299-40" tabindex="-1"></a>  )</span>
+<span id="cb299-41"><a href="newest-version-from-mssm.html#cb299-41" tabindex="-1"></a></span>
+<span id="cb299-42"><a href="newest-version-from-mssm.html#cb299-42" tabindex="-1"></a>  <span class="co"># Calculate Total Variance</span></span>
+<span id="cb299-43"><a href="newest-version-from-mssm.html#cb299-43" tabindex="-1"></a>  D <span class="ot">&lt;-</span> <span class="fu">ncol</span>(df_centered) <span class="co"># Number of taxa (columns)</span></span>
+<span id="cb299-44"><a href="newest-version-from-mssm.html#cb299-44" tabindex="-1"></a>  totvar <span class="ot">&lt;-</span> (<span class="dv">1</span> <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> D)) <span class="sc">*</span> <span class="fu">sum</span>(variation_matrix, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb299-45"><a href="newest-version-from-mssm.html#cb299-45" tabindex="-1"></a></span>
+<span id="cb299-46"><a href="newest-version-from-mssm.html#cb299-46" tabindex="-1"></a>  <span class="co"># 4. Scale data</span></span>
+<span id="cb299-47"><a href="newest-version-from-mssm.html#cb299-47" tabindex="-1"></a>  power_exponent <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">sqrt</span>(totvar)</span>
+<span id="cb299-48"><a href="newest-version-from-mssm.html#cb299-48" tabindex="-1"></a>  df_scaled <span class="ot">&lt;-</span> df_centered<span class="sc">^</span>power_exponent</span>
+<span id="cb299-49"><a href="newest-version-from-mssm.html#cb299-49" tabindex="-1"></a></span>
+<span id="cb299-50"><a href="newest-version-from-mssm.html#cb299-50" tabindex="-1"></a>  <span class="co"># CLR transform data</span></span>
+<span id="cb299-51"><a href="newest-version-from-mssm.html#cb299-51" tabindex="-1"></a>  df_clr <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(<span class="fu">apply</span>(df_scaled, <span class="dv">1</span>, clr_transform)))</span>
+<span id="cb299-52"><a href="newest-version-from-mssm.html#cb299-52" tabindex="-1"></a></span>
+<span id="cb299-53"><a href="newest-version-from-mssm.html#cb299-53" tabindex="-1"></a>  df_clr_dist <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">t</span>(<span class="fu">apply</span>(df, <span class="dv">1</span>, clr_transform)))</span>
+<span id="cb299-54"><a href="newest-version-from-mssm.html#cb299-54" tabindex="-1"></a></span>
+<span id="cb299-55"><a href="newest-version-from-mssm.html#cb299-55" tabindex="-1"></a>  <span class="co"># Perform PCA on zero replaced, centered, scaled, and CLR transformed df</span></span>
+<span id="cb299-56"><a href="newest-version-from-mssm.html#cb299-56" tabindex="-1"></a>  pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(df_clr, <span class="at">center =</span> <span class="cn">FALSE</span>, <span class="at">scale. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb299-57"><a href="newest-version-from-mssm.html#cb299-57" tabindex="-1"></a></span>
+<span id="cb299-58"><a href="newest-version-from-mssm.html#cb299-58" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb299-59"><a href="newest-version-from-mssm.html#cb299-59" tabindex="-1"></a>    <span class="at">df_clr =</span> df_clr,</span>
+<span id="cb299-60"><a href="newest-version-from-mssm.html#cb299-60" tabindex="-1"></a>    <span class="at">df_clr_dist =</span> df_clr_dist,</span>
+<span id="cb299-61"><a href="newest-version-from-mssm.html#cb299-61" tabindex="-1"></a>    <span class="at">pca_result =</span> pca_result</span>
+<span id="cb299-62"><a href="newest-version-from-mssm.html#cb299-62" tabindex="-1"></a>  ))</span>
+<span id="cb299-63"><a href="newest-version-from-mssm.html#cb299-63" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r script-source"><code class="sourceCode r"><span id="cb300-1"><a href="newest-version-from-mssm.html#cb300-1" tabindex="-1"></a><span class="co"># Use the &#39;pca_result&#39; df produced from &#39;perform_pca&#39; function to make the PCA plot</span></span>
+<span id="cb300-2"><a href="newest-version-from-mssm.html#cb300-2" tabindex="-1"></a></span>
+<span id="cb300-3"><a href="newest-version-from-mssm.html#cb300-3" tabindex="-1"></a>plot_pca <span class="ot">&lt;-</span> <span class="cf">function</span>(df, </span>
+<span id="cb300-4"><a href="newest-version-from-mssm.html#cb300-4" tabindex="-1"></a>                     samples_color_metadata, samples_shape_metadata, </span>
+<span id="cb300-5"><a href="newest-version-from-mssm.html#cb300-5" tabindex="-1"></a>                     samples_color_value, loadings_color_metadata, </span>
+<span id="cb300-6"><a href="newest-version-from-mssm.html#cb300-6" tabindex="-1"></a>                     loadings_color_value, loadings_taxon_level,</span>
+<span id="cb300-7"><a href="newest-version-from-mssm.html#cb300-7" tabindex="-1"></a>                     sample_metadata, genome_metadata, order_colors, </span>
+<span id="cb300-8"><a href="newest-version-from-mssm.html#cb300-8" tabindex="-1"></a>                     custom_ggplot_theme, <span class="at">scaling_factor_value =</span> <span class="fl">1.5</span>, </span>
+<span id="cb300-9"><a href="newest-version-from-mssm.html#cb300-9" tabindex="-1"></a>                     <span class="at">loadings_number =</span> <span class="dv">10</span>, <span class="at">show_labels =</span> <span class="cn">FALSE</span>, <span class="at">add_arrows =</span> <span class="cn">FALSE</span>, <span class="at">add_centroids =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb300-10"><a href="newest-version-from-mssm.html#cb300-10" tabindex="-1"></a>  </span>
+<span id="cb300-11"><a href="newest-version-from-mssm.html#cb300-11" tabindex="-1"></a>  <span class="co"># Extract scores from PCA results</span></span>
+<span id="cb300-12"><a href="newest-version-from-mssm.html#cb300-12" tabindex="-1"></a>  scores <span class="ot">&lt;-</span> <span class="fu">rownames_to_column</span>(<span class="fu">as.data.frame</span>(df<span class="sc">$</span>x), <span class="at">var =</span> <span class="st">&quot;microsample&quot;</span>)</span>
+<span id="cb300-13"><a href="newest-version-from-mssm.html#cb300-13" tabindex="-1"></a>  scores <span class="ot">&lt;-</span> <span class="fu">left_join</span>(scores, sample_metadata, <span class="at">by =</span> <span class="fu">join_by</span>(microsample <span class="sc">==</span> microsample))</span>
+<span id="cb300-14"><a href="newest-version-from-mssm.html#cb300-14" tabindex="-1"></a>  </span>
+<span id="cb300-15"><a href="newest-version-from-mssm.html#cb300-15" tabindex="-1"></a>  <span class="co"># Calculate limits for x and y axes</span></span>
+<span id="cb300-16"><a href="newest-version-from-mssm.html#cb300-16" tabindex="-1"></a>  x_limit <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">abs</span>(scores<span class="sc">$</span>PC1))</span>
+<span id="cb300-17"><a href="newest-version-from-mssm.html#cb300-17" tabindex="-1"></a>  y_limit <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">abs</span>(scores<span class="sc">$</span>PC2))</span>
+<span id="cb300-18"><a href="newest-version-from-mssm.html#cb300-18" tabindex="-1"></a>  </span>
+<span id="cb300-19"><a href="newest-version-from-mssm.html#cb300-19" tabindex="-1"></a>  <span class="co"># Calculate variance explained by each PC (principal component) &amp; create labels for plot</span></span>
+<span id="cb300-20"><a href="newest-version-from-mssm.html#cb300-20" tabindex="-1"></a>  variance_explained <span class="ot">&lt;-</span> (df<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> <span class="fu">sum</span>(df<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span>) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb300-21"><a href="newest-version-from-mssm.html#cb300-21" tabindex="-1"></a>  pc1_label <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;PC1: &quot;</span>, <span class="fu">round</span>(variance_explained[<span class="dv">1</span>], <span class="dv">2</span>), <span class="st">&quot;% variance explained&quot;</span>)</span>
+<span id="cb300-22"><a href="newest-version-from-mssm.html#cb300-22" tabindex="-1"></a>  pc2_label <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;PC2: &quot;</span>, <span class="fu">round</span>(variance_explained[<span class="dv">2</span>], <span class="dv">2</span>), <span class="st">&quot;% variance explained&quot;</span>)</span>
+<span id="cb300-23"><a href="newest-version-from-mssm.html#cb300-23" tabindex="-1"></a>  </span>
+<span id="cb300-24"><a href="newest-version-from-mssm.html#cb300-24" tabindex="-1"></a>  <span class="co"># Set a scaling factor for loadings (arrows)</span></span>
+<span id="cb300-25"><a href="newest-version-from-mssm.html#cb300-25" tabindex="-1"></a>  scaling_factor <span class="ot">&lt;-</span> scaling_factor_value</span>
+<span id="cb300-26"><a href="newest-version-from-mssm.html#cb300-26" tabindex="-1"></a>  </span>
+<span id="cb300-27"><a href="newest-version-from-mssm.html#cb300-27" tabindex="-1"></a>  <span class="co"># Extract and scale the loadings</span></span>
+<span id="cb300-28"><a href="newest-version-from-mssm.html#cb300-28" tabindex="-1"></a>  loadings <span class="ot">&lt;-</span> df<span class="sc">$</span>rotation[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">%&gt;%</span></span>
+<span id="cb300-29"><a href="newest-version-from-mssm.html#cb300-29" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb300-30"><a href="newest-version-from-mssm.html#cb300-30" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">genome =</span> <span class="fu">rownames</span>(.)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb300-31"><a href="newest-version-from-mssm.html#cb300-31" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">PC1 =</span> PC1 <span class="sc">*</span> scaling_factor,</span>
+<span id="cb300-32"><a href="newest-version-from-mssm.html#cb300-32" tabindex="-1"></a>           <span class="at">PC2 =</span> PC2 <span class="sc">*</span> scaling_factor) <span class="sc">%&gt;%</span></span>
+<span id="cb300-33"><a href="newest-version-from-mssm.html#cb300-33" tabindex="-1"></a>    <span class="fu">left_join</span>(genome_metadata, <span class="at">by =</span> <span class="fu">join_by</span>(genome <span class="sc">==</span> genome)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb300-34"><a href="newest-version-from-mssm.html#cb300-34" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">abs_loading =</span> <span class="fu">sqrt</span>(PC1<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> PC2<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb300-35"><a href="newest-version-from-mssm.html#cb300-35" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(abs_loading)) <span class="sc">%&gt;%</span></span>
+<span id="cb300-36"><a href="newest-version-from-mssm.html#cb300-36" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">order_by =</span> abs_loading, <span class="at">n =</span> loadings_number) <span class="sc">%&gt;%</span></span>
+<span id="cb300-37"><a href="newest-version-from-mssm.html#cb300-37" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">order_color =</span> order_colors[order])</span>
+<span id="cb300-38"><a href="newest-version-from-mssm.html#cb300-38" tabindex="-1"></a>  </span>
+<span id="cb300-39"><a href="newest-version-from-mssm.html#cb300-39" tabindex="-1"></a>  <span class="co"># Create ggplot</span></span>
+<span id="cb300-40"><a href="newest-version-from-mssm.html#cb300-40" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb300-41"><a href="newest-version-from-mssm.html#cb300-41" tabindex="-1"></a>    <span class="co"># Plot the samples (points)</span></span>
+<span id="cb300-42"><a href="newest-version-from-mssm.html#cb300-42" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">data =</span> scores, </span>
+<span id="cb300-43"><a href="newest-version-from-mssm.html#cb300-43" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, </span>
+<span id="cb300-44"><a href="newest-version-from-mssm.html#cb300-44" tabindex="-1"></a>                   <span class="at">fill =</span> .data[[samples_color_metadata]],</span>
+<span id="cb300-45"><a href="newest-version-from-mssm.html#cb300-45" tabindex="-1"></a>                   <span class="at">shape =</span> .data[[samples_shape_metadata]]), <span class="co">#.data[[]] tells ggplot2 to look up the column dynamically.</span></span>
+<span id="cb300-46"><a href="newest-version-from-mssm.html#cb300-46" tabindex="-1"></a>               <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb300-47"><a href="newest-version-from-mssm.html#cb300-47" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">stroke =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb300-48"><a href="newest-version-from-mssm.html#cb300-48" tabindex="-1"></a>    </span>
+<span id="cb300-49"><a href="newest-version-from-mssm.html#cb300-49" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> samples_color_value) <span class="sc">+</span> </span>
+<span id="cb300-50"><a href="newest-version-from-mssm.html#cb300-50" tabindex="-1"></a>    <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">24</span>, <span class="dv">23</span>, <span class="dv">22</span>, <span class="dv">25</span>)) <span class="sc">+</span></span>
+<span id="cb300-51"><a href="newest-version-from-mssm.html#cb300-51" tabindex="-1"></a>    <span class="fu">new_scale_color</span>() <span class="sc">+</span> <span class="co">#  new_scale_fill() ?</span></span>
+<span id="cb300-52"><a href="newest-version-from-mssm.html#cb300-52" tabindex="-1"></a>    <span class="co"># Plot the loadings (taxa, i.e. arrows)</span></span>
+<span id="cb300-53"><a href="newest-version-from-mssm.html#cb300-53" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="at">data =</span> loadings, </span>
+<span id="cb300-54"><a href="newest-version-from-mssm.html#cb300-54" tabindex="-1"></a>                 <span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> PC1, <span class="at">yend =</span> PC2, <span class="at">color =</span> .data[[loadings_color_metadata]]),</span>
+<span id="cb300-55"><a href="newest-version-from-mssm.html#cb300-55" tabindex="-1"></a>                 <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.2</span>, <span class="st">&quot;cm&quot;</span>)), </span>
+<span id="cb300-56"><a href="newest-version-from-mssm.html#cb300-56" tabindex="-1"></a>                 <span class="at">size =</span> <span class="fl">0.7</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb300-57"><a href="newest-version-from-mssm.html#cb300-57" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">name =</span> <span class="st">&quot;Classification&quot;</span>, <span class="at">values =</span> loadings_color_value) <span class="sc">+</span></span>
+<span id="cb300-58"><a href="newest-version-from-mssm.html#cb300-58" tabindex="-1"></a>    <span class="fu">geom_text_repel</span>(<span class="at">data =</span> loadings, </span>
+<span id="cb300-59"><a href="newest-version-from-mssm.html#cb300-59" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">label =</span> .data[[loadings_taxon_level]]),</span>
+<span id="cb300-60"><a href="newest-version-from-mssm.html#cb300-60" tabindex="-1"></a>                    <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">alpha=</span><span class="fl">0.7</span>, <span class="at">max.overlaps =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb300-61"><a href="newest-version-from-mssm.html#cb300-61" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;PCA Ordination Plot&quot;</span>,</span>
+<span id="cb300-62"><a href="newest-version-from-mssm.html#cb300-62" tabindex="-1"></a>         <span class="at">x =</span> pc1_label,</span>
+<span id="cb300-63"><a href="newest-version-from-mssm.html#cb300-63" tabindex="-1"></a>         <span class="at">y =</span> pc2_label) <span class="sc">+</span></span>
+<span id="cb300-64"><a href="newest-version-from-mssm.html#cb300-64" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span>x_limit, x_limit)) <span class="sc">+</span></span>
+<span id="cb300-65"><a href="newest-version-from-mssm.html#cb300-65" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span>y_limit, y_limit)) <span class="sc">+</span></span>
+<span id="cb300-66"><a href="newest-version-from-mssm.html#cb300-66" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;darkgrey&quot;</span>) <span class="sc">+</span></span>
+<span id="cb300-67"><a href="newest-version-from-mssm.html#cb300-67" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;darkgrey&quot;</span>) <span class="sc">+</span></span>
+<span id="cb300-68"><a href="newest-version-from-mssm.html#cb300-68" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb300-69"><a href="newest-version-from-mssm.html#cb300-69" tabindex="-1"></a>    custom_ggplot_theme <span class="sc">+</span></span>
+<span id="cb300-70"><a href="newest-version-from-mssm.html#cb300-70" tabindex="-1"></a>    <span class="co"># coord_fixed(ratio = 1) +</span></span>
+<span id="cb300-71"><a href="newest-version-from-mssm.html#cb300-71" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>))) <span class="co"># to print the legend for colour correctly!</span></span>
+<span id="cb300-72"><a href="newest-version-from-mssm.html#cb300-72" tabindex="-1"></a>  </span>
+<span id="cb300-73"><a href="newest-version-from-mssm.html#cb300-73" tabindex="-1"></a>  </span>
+<span id="cb300-74"><a href="newest-version-from-mssm.html#cb300-74" tabindex="-1"></a>      <span class="co"># ADD text to points</span></span>
+<span id="cb300-75"><a href="newest-version-from-mssm.html#cb300-75" tabindex="-1"></a>     <span class="cf">if</span> (show_labels) {</span>
+<span id="cb300-76"><a href="newest-version-from-mssm.html#cb300-76" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> </span>
+<span id="cb300-77"><a href="newest-version-from-mssm.html#cb300-77" tabindex="-1"></a>          <span class="fu">geom_text</span>(</span>
+<span id="cb300-78"><a href="newest-version-from-mssm.html#cb300-78" tabindex="-1"></a>            <span class="at">data =</span> scores, </span>
+<span id="cb300-79"><a href="newest-version-from-mssm.html#cb300-79" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">label =</span> animal),</span>
+<span id="cb300-80"><a href="newest-version-from-mssm.html#cb300-80" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="sc">-</span><span class="fl">0.02</span>),</span>
+<span id="cb300-81"><a href="newest-version-from-mssm.html#cb300-81" tabindex="-1"></a>            <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb300-82"><a href="newest-version-from-mssm.html#cb300-82" tabindex="-1"></a>          )</span>
+<span id="cb300-83"><a href="newest-version-from-mssm.html#cb300-83" tabindex="-1"></a>     }</span>
+<span id="cb300-84"><a href="newest-version-from-mssm.html#cb300-84" tabindex="-1"></a>  </span>
+<span id="cb300-85"><a href="newest-version-from-mssm.html#cb300-85" tabindex="-1"></a>  <span class="cf">if</span> (add_arrows) {</span>
+<span id="cb300-86"><a href="newest-version-from-mssm.html#cb300-86" tabindex="-1"></a>  <span class="co"># Prepare arrow data</span></span>
+<span id="cb300-87"><a href="newest-version-from-mssm.html#cb300-87" tabindex="-1"></a>  arrows_df <span class="ot">&lt;-</span> scores <span class="sc">%&gt;%</span></span>
+<span id="cb300-88"><a href="newest-version-from-mssm.html#cb300-88" tabindex="-1"></a>    <span class="fu">arrange</span>(treatment, age) <span class="sc">%&gt;%</span></span>
+<span id="cb300-89"><a href="newest-version-from-mssm.html#cb300-89" tabindex="-1"></a>    <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span></span>
+<span id="cb300-90"><a href="newest-version-from-mssm.html#cb300-90" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb300-91"><a href="newest-version-from-mssm.html#cb300-91" tabindex="-1"></a>      <span class="at">PC1_next =</span> <span class="fu">lead</span>(PC1),</span>
+<span id="cb300-92"><a href="newest-version-from-mssm.html#cb300-92" tabindex="-1"></a>      <span class="at">PC2_next =</span> <span class="fu">lead</span>(PC2)</span>
+<span id="cb300-93"><a href="newest-version-from-mssm.html#cb300-93" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb300-94"><a href="newest-version-from-mssm.html#cb300-94" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(PC1_next))</span>
+<span id="cb300-95"><a href="newest-version-from-mssm.html#cb300-95" tabindex="-1"></a>  </span>
+<span id="cb300-96"><a href="newest-version-from-mssm.html#cb300-96" tabindex="-1"></a>  <span class="co"># Add arrows to the plot</span></span>
+<span id="cb300-97"><a href="newest-version-from-mssm.html#cb300-97" tabindex="-1"></a>  p <span class="ot">&lt;-</span> p <span class="sc">+</span> </span>
+<span id="cb300-98"><a href="newest-version-from-mssm.html#cb300-98" tabindex="-1"></a>    <span class="fu">geom_segment</span>(</span>
+<span id="cb300-99"><a href="newest-version-from-mssm.html#cb300-99" tabindex="-1"></a>      <span class="at">data =</span> arrows_df,</span>
+<span id="cb300-100"><a href="newest-version-from-mssm.html#cb300-100" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
+<span id="cb300-101"><a href="newest-version-from-mssm.html#cb300-101" tabindex="-1"></a>        <span class="at">x =</span> PC1, <span class="at">y =</span> PC2,</span>
+<span id="cb300-102"><a href="newest-version-from-mssm.html#cb300-102" tabindex="-1"></a>        <span class="at">xend =</span> PC1_next, <span class="at">yend =</span> PC2_next,</span>
+<span id="cb300-103"><a href="newest-version-from-mssm.html#cb300-103" tabindex="-1"></a>        <span class="at">color =</span> treatment</span>
+<span id="cb300-104"><a href="newest-version-from-mssm.html#cb300-104" tabindex="-1"></a>      ),</span>
+<span id="cb300-105"><a href="newest-version-from-mssm.html#cb300-105" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.15</span>, <span class="st">&quot;cm&quot;</span>)),</span>
+<span id="cb300-106"><a href="newest-version-from-mssm.html#cb300-106" tabindex="-1"></a>      <span class="at">linewidth =</span> <span class="fl">0.6</span>,</span>
+<span id="cb300-107"><a href="newest-version-from-mssm.html#cb300-107" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.8</span>,</span>
+<span id="cb300-108"><a href="newest-version-from-mssm.html#cb300-108" tabindex="-1"></a>      <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb300-109"><a href="newest-version-from-mssm.html#cb300-109" tabindex="-1"></a>    )</span>
+<span id="cb300-110"><a href="newest-version-from-mssm.html#cb300-110" tabindex="-1"></a>  }</span>
+<span id="cb300-111"><a href="newest-version-from-mssm.html#cb300-111" tabindex="-1"></a>  </span>
+<span id="cb300-112"><a href="newest-version-from-mssm.html#cb300-112" tabindex="-1"></a><span class="cf">if</span> (add_centroids) {</span>
+<span id="cb300-113"><a href="newest-version-from-mssm.html#cb300-113" tabindex="-1"></a></span>
+<span id="cb300-114"><a href="newest-version-from-mssm.html#cb300-114" tabindex="-1"></a>  <span class="co"># Compute centroids per treatment × age</span></span>
+<span id="cb300-115"><a href="newest-version-from-mssm.html#cb300-115" tabindex="-1"></a>  centroids <span class="ot">&lt;-</span> scores <span class="sc">%&gt;%</span></span>
+<span id="cb300-116"><a href="newest-version-from-mssm.html#cb300-116" tabindex="-1"></a>    <span class="fu">group_by</span>(.data[[samples_color_metadata]], .data[[samples_shape_metadata]]) <span class="sc">%&gt;%</span></span>
+<span id="cb300-117"><a href="newest-version-from-mssm.html#cb300-117" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb300-118"><a href="newest-version-from-mssm.html#cb300-118" tabindex="-1"></a>      <span class="at">PC1 =</span> <span class="fu">mean</span>(PC1),</span>
+<span id="cb300-119"><a href="newest-version-from-mssm.html#cb300-119" tabindex="-1"></a>      <span class="at">PC2 =</span> <span class="fu">mean</span>(PC2),</span>
+<span id="cb300-120"><a href="newest-version-from-mssm.html#cb300-120" tabindex="-1"></a>      <span class="at">.groups =</span> <span class="st">&quot;drop&quot;</span></span>
+<span id="cb300-121"><a href="newest-version-from-mssm.html#cb300-121" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb300-122"><a href="newest-version-from-mssm.html#cb300-122" tabindex="-1"></a>    <span class="fu">rename</span>(</span>
+<span id="cb300-123"><a href="newest-version-from-mssm.html#cb300-123" tabindex="-1"></a>      <span class="at">color_group =</span> <span class="dv">1</span>,</span>
+<span id="cb300-124"><a href="newest-version-from-mssm.html#cb300-124" tabindex="-1"></a>      <span class="at">shape_group =</span> <span class="dv">2</span></span>
+<span id="cb300-125"><a href="newest-version-from-mssm.html#cb300-125" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb300-126"><a href="newest-version-from-mssm.html#cb300-126" tabindex="-1"></a>    <span class="fu">arrange</span>(color_group, shape_group)</span>
+<span id="cb300-127"><a href="newest-version-from-mssm.html#cb300-127" tabindex="-1"></a></span>
+<span id="cb300-128"><a href="newest-version-from-mssm.html#cb300-128" tabindex="-1"></a>  centroid_arrows <span class="ot">&lt;-</span> centroids <span class="sc">%&gt;%</span></span>
+<span id="cb300-129"><a href="newest-version-from-mssm.html#cb300-129" tabindex="-1"></a>    <span class="fu">group_by</span>(color_group) <span class="sc">%&gt;%</span></span>
+<span id="cb300-130"><a href="newest-version-from-mssm.html#cb300-130" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb300-131"><a href="newest-version-from-mssm.html#cb300-131" tabindex="-1"></a>      <span class="at">PC1_next =</span> <span class="fu">lead</span>(PC1),</span>
+<span id="cb300-132"><a href="newest-version-from-mssm.html#cb300-132" tabindex="-1"></a>      <span class="at">PC2_next =</span> <span class="fu">lead</span>(PC2)</span>
+<span id="cb300-133"><a href="newest-version-from-mssm.html#cb300-133" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb300-134"><a href="newest-version-from-mssm.html#cb300-134" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(PC1_next))</span>
+<span id="cb300-135"><a href="newest-version-from-mssm.html#cb300-135" tabindex="-1"></a></span>
+<span id="cb300-136"><a href="newest-version-from-mssm.html#cb300-136" tabindex="-1"></a>  <span class="co"># Add new color scale so centroids use treatment palette again</span></span>
+<span id="cb300-137"><a href="newest-version-from-mssm.html#cb300-137" tabindex="-1"></a>  p <span class="ot">&lt;-</span> p <span class="sc">+</span> </span>
+<span id="cb300-138"><a href="newest-version-from-mssm.html#cb300-138" tabindex="-1"></a>    <span class="fu">new_scale_color</span>() <span class="sc">+</span></span>
+<span id="cb300-139"><a href="newest-version-from-mssm.html#cb300-139" tabindex="-1"></a>    <span class="fu">new_scale_fill</span>() <span class="sc">+</span></span>
+<span id="cb300-140"><a href="newest-version-from-mssm.html#cb300-140" tabindex="-1"></a></span>
+<span id="cb300-141"><a href="newest-version-from-mssm.html#cb300-141" tabindex="-1"></a>    <span class="fu">geom_segment</span>(</span>
+<span id="cb300-142"><a href="newest-version-from-mssm.html#cb300-142" tabindex="-1"></a>      <span class="at">data =</span> centroid_arrows,</span>
+<span id="cb300-143"><a href="newest-version-from-mssm.html#cb300-143" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
+<span id="cb300-144"><a href="newest-version-from-mssm.html#cb300-144" tabindex="-1"></a>        <span class="at">x =</span> PC1, <span class="at">y =</span> PC2,</span>
+<span id="cb300-145"><a href="newest-version-from-mssm.html#cb300-145" tabindex="-1"></a>        <span class="at">xend =</span> PC1_next, <span class="at">yend =</span> PC2_next,</span>
+<span id="cb300-146"><a href="newest-version-from-mssm.html#cb300-146" tabindex="-1"></a>        <span class="at">color =</span> color_group</span>
+<span id="cb300-147"><a href="newest-version-from-mssm.html#cb300-147" tabindex="-1"></a>      ),</span>
+<span id="cb300-148"><a href="newest-version-from-mssm.html#cb300-148" tabindex="-1"></a>      <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> <span class="fu">unit</span>(<span class="fl">0.25</span>, <span class="st">&quot;cm&quot;</span>), <span class="at">type =</span> <span class="st">&quot;closed&quot;</span>),</span>
+<span id="cb300-149"><a href="newest-version-from-mssm.html#cb300-149" tabindex="-1"></a>      <span class="at">linewidth =</span> <span class="fl">1.2</span>,</span>
+<span id="cb300-150"><a href="newest-version-from-mssm.html#cb300-150" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.7</span>,</span>
+<span id="cb300-151"><a href="newest-version-from-mssm.html#cb300-151" tabindex="-1"></a>      <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb300-152"><a href="newest-version-from-mssm.html#cb300-152" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb300-153"><a href="newest-version-from-mssm.html#cb300-153" tabindex="-1"></a>    <span class="fu">geom_point</span>(</span>
+<span id="cb300-154"><a href="newest-version-from-mssm.html#cb300-154" tabindex="-1"></a>      <span class="at">data =</span> centroids,</span>
+<span id="cb300-155"><a href="newest-version-from-mssm.html#cb300-155" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
+<span id="cb300-156"><a href="newest-version-from-mssm.html#cb300-156" tabindex="-1"></a>        <span class="at">x =</span> PC1, <span class="at">y =</span> PC2,</span>
+<span id="cb300-157"><a href="newest-version-from-mssm.html#cb300-157" tabindex="-1"></a>        <span class="at">shape =</span> <span class="fu">factor</span>(shape_group),</span>
+<span id="cb300-158"><a href="newest-version-from-mssm.html#cb300-158" tabindex="-1"></a>        <span class="at">color =</span> color_group,</span>
+<span id="cb300-159"><a href="newest-version-from-mssm.html#cb300-159" tabindex="-1"></a>        <span class="at">fill  =</span> color_group</span>
+<span id="cb300-160"><a href="newest-version-from-mssm.html#cb300-160" tabindex="-1"></a>      ),</span>
+<span id="cb300-161"><a href="newest-version-from-mssm.html#cb300-161" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">4.5</span>,</span>
+<span id="cb300-162"><a href="newest-version-from-mssm.html#cb300-162" tabindex="-1"></a>      <span class="at">stroke =</span> <span class="dv">1</span>,</span>
+<span id="cb300-163"><a href="newest-version-from-mssm.html#cb300-163" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb300-164"><a href="newest-version-from-mssm.html#cb300-164" tabindex="-1"></a>      <span class="at">fill =</span> <span class="st">&quot;white&quot;</span>,</span>
+<span id="cb300-165"><a href="newest-version-from-mssm.html#cb300-165" tabindex="-1"></a>      <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb300-166"><a href="newest-version-from-mssm.html#cb300-166" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb300-167"><a href="newest-version-from-mssm.html#cb300-167" tabindex="-1"></a>    <span class="fu">geom_text</span>(</span>
+<span id="cb300-168"><a href="newest-version-from-mssm.html#cb300-168" tabindex="-1"></a>      <span class="at">data =</span> centroids,</span>
+<span id="cb300-169"><a href="newest-version-from-mssm.html#cb300-169" tabindex="-1"></a>      <span class="fu">aes</span>(</span>
+<span id="cb300-170"><a href="newest-version-from-mssm.html#cb300-170" tabindex="-1"></a>        <span class="at">x =</span> PC1, <span class="at">y =</span> PC2,</span>
+<span id="cb300-171"><a href="newest-version-from-mssm.html#cb300-171" tabindex="-1"></a>        <span class="at">label =</span> shape_group,</span>
+<span id="cb300-172"><a href="newest-version-from-mssm.html#cb300-172" tabindex="-1"></a>        <span class="at">color =</span> color_group</span>
+<span id="cb300-173"><a href="newest-version-from-mssm.html#cb300-173" tabindex="-1"></a>      ),</span>
+<span id="cb300-174"><a href="newest-version-from-mssm.html#cb300-174" tabindex="-1"></a>      <span class="at">size =</span> <span class="fl">3.3</span>,</span>
+<span id="cb300-175"><a href="newest-version-from-mssm.html#cb300-175" tabindex="-1"></a>      <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">1.2</span>,</span>
+<span id="cb300-176"><a href="newest-version-from-mssm.html#cb300-176" tabindex="-1"></a>      <span class="at">fontface =</span> <span class="st">&quot;bold&quot;</span>,</span>
+<span id="cb300-177"><a href="newest-version-from-mssm.html#cb300-177" tabindex="-1"></a>      <span class="at">inherit.aes =</span> <span class="cn">FALSE</span></span>
+<span id="cb300-178"><a href="newest-version-from-mssm.html#cb300-178" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb300-179"><a href="newest-version-from-mssm.html#cb300-179" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> samples_color_value) <span class="sc">+</span></span>
+<span id="cb300-180"><a href="newest-version-from-mssm.html#cb300-180" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> samples_color_value)</span>
+<span id="cb300-181"><a href="newest-version-from-mssm.html#cb300-181" tabindex="-1"></a>}</span>
+<span id="cb300-182"><a href="newest-version-from-mssm.html#cb300-182" tabindex="-1"></a>  </span>
+<span id="cb300-183"><a href="newest-version-from-mssm.html#cb300-183" tabindex="-1"></a>  <span class="fu">return</span>(p)</span>
+<span id="cb300-184"><a href="newest-version-from-mssm.html#cb300-184" tabindex="-1"></a>}</span></code></pre></div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="metatranscriptomics-selection-analysis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>

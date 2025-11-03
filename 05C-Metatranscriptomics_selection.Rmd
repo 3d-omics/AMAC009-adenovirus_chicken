@@ -1,0 +1,233 @@
+# Metatranscriptomics Selection Analysis
+
+## Overview
+
+This chapter identifies samples suitable for metatranscriptomics sequencing based on RNA concentration, elution volume, and taxonomic diversity metrics. Metatranscriptomics requires high-quality RNA samples with sufficient quantity and concentration for library preparation, typically targeting samples with high RNA yield and taxonomic diversity.
+
+## Load Data
+
+```{r load_data_05C, eval=TRUE, message=FALSE, warning=FALSE}
+# Load processed plotting data, color schemes, and extract concentration data
+load("data/macro/plot_data.Rdata")
+load("data/data_colors.Rdata")
+load("data/macro/extract_concentration_data.Rdata")
+```
+
+## Prepare RNA Extract Metadata
+
+This section loads RNA extraction metadata from Airtable, including concentration, elution volume, and spatial coordinates. This metadata is used to identify samples meeting metatranscriptomics requirements.
+
+```{r load_rna_extract_metadata_05C, eval=FALSE, message=FALSE}
+# Load RNA extraction metadata from Airtable
+# This includes concentration, elution volume, and spatial coordinates (SU_coordinate) for each extract
+RNA_extract_metadata_macro <- airtable("2-EX-Info", "apphvsV2YKhTCMKGS") %>% 
+  # select columns to extract
+  read_airtable(., fields = c(
+    "Extract", "Barcode", "Concentration_ng_uL", "ElutionVolume_uL",
+    "LeftOver_uL", "LeftOver_ng", "AcidNucleicMaterial",
+    "LabBatch_text", "ExperimentalUnit", "SUcoordinate_text"), id_to_col = TRUE) %>%
+  # rename columns
+  rename(
+    EX_batch = "LabBatch_text",
+    extract = "Extract",
+    animal = "ExperimentalUnit",
+    tube_barcode = "Barcode",
+    RNA_concentration = "Concentration_ng_uL",
+    elution_uL = "ElutionVolume_uL",
+    leftover_uL = "LeftOver_uL",
+    leftover_ng = "LeftOver_ng",
+    nucleic_acid = "AcidNucleicMaterial",
+    SU_coordinate = "SUcoordinate_text"
+  ) %>%
+    # select relevant batches
+  filter(EX_batch %in% c("EXB020","EXB021")) %>%
+  unnest(c(nucleic_acid, animal, SU_coordinate)) %>%
+  # select relevant columns
+  select(EX_batch, extract, animal, tube_barcode, RNA_concentration, elution_uL, nucleic_acid, SU_coordinate) %>%
+  filter(nucleic_acid == "RNA") %>%
+  # un-nest columns that appeared as a list
+  arrange(animal)
+```      
+
+
+## Merge RNA Metadata with Sample Information
+
+This section merges RNA extract metadata with sample metadata and alpha diversity metrics to create a comprehensive dataset for sample selection.
+
+```{r merge_rna_extract_metadata_05C, eval=FALSE, message=FALSE}
+# Merge RNA extract metadata with sample metadata
+# This links RNA extraction information to experimental samples (animal, treatment, breed, age)
+RNA_extract_sample_metadata_macro <- RNA_extract_metadata_macro %>% 
+  left_join(sample_metadata_macro, by = join_by(animal == animal)) %>%
+  rename(microsample=sample)
+
+RNA_extract_sample_div_metadata_macro <- RNA_extract_sample_metadata_macro %>%
+ left_join(alpha_div_macro_filtered_30, by = join_by(microsample == microsample)) 
+```
+
+
+## Visualize RNA Concentration and Richness
+
+This section creates visualizations to assess RNA extraction quality and taxonomic richness across all samples, helping identify candidates for metatranscriptomics sequencing.
+
+```{r rna_barplots_richness_05C, eval=TRUE, message=FALSE, fig.height=6, fig.width=15}
+# Plot 1: Taxonomic richness by animal, colored by RNA concentration
+# Shows alpha diversity combined with RNA quality metrics
+barplot_RNA2   <- RNA_extract_sample_div_metadata_macro %>%
+  filter(treatment != "TF0") %>%
+  ggplot(aes(x = animal, y = richness, fill = RNA_concentration)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  labs(x = "RNA extracts", y = "richness", fill = "Read type") +
+  scale_fill_gradient(low = "#c90076", high = "#3598bf", name = "RNA concentration") +
+  facet_nested(. ~ animal_breed + treatment_expl + age, scales = "free", space = "free") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_text(), #axis.text.x = element_blank(),
+        legend.position = "top",
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle("Broilers + Layers")
+# barplot_RNA2  # Individual plot commented out - used in combined plot
+```
+
+
+```{r rna_barplots_conc_05C, eval=TRUE, message=FALSE, fig.height=6, fig.width=15}
+# Plot 2: RNA concentration by animal, colored by taxonomic richness
+# Shows RNA quality metrics combined with diversity information
+barplot_RNA2 <- RNA_extract_sample_div_metadata_macro %>%
+  filter(treatment != "TF0") %>%
+  ggplot(aes(x = animal, y = RNA_concentration, fill =  richness)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  labs(x = "RNA extracts", y = "RNA concentration", fill = "Read type") +
+  scale_fill_gradient(low = "#c90076", high = "#3598bf", name = "richness") +
+  facet_nested(. ~ animal_breed + treatment_expl + age, scales = "free", space = "free") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_text(), #axis.text.x = element_blank(),
+        legend.position = "top",
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle("Broilers + Layers")
+# barplot_RNA2  # Individual plot commented out - used in combined plot
+```
+
+
+
+## Identify Best Samples
+
+This section applies selection criteria to identify the best samples for metatranscriptomics sequencing, ranking samples by combined RNA concentration and richness metrics.
+
+```{r rna_selection_prep_05C, eval=TRUE, message=FALSE, fig.height=6, fig.width=15}
+# Step 1: Filter samples based on quality criteria
+# Requirements: RNA concentration > 30 ng/uL, non-missing values, specific time points
+rna_filtered <- RNA_extract_sample_div_metadata_macro %>%
+  filter(
+    !is.na(RNA_concentration),
+    !is.na(richness),
+    RNA_concentration > 30,
+    (animal_breed == "broiler" & age %in% c(5, 14) |
+     animal_breed == "layer"   & age %in% c(7, 14) |
+     age == 0)  # optional: include day 0 controls
+  )
+
+# Step 2: Rank samples by combined score
+# Normalize metrics to 0-1 scale and create weighted combined score
+# Weight: 60% RNA concentration, 40% richness (prioritizes RNA quality)
+rna_ranked <- rna_filtered %>%
+  mutate(
+    # Normalize richness and RNA concentration (0–1 scaling) for fair comparison
+    richness_scaled = scales::rescale(richness),
+    RNA_scaled = scales::rescale(RNA_concentration),
+    # Create a combined score (weighted average favoring RNA quality)
+    combined_score = 0.6 * RNA_scaled + 0.4 * richness_scaled
+  ) %>%
+  arrange(desc(combined_score))  # Sort best to worst
+
+# Step 3: Select top samples per group
+# Select top 3 samples per treatment × age combination for broilers
+# Note: This can be modified to include layers or other grouping schemes
+top_per_group <- rna_ranked %>%
+  filter(animal_breed=="broiler") %>%
+  group_by(treatment, age) %>%
+  slice_max(order_by = combined_score, n = 3, with_ties = FALSE) %>%
+  ungroup()
+```
+
+
+
+
+## Visualize Selected Samples
+
+This section marks selected samples on the visualization plots to show which samples were chosen for metatranscriptomics sequencing.
+
+```{r rna_barplots_marked_05C, eval=TRUE, message=FALSE, fig.height=6, fig.width=13}
+# Create barplot showing RNA concentration by animal, colored by richness
+# Filtered to show only broiler samples
+barplot_RNA3 <- RNA_extract_sample_div_metadata_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "broiler") %>%
+  ggplot(aes(x = animal, y = RNA_concentration, fill =  richness)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  labs(x = "RNA extracts", y = "RNA concentration", fill = "Read type") +
+  scale_fill_gradient(low = "#c90076", high = "#3598bf", name = "richness") +
+  facet_nested(. ~ treatment_expl + age, scales = "free", space = "free") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_text(), #axis.text.x = element_blank(),
+        legend.position = "top",
+        plot.margin = margin(0.2, 0.2, 0.2, 0.2)) +
+  ggtitle(" broiler")
+
+
+# Mark selected samples with star symbols
+barplot_RNA2_3 <- barplot_RNA3 +
+  geom_point(
+    data = top_per_group,
+    aes(x = animal, y = RNA_concentration),
+    shape = 8,          # star shape
+    size = 4,
+    color = "black",
+    inherit.aes = FALSE
+  )
+
+# Display plot with selected samples marked
+barplot_RNA2_3  
+```
+
+## Export Selected Samples
+
+This section prepares and exports the final list of selected samples with all relevant metadata for metatranscriptomics sequencing.
+
+**Novogene sequencing requirements:**
+- Total RNA: ≥300 ng
+- Volume: ≥20 μL
+- Concentration: ≥15 ng/μL
+
+```{r rna_selection_export_05C, eval=FALSE}
+# Define shipping volume per sample (22 uL meets Novogene requirements)
+ship_to_Novogene_volume_uL_value = 22
+
+# Prepare export data frame with essential information
+# Calculate shipping quantities and remaining volumes
+best_RNA_samples_export <- top_per_group %>%
+  select(nucleic_acid, EX_batch, extract, animal, SU_coordinate, tube_barcode, RNA_concentration, elution_uL) %>%
+  mutate(
+    ship_to_Novogene_volume_uL = ship_to_Novogene_volume_uL_value,  # Volume to ship
+    ship_ng = ship_to_Novogene_volume_uL*RNA_concentration,        # Quantity to ship
+    leftover_uL = elution_uL - ship_to_Novogene_volume_uL          # Remaining volume
+  )
+
+write.csv(best_RNA_samples_export, 
+          file = "transcriptomics_selection_adenovirus.csv", row.names = FALSE)
+```
+
+
+## Save Data
+
+This section saves the processed RNA extract metadata and selected samples for future reference.
+
+```{r wrap_objects_05C, eval=FALSE}
+# Save RNA extract concentration data and selected samples
+save(RNA_extract_sample_div_metadata_macro, top_per_group, rna_ranked, best_RNA_samples_export,
+  file = "data/macro/RNA_extract_concentration_data.Rdata"
+)
+```
+

@@ -1,0 +1,485 @@
+
+# Beta Diversity Analysis - Within Breeds
+
+## Load Data and Plotting Utilities
+
+```{r load_data_04F, warning=FALSE, message=FALSE}
+# Load processed plotting data, color schemes, and MAG catalogue data (for genome_metadata)
+load("data/macro/plot_data.Rdata")
+load("data/data_colors.Rdata")
+load("data/MAG_catalogue/data.Rdata")  # Needed for genome_metadata in PCA plots
+```
+
+## Beta Diversity Within Breeds
+
+This section analyzes compositional differences within each breed separately, comparing different treatments using PCA and PERMANOVA.
+
+## Broilers - Composition Barplots
+
+```{r composition_barplots_broiler_04F, warning=FALSE, message=FALSE, fig.height=7, fig.width=12}
+# Create stacked barplots showing order-level composition for broilers
+# Using filtered (non-closed) data
+p1 <- tidy_plot_genome_counts_filt_30_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "broiler") %>%
+  ggplot(aes(x = animal, y = count, fill = order)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  scale_fill_manual(values = order_colors[-4], drop = FALSE) +
+  labs(x = "Metagenomic Samples", y = "Order composition", fill = "Order") +
+  facet_nested(. ~ animal_breed + treatment_expl + age, scales = "free", space = "free") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6),
+        axis.text.y = element_blank(),
+        legend.position = "none") +
+  ggtitle("Composition of bacterial orders at 30% coverage filtered data (non-closed)")
+
+# Create stacked barplot using closed (100% normalized) data
+p2 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "broiler") %>%
+  ggplot(aes(x = animal, y = count, fill = order)) +
+  geom_bar(stat = "identity", colour = "white", linewidth = 0.1) +
+  scale_fill_manual(values = order_colors[-4], drop = FALSE) +
+  labs(x = "Metagenomic Samples", y = "Order composition", fill = "Order") +
+  facet_nested(. ~ animal_breed + treatment_expl + age, scales = "free", space = "free") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6),
+        axis.text.y = element_blank(),
+        legend.position = "none") +
+  ggtitle("Composition of bacterial orders at 30% coverage filtered data (closed)")
+
+# Display both plots (commented out - these are combined below)
+# p1
+# p2
+```
+
+## Broilers - PCA Analysis
+
+```{r pca_broiler_prep_04F, warning=FALSE, message=FALSE, comment=""}
+# Prepare wide format data frame for PCA analysis on broilers only
+PCA_df <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "broiler") %>%
+  # Remove metadata
+  select(genome, microsample, count) %>%
+  # Make tidy df into wide df
+  pivot_wider(
+    names_from = genome,   
+    values_from = count,   
+    # Fill missing values with 0
+    values_fill = 0) %>%
+  # Remove taxa (columns) that are zero for all leftover samples (rows)
+  select(where(~ any(. != 0))) %>%
+  # scale each sample to 100 (= closure to 100, not required, but common)
+  mutate(across(-microsample, ~ . / rowSums(across(where(is.numeric))) * 100 )) %>%
+  # turn the column 'microsample'into the name of the rows of the df
+  column_to_rownames(var = "microsample")
+
+
+MACRO_sample_metadata <- sample_metadata_macro %>%
+  mutate(microsample = sample) %>%
+  select(microsample, animal, animal_breed, age, treatment, treatment_expl) %>%
+  mutate(sample_type = "MACRO") 
+
+
+
+pca_result <- perform_pca(PCA_df, z_delete = TRUE)
+# plot_scree(pca_result)  # Scree plot removed
+p <- plot_pca(pca_result$pca_result,
+         samples_color_metadata = "treatment" , 
+         samples_shape_metadata = "age",
+         samples_color_value = treatment_colours_bright, 
+         loadings_color_metadata = "order", 
+         loadings_color_value = order_colors, 
+         loadings_taxon_level = "species",
+         MACRO_sample_metadata, genome_metadata, order_colors, 
+         custom_ggplot_theme)
+
+p2 = p + ggtitle("Broilers")
+# p2  # Individual plot commented out - used in combined plot
+
+```
+
+
+```{r pca_broilers_plot_04F, warning=FALSE, message=FALSE, comment=""}
+
+p <- plot_pca(pca_result$pca_result,
+         samples_color_metadata = "treatment" , 
+         samples_shape_metadata = "age",
+         samples_color_value = treatment_colours_bright, 
+         loadings_color_metadata = "order", 
+         loadings_color_value = order_colors, 
+         loadings_taxon_level = "species",
+         scaling_factor_value = 1.0, 
+          loadings_number = 10,
+         MACRO_sample_metadata, genome_metadata, order_colors, 
+         custom_ggplot_theme,
+         add_centroids = TRUE)
+
+p2 = p + ggtitle("Broilers")
+# p2  # Individual plot commented out - used in combined plot
+
+```
+
+### PERMANOVA
+```{r permanova_broilers_test_04F, warning = FALSE, message = FALSE, fig.height = 7, fig.width=10}
+
+# Calculate Euclidean distance on CLR data
+pca_animals_dist_matrix <- vegdist(pca_result$df_clr_dist, method = "euclidean")
+
+# Make sure that filtered df and metadata have the same number & order of rows
+pca_animals_metadata_adonis <- plot_data_stats_macro %>%
+  filter(microsample %in% rownames(pca_result$df_clr_dist)) %>%
+  arrange(match(microsample, rownames(pca_result$df_clr_dist))) %>%
+  select(microsample, animal_breed, treatment, age)
+all(pca_animals_metadata_adonis$microsample == rownames(pca_result$df_clr_dist))
+
+# Run PERMANOVA
+adonis2_result <- adonis2(
+  pca_animals_dist_matrix ~ treatment,
+  data = pca_animals_metadata_adonis,
+  permutations = 999,
+  by = "terms"
+)
+
+# Display PERMANOVA results as formatted table
+adonis2_table <- as.data.frame(adonis2_result)
+knitr::kable(adonis2_table, digits = 4, caption = "PERMANOVA results for beta diversity within breed")
+```
+
+```{r permanova_broilers_age_04F, warning = FALSE, message = FALSE, fig.height = 7, fig.width=10}
+# #  Pick one treatment
+# trt <- "TF1"
+# #Subset metadata safely — preserves sample IDs as rownames
+# subset_meta <- pca_animals_metadata_adonis[
+#   pca_animals_metadata_adonis$treatment == trt, ,
+#   drop = FALSE
+# ]
+# #  Restore the correct sample IDs as rownames
+# rownames(subset_meta) <- subset_meta$microsample
+# subset_dist <- as.dist(as.matrix(pca_animals_dist_matrix)[
+#   rownames(subset_meta),
+#   rownames(subset_meta)
+# ])
+# adonis_res_TF1 <- adonis2(subset_dist ~ age, data = subset_meta, permutations = 999)
+
+# LOOP
+treatments <- unique(pca_animals_metadata_adonis$treatment)
+
+results_age <- map_dfr(treatments, function(trt) {
+  
+  # Subset metadata and restore proper sample IDs
+  subset_meta <- pca_animals_metadata_adonis[
+    pca_animals_metadata_adonis$treatment == trt, ,
+    drop = FALSE
+  ]
+  rownames(subset_meta) <- subset_meta$microsample
+  
+  # Subset the distance matrix to those samples
+  subset_dist <- as.dist(as.matrix(pca_animals_dist_matrix)[
+    rownames(subset_meta),
+    rownames(subset_meta)
+  ])
+  
+  # Run PERMANOVA for age within this treatment
+  adonis_res <- adonis2(subset_dist ~ age, data = subset_meta, permutations = 999)
+  
+  # Extract R² and p-value
+  data.frame(
+    Treatment = trt,
+    R2 = adonis_res$R2[1],
+    p_value = adonis_res$`Pr(>F)`[1]
+  )
+})
+
+results_age
+
+```
+
+
+
+### Layers
+```{r composition_layers_04F, warning=FALSE, message=FALSE, comment=""}
+tidy_plot_genome_counts_filt_30_macro %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "layer") %>%
+  ggplot(aes(x = animal , y = count, fill = order)) +
+  geom_bar(stat="identity", colour="white", linewidth=0.1) + #plot stacked bars with white borders
+  scale_fill_manual(values = order_colors[-4], drop = FALSE) +
+  labs(x = "Metagenomic Samples", y = "Order composition",fill = "Read type") +
+  facet_nested(. ~ animal_breed + treatment_expl + age, scales = "free", space = "free") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6),
+        axis.text.y = element_blank(),
+        legend.position = "none") +
+  ggtitle("Composition of bacterial orders at 30% coverage filtered data")
+
+tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(treatment != "TF0") %>%
+  filter(animal_breed == "layer") %>%
+  ggplot(aes(x = animal , y = count, fill = order)) +
+  geom_bar(stat="identity", colour="white", linewidth=0.1) + #plot stacked bars with white borders
+  scale_fill_manual(values = order_colors[-4], drop = FALSE) +
+  labs(x = "Metagenomic Samples", y = "Order composition",fill = "Read type") +
+  facet_nested(. ~ animal_breed + treatment_expl + age, scales = "free", space = "free") +
+  custom_ggplot_theme +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6),
+        axis.text.y = element_blank(),
+        legend.position = "none") +
+  ggtitle("Composition of bacterial orders at 30% coverage filtered data")
+
+```
+
+
+```{r pca_layers_prep_04F, warning=FALSE, message=FALSE, comment=""}
+PCA_df <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "layer") %>%
+  # Remove metadata
+  select(genome, microsample, count) %>%
+  # Make tidy df into wide df
+  pivot_wider(
+    names_from = genome,   
+    values_from = count,   
+    # Fill missing values with 0
+    values_fill = 0) %>%
+  # Remove taxa (columns) that are zero for all leftover samples (rows)
+  select(where(~ any(. != 0))) %>%
+  # scale each sample to 100 (= closure to 100, not required, but common)
+  mutate(across(-microsample, ~ . / rowSums(across(where(is.numeric))) * 100 )) %>%
+  # turn the column 'microsample'into the name of the rows of the df
+  column_to_rownames(var = "microsample")
+
+
+MACRO_sample_metadata <- sample_metadata_macro %>%
+  mutate(microsample = sample) %>%
+  select(microsample, animal, animal_breed, age, treatment, treatment_expl) %>%
+  mutate(sample_type = "MACRO") 
+
+
+
+pca_result <- perform_pca(PCA_df, z_delete = TRUE)
+# plot_scree(pca_result)  # Scree plot removed
+p <- plot_pca(pca_result$pca_result,
+         samples_color_metadata = "treatment" , 
+         samples_shape_metadata = "age",
+         samples_color_value = treatment_colours_bright, 
+         loadings_color_metadata = "order", 
+         loadings_color_value = order_colors, 
+         loadings_taxon_level = "species",
+         MACRO_sample_metadata, genome_metadata, order_colors, 
+         custom_ggplot_theme)
+
+p1 = p + ggtitle("Layers")
+# p1  # Individual plot commented out - used in combined plot
+```
+
+```{r pca_layers_plot_04F, warning=FALSE, message=FALSE, comment=""}
+
+p <- plot_pca(pca_result$pca_result,
+         samples_color_metadata = "treatment" , 
+         samples_shape_metadata = "age",
+         samples_color_value = treatment_colours_bright, 
+         loadings_color_metadata = "order", 
+         loadings_color_value = order_colors, 
+         loadings_taxon_level = "species",
+         scaling_factor_value = 1.0, 
+          loadings_number = 10,
+         MACRO_sample_metadata, genome_metadata, order_colors, 
+         custom_ggplot_theme,
+         add_centroids = TRUE)
+
+p1 = p + ggtitle("Layers")
+# p1  # Individual plot commented out - used in combined plot
+
+```
+
+
+
+```{r layers_composition_combined_04F, warning=FALSE, message=FALSE, fig.height=15, fig.width=10}
+
+(p1/p2) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right", legend.box = "vertical")
+
+```
+
+
+### PERMANOVA
+```{r permanova_layers_test_04F, warning = FALSE, message = FALSE, fig.height = 7, fig.width=10}
+
+# Calculate Euclidean distance on CLR data
+pca_animals_dist_matrix <- vegdist(pca_result$df_clr_dist, method = "euclidean")
+
+# Make sure that filtered df and metadata have the same number & order of rows
+pca_animals_metadata_adonis <- plot_data_stats_macro %>%
+  filter(microsample %in% rownames(pca_result$df_clr_dist)) %>%
+  arrange(match(microsample, rownames(pca_result$df_clr_dist))) %>%
+  select(microsample, animal_breed, treatment, age)
+all(pca_animals_metadata_adonis$microsample == rownames(pca_result$df_clr_dist))
+
+# Run PERMANOVA
+adonis2_result <- adonis2(
+  pca_animals_dist_matrix ~ treatment,
+  data = pca_animals_metadata_adonis,
+  permutations = 999,
+  by = "terms"
+)
+
+# Display PERMANOVA results as formatted table
+adonis2_table <- as.data.frame(adonis2_result)
+knitr::kable(adonis2_table, digits = 4, caption = "PERMANOVA results for beta diversity within breed")
+```
+
+
+```{r permanova_layers_age_04F, warning = FALSE, message = FALSE, fig.height = 7, fig.width=10}
+
+# LOOP
+treatments <- unique(pca_animals_metadata_adonis$treatment)
+
+results_age <- map_dfr(treatments, function(trt) {
+  
+  # Subset metadata and restore proper sample IDs
+  subset_meta <- pca_animals_metadata_adonis[
+    pca_animals_metadata_adonis$treatment == trt, ,
+    drop = FALSE
+  ]
+  rownames(subset_meta) <- subset_meta$microsample
+  
+  # Subset the distance matrix to those samples
+  subset_dist <- as.dist(as.matrix(pca_animals_dist_matrix)[
+    rownames(subset_meta),
+    rownames(subset_meta)
+  ])
+  
+  # Run PERMANOVA for age within this treatment
+  adonis_res <- adonis2(subset_dist ~ age, data = subset_meta, permutations = 999)
+  
+  # Extract R² and p-value
+  data.frame(
+    Treatment = trt,
+    R2 = adonis_res$R2[1],
+    p_value = adonis_res$`Pr(>F)`[1]
+  )
+})
+
+results_age
+
+```
+
+
+```{r venn_layers_prep_04F, warning=FALSE, message=FALSE, fig.height=4, fig.width=6}
+group1 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "layer") %>%
+  filter(type_simple == "P", treatment == "TF1") %>%
+  pull(genome) %>%
+  unique()
+
+group2 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "layer") %>%
+  filter(type_simple == "P", treatment == "TF2") %>%
+  pull(genome) %>%
+  unique()
+
+group3 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "layer") %>%
+  filter(type_simple == "P", treatment == "TF3") %>%
+  pull(genome) %>%
+  unique()
+
+
+venn_data <- list(
+  TF1 = group1,
+  TF2 = group2,
+  TF3 = group3
+)
+
+# # Taxa unique to group1 only
+# unique_group1 <- setdiff(group1, group2) # layer
+# # Taxa unique to group2 only
+# unique_group2 <- setdiff(group2, group1) # broiler
+# 
+# 
+# # Filter once (layer/broiler + genomes of interest)
+# filtered_group1 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+#   filter(type_simple == "P", animal_breed == "layer", genome %in% unique_group1)
+# 
+# filtered_group2 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+#   filter(type_simple == "P", animal_breed == "broiler", genome %in% unique_group2)
+```
+
+```{r venn_layers_plot_04F, message=FALSE, warning=FALSE, fig.height=6, fig.width=10}
+
+layers_venn <- ggVennDiagram(
+  venn_data,
+  label = "count",       
+  set_color = c(TF1 = "#4059AE",
+  TF2 = "#97D8C4",
+  TF3 = "#F3B942") ) +
+  scale_fill_gradient(low = "white", high = "grey") +
+  ggtitle("Layers") #+
+  #coord_flip()
+
+#layers_venn
+```
+
+```{r venn_broilers_prep_04F, warning=FALSE, message=FALSE, fig.height=4, fig.width=6}
+group1 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "broiler") %>%
+  filter(type_simple == "P", treatment == "TF1") %>%
+  pull(genome) %>%
+  unique()
+
+group2 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "broiler") %>%
+  filter(type_simple == "P", treatment == "TF2") %>%
+  pull(genome) %>%
+  unique()
+
+group3 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+  filter(animal_breed == "broiler") %>%
+  filter(type_simple == "P", treatment == "TF3") %>%
+  pull(genome) %>%
+  unique()
+
+
+venn_data <- list(
+  TF1 = group1,
+  TF2 = group2,
+  TF3 = group3
+)
+
+# # Taxa unique to group1 only
+# unique_group1 <- setdiff(group1, group2) # layer
+# # Taxa unique to group2 only
+# unique_group2 <- setdiff(group2, group1) # broiler
+# 
+# 
+# # Filter once (layer/broiler + genomes of interest)
+# filtered_group1 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+#   filter(type_simple == "P", animal_breed == "layer", genome %in% unique_group1)
+# 
+# filtered_group2 <- tidy_plot_genome_counts_filt_30_macro_closed %>%
+#   filter(type_simple == "P", animal_breed == "broiler", genome %in% unique_group2)
+```
+
+```{r venn_broilers_plot_04F, message=FALSE, warning=FALSE, fig.height=6, fig.width=10}
+
+broilers_ven <- ggVennDiagram(
+  venn_data,
+  label = "count",       
+  set_color = c(TF1 = "#4059AE",
+  TF2 = "#97D8C4",
+  TF3 = "#F3B942") ) +
+  scale_fill_gradient(low = "white", high = "grey") +
+  ggtitle("Broilers") #+
+  #coord_flip()
+
+#broilers_ven
+```
+
+
+```{r venn_combined_04F, message=FALSE, warning=FALSE, fig.height=6, fig.width=12}
+layers_venn + broilers_ven
+```
+
+
+
